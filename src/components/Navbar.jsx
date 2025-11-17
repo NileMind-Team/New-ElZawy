@@ -10,6 +10,8 @@ import {
   FaShoppingCart,
   FaClipboardList,
   FaTimes,
+  FaUsers,
+  FaUserShield,
 } from "react-icons/fa";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,6 +26,7 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userData, setUser] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const sidebarRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -119,6 +122,11 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const handleAdminClick = () => {
+    setIsSidebarOpen(false);
+    navigate("/admin/users");
+  };
+
   // Close sidebar and dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -147,7 +155,6 @@ const Navbar = () => {
     };
   }, [isSidebarOpen]);
 
-  // Fetch user profile
   useEffect(() => {
     if (!isLoggedIn) {
       setLoading(false);
@@ -161,7 +168,21 @@ const Navbar = () => {
           const fixedImageUrl = res.data.imageUrl
             ? `https://restaurant-template.runasp.net/${res.data.imageUrl}`
             : null;
-          setUser({ ...res.data, avatar: fixedImageUrl });
+
+          const userDataWithAvatar = { ...res.data, avatar: fixedImageUrl };
+          setUser(userDataWithAvatar);
+
+          const isAdminUser =
+            res.data.roles && res.data.roles.includes("Admin");
+          setIsAdmin(isAdminUser);
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              ...userDataWithAvatar,
+              roles: res.data.roles,
+            })
+          );
         }
       } catch (err) {
         console.error("Failed to fetch profile", err);
@@ -359,6 +380,14 @@ const Navbar = () => {
                       <p className="text-sm text-gray-600 truncate">
                         {userData.email}
                       </p>
+                      {isAdmin && (
+                        <div className="flex items-center gap-1 mt-1">
+                          <FaUserShield className="text-[#E41E26] text-xs" />
+                          <span className="text-xs text-[#E41E26] font-semibold">
+                            Admin
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -374,7 +403,7 @@ const Navbar = () => {
                   >
                     <button
                       onClick={handleHomeClick}
-                      className="w-full text-left flex items-center gap-4 px-4 py-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
+                      className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
                     >
                       <div className="p-2 bg-[#E41E26]/10 rounded-lg">
                         <FaHome className="text-[#E41E26] text-lg" />
@@ -383,13 +412,31 @@ const Navbar = () => {
                     </button>
                   </motion.div>
 
+                  {/* Admin Panel - Only show for admin users */}
+                  {isAdmin && (
+                    <motion.div
+                      whileHover={{ scale: 1.02, x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <button
+                        onClick={handleAdminClick}
+                        className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
+                      >
+                        <div className="p-2 bg-[#E41E26]/10 rounded-lg">
+                          <FaUsers className="text-[#E41E26] text-lg" />
+                        </div>
+                        <span className="text-lg">Admin Panel</span>
+                      </button>
+                    </motion.div>
+                  )}
+
                   <motion.div
                     whileHover={{ scale: 1.02, x: 4 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     <button
                       onClick={handleProfileClick}
-                      className="w-full text-left flex items-center gap-4 px-4 py-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
+                      className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
                     >
                       <div className="p-2 bg-[#E41E26]/10 rounded-lg">
                         <FaUser className="text-[#E41E26] text-lg" />
@@ -404,7 +451,7 @@ const Navbar = () => {
                   >
                     <button
                       onClick={handleOrdersClick}
-                      className="w-full text-left flex items-center gap-4 px-4 py-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
+                      className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
                     >
                       <div className="p-2 bg-[#E41E26]/10 rounded-lg">
                         <FaClipboardList className="text-[#E41E26] text-lg" />
@@ -419,7 +466,7 @@ const Navbar = () => {
                   >
                     <button
                       onClick={handleCartClick}
-                      className="w-full text-left flex items-center gap-4 px-4 py-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
+                      className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
                     >
                       <div className="p-2 bg-[#E41E26]/10 rounded-lg">
                         <FaShoppingCart className="text-[#E41E26] text-lg" />
@@ -434,7 +481,7 @@ const Navbar = () => {
                   >
                     <button
                       onClick={handleAddressesClick}
-                      className="w-full text-left flex items-center gap-4 px-4 py-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
+                      className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
                     >
                       <div className="p-2 bg-[#E41E26]/10 rounded-lg">
                         <FaMapMarkerAlt className="text-[#E41E26] text-lg" />
@@ -449,7 +496,7 @@ const Navbar = () => {
                   >
                     <button
                       onClick={handleReviewsClick}
-                      className="w-full text-left flex items-center gap-4 px-4 py-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
+                      className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30"
                     >
                       <div className="p-2 bg-[#E41E26]/10 rounded-lg">
                         <FaStar className="text-[#E41E26] text-lg" />
@@ -465,7 +512,7 @@ const Navbar = () => {
                     >
                       <button
                         onClick={handleDeleteAccount}
-                        className="w-full text-left flex items-center gap-4 px-4 py-4 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-red-200"
+                        className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-red-200"
                       >
                         <div className="p-2 bg-red-100 rounded-lg">
                           <FaTrash className="text-red-500 text-lg" />
@@ -480,7 +527,7 @@ const Navbar = () => {
                     >
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left flex items-center gap-4 px-4 py-4 text-gray-700 hover:bg-red-50 hover:text-[#E41E26] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#E41E26]/30"
+                        className="w-full text-left flex items-center gap-4 px-2 py-2 text-gray-700 hover:bg-red-50 hover:text-[#E41E26] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#E41E26]/30"
                       >
                         <div className="p-2 bg-[#E41E26]/10 rounded-lg">
                           <FaSignOutAlt className="text-[#E41E26] text-lg" />
