@@ -60,7 +60,7 @@ const ProductForm = () => {
   const daysOfWeek = [
     { id: "السبت", name: "السبت" },
     { id: "الأحد", name: "الأحد" },
-    { id: "الإثنين", name: "الإثنين" },
+    { id: "الإثنين", name: "الاثنين" },
     { id: "الثلاثاء", name: "الثلاثاء" },
     { id: "الأربعاء", name: "الأربعاء" },
     { id: "الخميس", name: "الخميس" },
@@ -416,8 +416,6 @@ const ProductForm = () => {
 
       if (formData.Calories) {
         formDataToSend.append("Calories", formData.Calories.toString());
-      } else {
-        formDataToSend.append("Calories", "0");
       }
 
       if (formData.PreparationTimeStart) {
@@ -425,8 +423,6 @@ const ProductForm = () => {
           "PreparationTimeStart",
           formData.PreparationTimeStart.toString()
         );
-      } else {
-        formDataToSend.append("PreparationTimeStart", "0");
       }
 
       if (formData.PreparationTimeEnd) {
@@ -434,8 +430,6 @@ const ProductForm = () => {
           "PreparationTimeEnd",
           formData.PreparationTimeEnd.toString()
         );
-      } else {
-        formDataToSend.append("PreparationTimeEnd", "0");
       }
 
       if (formData.availabilityType === "custom") {
@@ -819,7 +813,7 @@ const ProductForm = () => {
                             <img
                               src={imagePreview}
                               alt="Preview"
-                              className="w-full h-48 xs:h-56 sm:h-64 md:h-96 object-cover rounded-lg mb-2 xs:mb-3"
+                              className="w-full h-48 xs:h-56 sm:h-64 md:h-96 object-contain rounded-lg mb-2 xs:mb-3"
                             />
                             <button
                               type="button"
