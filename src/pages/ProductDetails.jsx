@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   FaShoppingCart,
@@ -22,7 +22,6 @@ import "../style/ProductDetails.css";
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -31,52 +30,7 @@ const ProductDetails = () => {
     useState(false);
   const [selectedAddons, setSelectedAddons] = useState({});
   const [isSticky, setIsSticky] = useState(false);
-
-  const [addonsData] = useState([
-    {
-      id: 1,
-      title: "درجة الحرارة",
-      type: "single",
-      options: [
-        { id: 1, name: "حار", price: 0 },
-        { id: 2, name: "بارد", price: 0 },
-        { id: 3, name: "معتدل", price: 0 },
-      ],
-    },
-    {
-      id: 2,
-      title: "الحجم",
-      type: "single",
-      options: [
-        { id: 1, name: "صغير", price: 5 },
-        { id: 2, name: "وسط", price: 10 },
-        { id: 3, name: "كبير", price: 15 },
-      ],
-    },
-    {
-      id: 3,
-      title: "الإضافات",
-      type: "multiple",
-      options: [
-        { id: 1, name: "كبدة", price: 8 },
-        { id: 2, name: "سجق", price: 6 },
-        { id: 3, name: "بسطرمة", price: 12 },
-        { id: 4, name: "جبنة", price: 5 },
-        { id: 5, name: "زيتون", price: 3 },
-      ],
-    },
-    {
-      id: 4,
-      title: "الصوص",
-      type: "multiple",
-      options: [
-        { id: 1, name: "مايونيز", price: 2 },
-        { id: 2, name: "كاتشب", price: 1 },
-        { id: 3, name: "ثوم", price: 3 },
-        { id: 4, name: "حار", price: 2 },
-      ],
-    },
-  ]);
+  const [addonsData, setAddonsData] = useState([]);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -119,14 +73,24 @@ const ProductDetails = () => {
       try {
         setLoading(true);
 
-        if (location.state?.product) {
-          setProduct(location.state.product);
-          setLoading(false);
-          return;
-        }
-
         const response = await axiosInstance.get(`/api/MenuItems/Get/${id}`);
         const productData = response.data;
+
+        const transformedAddons =
+          productData.typesWithOptions?.map((type) => ({
+            id: type.id,
+            title: type.name,
+            type: "multiple",
+            required: false,
+            options:
+              type.menuItemOptions?.map((option) => ({
+                id: option.id,
+                name: option.name,
+                price: option.price,
+              })) || [],
+          })) || [];
+
+        setAddonsData(transformedAddons);
 
         const transformedProduct = {
           id: productData.id,
@@ -160,6 +124,7 @@ const ProductDetails = () => {
               ) || [],
           },
           menuItemSchedules: productData.menuItemSchedules || [],
+          typesWithOptions: productData.typesWithOptions || [],
         };
 
         setProduct(transformedProduct);
@@ -180,7 +145,7 @@ const ProductDetails = () => {
     };
 
     fetchProductDetails();
-  }, [id, location.state, navigate]);
+  }, [id, navigate]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -564,7 +529,7 @@ const ProductDetails = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 mb-4 md:mb-6 h-auto lg:h-[555px] flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 mb-4 md:mb-6 h-auto lg:max-h-[555px] flex flex-col">
               <div className="flex-1 overflow-hidden">
                 <div className="h-full overflow-y-auto custom-scrollbar pr-2 pb-4">
                   <div className="mb-4 md:mb-6">
@@ -640,69 +605,69 @@ const ProductDetails = () => {
                   </div>
 
                   <div className="space-y-4 md:space-y-6">
-                    {addonsData.map((addon) => (
-                      <div
-                        key={addon.id}
-                        className="bg-gray-50 dark:bg-gray-700/50 rounded-xl md:rounded-2xl p-3 md:p-4 border border-gray-200 dark:border-gray-600"
-                        dir="rtl"
-                      >
-                        <div className="flex items-center justify-between mb-2 md:mb-3">
-                          <h3 className="font-semibold text-base md:text-lg text-gray-800 dark:text-gray-200">
-                            {addon.title}
-                          </h3>
-                        </div>
+                    {addonsData.length > 0 &&
+                      addonsData.map((addon) => (
+                        <div
+                          key={addon.id}
+                          className="bg-gray-50 dark:bg-gray-700/50 rounded-xl md:rounded-2xl p-3 md:p-4 border border-gray-200 dark:border-gray-600"
+                          dir="rtl"
+                        >
+                          <div className="flex items-center justify-between mb-2 md:mb-3">
+                            <h3 className="font-semibold text-base md:text-lg text-gray-800 dark:text-gray-200">
+                              {addon.title}
+                            </h3>
+                          </div>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
-                          {" "}
-                          {addon.options.map((option) => {
-                            const isSelected = selectedAddons[
-                              addon.id
-                            ]?.includes(option.id);
-                            return (
-                              <motion.button
-                                key={option.id}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() =>
-                                  handleAddonSelect(
-                                    addon.id,
-                                    option.id,
-                                    addon.type
-                                  )
-                                }
-                                className={`p-2 md:p-3 rounded-lg md:rounded-xl border-2 transition-all duration-200 flex items-center justify-between ${
-                                  isSelected
-                                    ? "border-[#E41E26] bg-red-50 dark:bg-red-900/20"
-                                    : "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
-                                }`}
-                                dir="rtl"
-                              >
-                                <div className="flex items-center gap-1 md:gap-2">
-                                  <span
-                                    className={`font-medium text-sm md:text-base ${
-                                      isSelected
-                                        ? "text-[#E41E26]"
-                                        : "text-gray-700 dark:text-gray-300"
-                                    }`}
-                                  >
-                                    {option.name}
-                                  </span>
-                                  {isSelected && (
-                                    <FaCheck className="text-[#E41E26] text-xs md:text-sm" />
+                          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                            {addon.options.map((option) => {
+                              const isSelected = selectedAddons[
+                                addon.id
+                              ]?.includes(option.id);
+                              return (
+                                <motion.button
+                                  key={option.id}
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  onClick={() =>
+                                    handleAddonSelect(
+                                      addon.id,
+                                      option.id,
+                                      addon.type
+                                    )
+                                  }
+                                  className={`p-2 md:p-3 rounded-lg md:rounded-xl border-2 transition-all duration-200 flex items-center justify-between ${
+                                    isSelected
+                                      ? "border-[#E41E26] bg-red-50 dark:bg-red-900/20"
+                                      : "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
+                                  }`}
+                                  dir="rtl"
+                                >
+                                  <div className="flex items-center gap-1 md:gap-2">
+                                    <span
+                                      className={`font-medium text-sm md:text-base ${
+                                        isSelected
+                                          ? "text-[#E41E26]"
+                                          : "text-gray-700 dark:text-gray-300"
+                                      }`}
+                                    >
+                                      {option.name}
+                                    </span>
+                                    {isSelected && (
+                                      <FaCheck className="text-[#E41E26] text-xs md:text-sm" />
+                                    )}
+                                  </div>
+
+                                  {option.price > 0 && (
+                                    <span className="text-xs md:text-sm text-green-600 dark:text-green-400 font-semibold">
+                                      +{toArabicNumbers(option.price)} ج.م
+                                    </span>
                                   )}
-                                </div>
-
-                                {option.price > 0 && (
-                                  <span className="text-xs md:text-sm text-green-600 dark:text-green-400 font-semibold">
-                                    +{toArabicNumbers(option.price)} ج.م
-                                  </span>
-                                )}
-                              </motion.button>
-                            );
-                          })}
+                                </motion.button>
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </div>
               </div>

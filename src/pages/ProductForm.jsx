@@ -65,6 +65,9 @@ const ProductForm = () => {
   ]);
   const [initialSchedules, setInitialSchedules] = useState([]);
 
+  const [menuItemOptions, setMenuItemOptions] = useState([]);
+  const [optionTypesDropdownOpen, setOptionTypesDropdownOpen] = useState(null);
+
   const daysOfWeek = [
     { id: "السبت", name: "السبت" },
     { id: "الأحد", name: "الأحد" },
@@ -100,6 +103,91 @@ const ProductForm = () => {
 
     fetchOptionTypes();
   }, []);
+
+  const addMenuItemOption = () => {
+    setMenuItemOptions([
+      ...menuItemOptions,
+      {
+        id: Date.now(),
+        typeId: "",
+        options: [
+          {
+            id: Date.now() + 1,
+            name: "",
+            price: "",
+            isAvailableNow: true,
+            isActive: true,
+          },
+        ],
+      },
+    ]);
+  };
+
+  const removeMenuItemOption = (id) => {
+    if (menuItemOptions.length > 0) {
+      setMenuItemOptions(menuItemOptions.filter((option) => option.id !== id));
+    }
+  };
+
+  const updateMenuItemOption = (id, field, value) => {
+    setMenuItemOptions(
+      menuItemOptions.map((optionType) =>
+        optionType.id === id ? { ...optionType, [field]: value } : optionType
+      )
+    );
+  };
+
+  const addOptionToType = (typeId) => {
+    setMenuItemOptions(
+      menuItemOptions.map((optionType) =>
+        optionType.id === typeId
+          ? {
+              ...optionType,
+              options: [
+                ...optionType.options,
+                {
+                  id: Date.now(),
+                  name: "",
+                  price: "",
+                  isAvailableNow: true,
+                  isActive: true,
+                },
+              ],
+            }
+          : optionType
+      )
+    );
+  };
+
+  const removeOptionFromType = (typeId, optionId) => {
+    setMenuItemOptions(
+      menuItemOptions.map((optionType) =>
+        optionType.id === typeId
+          ? {
+              ...optionType,
+              options: optionType.options.filter(
+                (option) => option.id !== optionId
+              ),
+            }
+          : optionType
+      )
+    );
+  };
+
+  const updateOption = (typeId, optionId, field, value) => {
+    setMenuItemOptions(
+      menuItemOptions.map((optionType) =>
+        optionType.id === typeId
+          ? {
+              ...optionType,
+              options: optionType.options.map((option) =>
+                option.id === optionId ? { ...option, [field]: value } : option
+              ),
+            }
+          : optionType
+      )
+    );
+  };
 
   const handleOpenOptionTypesManager = () => {
     setShowOptionTypesManager(true);
@@ -586,6 +674,40 @@ const ProductForm = () => {
       }
     }
 
+    if (!isEditing) {
+      let invalidOptions = [];
+      menuItemOptions.forEach((optionType, typeIndex) => {
+        if (!optionType.typeId) {
+          invalidOptions.push(`نوع الإضافة ${typeIndex + 1} يجب اختيار نوع`);
+        }
+        optionType.options.forEach((option, optionIndex) => {
+          if (!option.name.trim()) {
+            invalidOptions.push(
+              `اسم الإضافة ${optionIndex + 1} في النوع ${typeIndex + 1} مطلوب`
+            );
+          }
+          if (!option.price || parseFloat(option.price) < 0) {
+            invalidOptions.push(
+              `سعر الإضافة ${optionIndex + 1} في النوع ${
+                typeIndex + 1
+              } يجب أن يكون رقمًا صحيحًا`
+            );
+          }
+        });
+      });
+
+      if (invalidOptions.length > 0) {
+        Swal.fire({
+          icon: "error",
+          title: "خطأ في الإضافات",
+          text: invalidOptions.slice(0, 3).join("\n"),
+          confirmButtonColor: "#E41E26",
+        });
+        setIsLoading(false);
+        return;
+      }
+    }
+
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("Name", formData.Name);
@@ -633,6 +755,33 @@ const ProductForm = () => {
             `MenuItemSchedules[${index}].isActive`,
             schedule.isActive.toString()
           );
+        });
+      }
+
+      if (!isEditing && menuItemOptions.length > 0) {
+        let optionIndex = 0;
+        menuItemOptions.forEach((optionType) => {
+          optionType.options.forEach((option) => {
+            const prefix = `MenuItemOptions[${optionIndex}]`;
+            formDataToSend.append(`${prefix}.name`, option.name);
+            formDataToSend.append(
+              `${prefix}.price`,
+              parseFloat(option.price).toString()
+            );
+            formDataToSend.append(
+              `${prefix}.isAvailableNow`,
+              option.isAvailableNow.toString()
+            );
+            formDataToSend.append(
+              `${prefix}.isActive`,
+              option.isActive.toString()
+            );
+            formDataToSend.append(
+              `${prefix}.typeId`,
+              optionType.typeId.toString()
+            );
+            optionIndex++;
+          });
         });
       }
 
@@ -1045,6 +1194,246 @@ const ProductForm = () => {
                   </div>
                 </div>
 
+                {!isEditing && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg xs:rounded-xl sm:rounded-2xl p-3 xs:p-4 sm:p-6 border border-purple-200/50 dark:from-gray-700 dark:to-gray-800 dark:border-gray-600"
+                  >
+                    <div className="flex items-center gap-2 xs:gap-3 mb-3 xs:mb-4">
+                      <FaList className="text-purple-600 text-base xs:text-lg sm:text-xl dark:text-purple-400" />
+                      <h3 className="text-sm xs:text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200">
+                        الإضافات (خيارات المنتج)
+                      </h3>
+                    </div>
+
+                    <div className="space-y-4 xs:space-y-5">
+                      {menuItemOptions.map((optionType, typeIndex) => (
+                        <div
+                          key={optionType.id}
+                          className="bg-white/80 rounded-lg p-3 xs:p-4 border border-gray-200 dark:bg-gray-600/80 dark:border-gray-500"
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="text-xs xs:text-sm font-semibold text-gray-700 dark:text-gray-300">
+                              نوع الإضافة {typeIndex + 1}
+                            </h4>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeMenuItemOption(optionType.id)
+                              }
+                              className="text-red-500 hover:text-red-700 transition-colors"
+                            >
+                              <FaTrash size={14} />
+                            </button>
+                          </div>
+
+                          <div className="mb-3 xs:mb-4">
+                            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                              نوع الإضافة *
+                            </label>
+                            <div className="relative">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setOptionTypesDropdownOpen(
+                                    optionTypesDropdownOpen === optionType.id
+                                      ? null
+                                      : optionType.id
+                                  )
+                                }
+                                className="w-full flex items-center justify-between border border-gray-200 bg-white rounded-lg px-3 py-2 text-black focus:ring-2 focus:ring-purple-500 transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                              >
+                                <span>
+                                  {optionType.typeId
+                                    ? optionTypes.find(
+                                        (type) => type.id === optionType.typeId
+                                      )?.name || "اختر النوع"
+                                    : "اختر النوع"}
+                                </span>
+                                <motion.div
+                                  animate={{
+                                    rotate:
+                                      optionTypesDropdownOpen === optionType.id
+                                        ? 180
+                                        : 0,
+                                  }}
+                                  transition={{ duration: 0.3 }}
+                                >
+                                  <FaChevronDown
+                                    size={12}
+                                    className="text-purple-600 dark:text-purple-400"
+                                  />
+                                </motion.div>
+                              </button>
+
+                              {optionTypesDropdownOpen === optionType.id && (
+                                <motion.ul
+                                  initial={{ opacity: 0, y: -5 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -5 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="absolute z-50 mt-1 w-full bg-white border border-gray-200 shadow-2xl rounded-lg overflow-hidden max-h-48 overflow-y-auto dark:bg-gray-600 dark:border-gray-500"
+                                >
+                                  {optionTypes.map((type) => (
+                                    <li
+                                      key={type.id}
+                                      onClick={() => {
+                                        updateMenuItemOption(
+                                          optionType.id,
+                                          "typeId",
+                                          type.id
+                                        );
+                                        setOptionTypesDropdownOpen(null);
+                                      }}
+                                      className="px-3 py-2 hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 cursor-pointer text-gray-700 transition-all text-xs border-b border-gray-100 last:border-b-0 dark:hover:from-gray-500 dark:hover:to-gray-400 dark:text-gray-300 dark:border-gray-500"
+                                    >
+                                      {type.name}
+                                    </li>
+                                  ))}
+                                </motion.ul>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="space-y-3 xs:space-y-4">
+                            {optionType.options.map((option, optionIndex) => (
+                              <div
+                                key={option.id}
+                                className="grid grid-cols-1 md:grid-cols-3 gap-2 xs:gap-3 p-3 bg-gray-50/50 rounded-lg dark:bg-gray-700/50"
+                              >
+                                <div>
+                                  <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                                    اسم الإضافة *
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={option.name}
+                                    onChange={(e) =>
+                                      updateOption(
+                                        optionType.id,
+                                        option.id,
+                                        "name",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="w-full border border-gray-200 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                    placeholder="اسم الإضافة"
+                                    required
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                                    السعر (جنيه) *
+                                  </label>
+                                  <input
+                                    type="number"
+                                    value={option.price}
+                                    onChange={(e) =>
+                                      updateOption(
+                                        optionType.id,
+                                        option.id,
+                                        "price",
+                                        e.target.value
+                                      )
+                                    }
+                                    step="0.01"
+                                    min="0"
+                                    className="w-full border border-gray-200 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                    placeholder="0.00"
+                                    required
+                                  />
+                                </div>
+
+                                <div className="flex items-end gap-2">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <label className="flex items-center gap-1 cursor-pointer">
+                                        <input
+                                          type="checkbox"
+                                          checked={option.isAvailableNow}
+                                          onChange={(e) =>
+                                            updateOption(
+                                              optionType.id,
+                                              option.id,
+                                              "isAvailableNow",
+                                              e.target.checked
+                                            )
+                                          }
+                                          className="text-purple-600 focus:ring-purple-500"
+                                        />
+                                        <span className="text-xs text-gray-600 dark:text-gray-400">
+                                          متاح الآن
+                                        </span>
+                                      </label>
+                                      <label className="flex items-center gap-1 cursor-pointer">
+                                        <input
+                                          type="checkbox"
+                                          checked={option.isActive}
+                                          onChange={(e) =>
+                                            updateOption(
+                                              optionType.id,
+                                              option.id,
+                                              "isActive",
+                                              e.target.checked
+                                            )
+                                          }
+                                          className="text-purple-600 focus:ring-purple-500"
+                                        />
+                                        <span className="text-xs text-gray-600 dark:text-gray-400">
+                                          نشط
+                                        </span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                  {optionType.options.length > 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        removeOptionFromType(
+                                          optionType.id,
+                                          option.id
+                                        )
+                                      }
+                                      className="text-red-500 hover:text-red-700 transition-colors p-1"
+                                    >
+                                      <FaTrash size={12} />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          <motion.button
+                            type="button"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => addOptionToType(optionType.id)}
+                            className="mt-3 w-full py-2 border border-dashed border-gray-300 text-gray-600 rounded-lg font-semibold hover:border-purple-500 hover:text-purple-600 transition-all duration-300 text-xs flex items-center justify-center gap-2 dark:border-gray-500 dark:text-gray-400 dark:hover:border-purple-500 dark:hover:text-purple-400"
+                          >
+                            <FaPlus size={10} />
+                            إضافة خيار جديد لهذا النوع
+                          </motion.button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={addMenuItemOption}
+                      className="mt-4 w-full py-2 xs:py-2.5 border-2 border-dashed border-gray-300 text-gray-600 rounded-lg font-semibold hover:border-purple-500 hover:text-purple-600 transition-all duration-300 text-xs xs:text-sm flex items-center justify-center gap-2 dark:border-gray-500 dark:text-gray-400 dark:hover:border-purple-500 dark:hover:text-purple-400"
+                    >
+                      <FaPlus size={12} />
+                      إضافة نوع إضافة جديد
+                    </motion.button>
+                  </motion.div>
+                )}
+
+                {/* Availability Section */}
                 <div className="bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] rounded-lg xs:rounded-xl sm:rounded-2xl p-3 xs:p-4 sm:p-6 border border-[#FDB913]/30 dark:from-gray-600 dark:to-gray-500 dark:border-gray-500">
                   <div className="flex items-center gap-2 xs:gap-3 mb-3 xs:mb-4">
                     <FaClock className="text-[#E41E26] text-base xs:text-lg sm:text-xl" />
