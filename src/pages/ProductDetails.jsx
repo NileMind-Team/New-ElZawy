@@ -15,6 +15,7 @@ import {
   FaPlusCircle,
   FaSave,
   FaTimes,
+  FaLayerGroup,
 } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,7 +43,16 @@ const ProductDetails = () => {
     price: 0,
   });
 
+  const [showAddonTypeModal, setShowAddonTypeModal] = useState(false);
+  const [addonTypeForm, setAddonTypeForm] = useState({
+    name: "",
+    canSelectMultipleOptions: false,
+    isSelectionRequired: false,
+  });
+
+  const [newAddonOptions, setNewAddonOptions] = useState([]);
   const modalRef = useRef(null);
+  const addonTypeModalRef = useRef(null);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -183,9 +193,15 @@ const ProductDetails = () => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         handleCloseOptionModal();
       }
+      if (
+        addonTypeModalRef.current &&
+        !addonTypeModalRef.current.contains(event.target)
+      ) {
+        handleCloseAddonTypeModal();
+      }
     };
 
-    if (showOptionModal) {
+    if (showOptionModal || showAddonTypeModal) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("touchstart", handleClickOutside);
     }
@@ -194,7 +210,7 @@ const ProductDetails = () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [showOptionModal]);
+  }, [showOptionModal, showAddonTypeModal]);
 
   const getDayName = (dayNumber) => {
     const days = [
@@ -551,6 +567,119 @@ const ProductDetails = () => {
     });
   };
 
+  const handleOpenAddAddonTypeModal = () => {
+    setAddonTypeForm({
+      name: "",
+      canSelectMultipleOptions: false,
+      isSelectionRequired: false,
+    });
+    setNewAddonOptions([]);
+    setShowAddonTypeModal(true);
+  };
+
+  const handleCloseAddonTypeModal = () => {
+    setShowAddonTypeModal(false);
+    setAddonTypeForm({
+      name: "",
+      canSelectMultipleOptions: false,
+      isSelectionRequired: false,
+    });
+    setNewAddonOptions([]);
+  };
+
+  const handleAddonTypeFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setAddonTypeForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const addNewOptionField = () => {
+    setNewAddonOptions((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        name: "",
+        price: 0,
+      },
+    ]);
+  };
+
+  const updateNewOptionField = (id, field, value) => {
+    setNewAddonOptions((prev) =>
+      prev.map((option) =>
+        option.id === id
+          ? {
+              ...option,
+              [field]: field === "price" ? parseFloat(value) || 0 : value,
+            }
+          : option
+      )
+    );
+  };
+
+  const removeNewOptionField = (id) => {
+    setNewAddonOptions((prev) => prev.filter((option) => option.id !== id));
+  };
+
+  const handleSaveAddonType = async () => {
+    if (!addonTypeForm.name.trim()) {
+      toast.error("يرجى إدخال اسم نوع الإضافة", {
+        position: "top-right",
+        autoClose: 2000,
+        rtl: true,
+      });
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post(
+        `/api/MenuItemOptionTypes/Add`,
+        {
+          menuItemId: parseInt(id),
+          name: addonTypeForm.name,
+          canSelectMultipleOptions: addonTypeForm.canSelectMultipleOptions,
+          isSelectionRequired: addonTypeForm.isSelectionRequired,
+        }
+      );
+
+      const newAddonTypeId = response.data.id;
+
+      if (newAddonOptions.length > 0) {
+        const optionPromises = newAddonOptions.map((option) => {
+          if (option.name.trim()) {
+            return axiosInstance.post(`/api/MenuItemOptions/Add`, {
+              menuItemId: parseInt(id),
+              typeId: newAddonTypeId,
+              name: option.name,
+              price: option.price,
+            });
+          }
+          return Promise.resolve();
+        });
+
+        await Promise.all(optionPromises);
+      }
+
+      toast.success("تم إضافة نوع الإضافة مع خياراته بنجاح", {
+        position: "top-right",
+        autoClose: 2000,
+        rtl: true,
+      });
+
+      await fetchProductDetails();
+      handleCloseAddonTypeModal();
+    } catch (error) {
+      console.error("Error saving addon type:", error);
+      toast.error("فشل في حفظ نوع الإضافة", {
+        position: "top-right",
+        autoClose: 2000,
+        rtl: true,
+      });
+    }
+  };
+
   const isArabic = (text) => {
     const arabicRegex = /[\u0600-\u06FF]/;
     return arabicRegex.test(text);
@@ -672,6 +801,183 @@ const ProductDetails = () => {
               >
                 <FaSave />
                 {editingOption ? "تحديث" : "حفظ"}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Addon Type Modal */}
+      {showAddonTypeModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            ref={addonTypeModalRef}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 overflow-y-auto max-h-[90vh]"
+            dir="rtl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+                إضافة نوع إضافة جديد
+              </h3>
+              <button
+                onClick={handleCloseAddonTypeModal}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              >
+                <FaTimes className="text-lg" />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    اسم نوع الإضافة *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={addonTypeForm.name}
+                    onChange={handleAddonTypeFormChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent"
+                    placeholder="أدخل اسم نوع الإضافة"
+                    autoFocus
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="canSelectMultipleOptions"
+                      name="canSelectMultipleOptions"
+                      checked={addonTypeForm.canSelectMultipleOptions}
+                      onChange={handleAddonTypeFormChange}
+                      className="w-5 h-5 text-[#E41E26] rounded focus:ring-[#E41E26]"
+                    />
+                    <label
+                      htmlFor="canSelectMultipleOptions"
+                      className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      يمكن اختيار أكثر من خيار
+                    </label>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="isSelectionRequired"
+                      name="isSelectionRequired"
+                      checked={addonTypeForm.isSelectionRequired}
+                      onChange={handleAddonTypeFormChange}
+                      className="w-5 h-5 text-[#E41E26] rounded focus:ring-[#E41E26]"
+                    />
+                    <label
+                      htmlFor="isSelectionRequired"
+                      className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      اختيار إجباري
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Add Options Section */}
+              <div className="border-t pt-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                    إضافة خيارات
+                  </h4>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={addNewOptionField}
+                    className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
+                  >
+                    <FaPlusCircle className="text-xs" />
+                    إضافة خيار
+                  </motion.button>
+                </div>
+
+                <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+                  {newAddonOptions.length === 0 ? (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
+                      لم يتم إضافة أي خيارات بعد
+                    </p>
+                  ) : (
+                    newAddonOptions.map((option, index) => (
+                      <div
+                        key={option.id}
+                        className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-600"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            خيار #{index + 1}
+                          </span>
+                          <button
+                            onClick={() => removeNewOptionField(option.id)}
+                            className="text-red-500 hover:text-red-700 transition-colors"
+                            type="button"
+                          >
+                            <FaTrash className="text-xs" />
+                          </button>
+                        </div>
+                        <div className="space-y-2">
+                          <div>
+                            <input
+                              type="text"
+                              value={option.name}
+                              onChange={(e) =>
+                                updateNewOptionField(
+                                  option.id,
+                                  "name",
+                                  e.target.value
+                                )
+                              }
+                              className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-[#E41E26] focus:border-transparent"
+                              placeholder="اسم الخيار"
+                            />
+                          </div>
+                          <div>
+                            <input
+                              type="number"
+                              value={option.price}
+                              onChange={(e) =>
+                                updateNewOptionField(
+                                  option.id,
+                                  "price",
+                                  e.target.value
+                                )
+                              }
+                              min="0"
+                              step="0.01"
+                              className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-[#E41E26] focus:border-transparent"
+                              placeholder="السعر (ج.م)"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-8">
+              <button
+                onClick={handleCloseAddonTypeModal}
+                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={handleSaveAddonType}
+                className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                <FaSave />
+                حفظ
               </button>
             </div>
           </motion.div>
@@ -843,6 +1149,21 @@ const ProductDetails = () => {
                   </div>
 
                   <div className="space-y-4 md:space-y-6">
+                    {isAdminOrRestaurantOrBranch && (
+                      <div className="flex justify-end">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={handleOpenAddAddonTypeModal}
+                          className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
+                          dir="rtl"
+                        >
+                          <FaLayerGroup />
+                          إضافة نوع إضافة جديد
+                        </motion.button>
+                      </div>
+                    )}
+
                     {addonsData.length > 0 &&
                       addonsData.map((addon) => (
                         <div
@@ -858,6 +1179,11 @@ const ProductDetails = () => {
                               {addon.isSelectionRequired && (
                                 <span className="text-xs bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-300 px-2 py-1 rounded-full">
                                   مطلوب
+                                </span>
+                              )}
+                              {addon.canSelectMultipleOptions && (
+                                <span className="text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-1 rounded-full">
+                                  متعدد
                                 </span>
                               )}
                             </div>
