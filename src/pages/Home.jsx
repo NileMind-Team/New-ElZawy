@@ -31,8 +31,8 @@ const Home = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const [cartItemsCount, setCartItemsCount] = useState(0);
   const [isAdminOrRestaurantOrBranch, setIsAdminOrRestaurantOrBranch] =
     useState(false);
   const [loading, setLoading] = useState(true);
@@ -193,6 +193,27 @@ const Home = () => {
     fetchProducts();
   }, [selectedCategory]);
 
+  // دالة لجلب عدد العناصر في الكارت
+  const fetchCartItemsCount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const response = await axiosInstance.get("/api/CartItems/GetAll");
+      const cartItems = response.data;
+
+      // حساب العدد الإجمالي للعناصر في الكارت
+      const totalCount = cartItems.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      setCartItemsCount(totalCount);
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+      setCartItemsCount(0);
+    }
+  };
+
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
@@ -207,6 +228,7 @@ const Home = () => {
     };
 
     fetchFavorites();
+    fetchCartItemsCount(); // جلب عدد العناصر في الكارت عند تحميل الصفحة
   }, []);
 
   const getDayName = (dayNumber) => {
@@ -317,8 +339,22 @@ const Home = () => {
     navigate(`/product/${product.id}`, { state: { product } });
   };
 
-  const handleAddToCart = (product, e) => {
+  const handleAddToCart = async (product, e) => {
     e.stopPropagation();
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.warning("يجب تسجيل الدخول لإضافة المنتجات إلى السلة", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+      return;
+    }
 
     if (!product.isActive) {
       Swal.fire({
@@ -331,27 +367,34 @@ const Home = () => {
       return;
     }
 
-    const existingItem = cart.find((item) => item.id === product.id);
+    try {
+      // استخدام الـ API لإضافة المنتج إلى الكارت
+      await axiosInstance.post("/api/CartItems/AddCartItem", {
+        menuItemId: product.id,
+        quantity: 1,
+        options: [], // يمكنك تعديل هذا إذا كان هناك خيارات للمنتج
+      });
 
-    if (existingItem) {
-      setCart(
-        cart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
-    } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
+      // تحديث عدد العناصر في الكارت
+      await fetchCartItemsCount();
+
+      Swal.fire({
+        icon: "success",
+        title: "تم الإضافة إلى السلة!",
+        text: `تم إضافة ${product.name} إلى سلة التسوق`,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "فشل في إضافة المنتج إلى السلة",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
-
-    Swal.fire({
-      icon: "success",
-      title: "تم الإضافة إلى السلة!",
-      text: `تم إضافة ${product.name} إلى سلة التسوق`,
-      timer: 1500,
-      showConfirmButton: false,
-    });
   };
 
   const handleEditProduct = (product, e) => {
@@ -1201,6 +1244,25 @@ const Home = () => {
         </div>
       )}
 
+      {/* زر الكارت - يعتمد على API */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-full p-3 sm:p-4 shadow-2xl z-40 cursor-pointer hover:scale-110 transition-transform duration-200 no-product-details ${
+          cartItemsCount === 0 ? "opacity-70" : ""
+        }`}
+        onClick={() => navigate("/cart")}
+      >
+        <div className="relative">
+          <FaShoppingCart className="w-4 h-4 sm:w-6 sm:h-6" />
+          {cartItemsCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-white text-[#E41E26] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold">
+              {cartItemsCount}
+            </span>
+          )}
+        </div>
+      </motion.div>
+
       <AnimatePresence>
         {showCategoriesManager && (
           <>
@@ -1591,22 +1653,6 @@ const Home = () => {
           </>
         )}
       </AnimatePresence>
-
-      {cart.length > 0 && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-full p-3 sm:p-4 shadow-2xl z-40 cursor-pointer hover:scale-110 transition-transform duration-200 no-product-details"
-          onClick={() => navigate("/cart")}
-        >
-          <div className="relative">
-            <FaShoppingCart className="w-4 h-4 sm:w-6 sm:h-6" />
-            <span className="absolute -top-2 -right-2 bg-white text-[#E41E26] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold">
-              {cart.reduce((total, item) => total + item.quantity, 0)}
-            </span>
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 };
