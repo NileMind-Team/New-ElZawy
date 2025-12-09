@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FaSearch,
   FaShoppingCart,
   FaPlus,
   FaEdit,
@@ -26,11 +25,13 @@ import Swal from "sweetalert2";
 import axiosInstance from "../api/axiosInstance";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import HeroSwipper from "./HeroSwipper"; 
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  // eslint-disable-next-line no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
   const [favorites, setFavorites] = useState([]);
   const [cartItemsCount, setCartItemsCount] = useState(0);
@@ -894,52 +895,10 @@ const Home = () => {
         style={{ zIndex: 9999 }}
       />
 
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute -left-20 -top-20 w-80 h-80 bg-gradient-to-r from-[#E41E26]/10 to-[#FDB913]/10 dark:from-[#E41E26]/5 dark:to-[#FDB913]/5 rounded-full blur-3xl"></div>
-        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-gradient-to-r from-[#FDB913]/10 to-[#E41E26]/10 dark:from-[#FDB913]/5 dark:to-[#E41E26]/5 rounded-full blur-3xl"></div>
-      </div>
+      <HeroSwipper />
 
-      <div className="relative bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white py-8 md:py-16 px-4 text-center w-full">
-        <div className="max-w-4xl mx-auto relative z-10 w-full">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-2 text-center"
-            dir="rtl"
-          >
-            <span className="block sm:inline">مرحباً بكم في</span>{" "}
-            <span className="block sm:inline">Chicken One</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-lg md:text-xl lg:text-2xl opacity-90 mb-6 md:mb-8 px-2"
-          >
-            طعام لذيذ، يصل إليك طازجاً
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative max-w-2xl mx-auto w-full px-2"
-          >
-            <div className="relative">
-              <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
-              <input
-                type="text"
-                placeholder="ابحث عن أطباقك المفضلة..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 md:py-4 rounded-2xl border-none outline-none text-gray-800 dark:text-gray-200 dark:bg-gray-700 shadow-2xl focus:ring-2 focus:ring-[#E41E26] text-sm md:text-base text-right"
-                dir="rtl"
-              />
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      <div className="relative max-w-6xl mx-auto -mt-6 md:-mt-8 px-2 sm:px-4 z-20 w-full">
+      {/* Categories Section */}
+      <div className="relative max-w-6xl mx-auto -mt-8 md:-mt-12 px-2 sm:px-4 z-20 w-full">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-3 md:p-4 relative w-full transition-colors duration-300">
           <button
             onClick={() => scrollCategories("left")}
@@ -1002,6 +961,7 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Products Grid */}
       <div className="relative z-10 w-full">
         {productsLoading ? (
           <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 md:py-6 w-full">
@@ -1012,7 +972,7 @@ const Home = () => {
         ) : filteredProducts.length === 0 ? (
           <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 md:py-6 w-full">
             <div className="text-center py-12 md:py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg mx-2 transition-colors duration-300">
-              <FaSearch className="mx-auto text-4xl md:text-6xl text-gray-400 mb-4" />
+              <FaEye className="mx-auto text-4xl md:text-6xl text-gray-400 mb-4" />
               <h3 className="text-xl md:text-2xl font-semibold text-gray-600 dark:text-gray-400 mb-2">
                 {selectedCategory === "offers"
                   ? "لا توجد عروض حالياً"
@@ -1021,11 +981,10 @@ const Home = () => {
               <p className="text-gray-500 dark:text-gray-500 mb-4 px-4">
                 {selectedCategory === "offers"
                   ? "لا توجد منتجات تحتوي على عروض حالياً"
-                  : "حاول تعديل معايير البحث أو التصفية"}
+                  : "حاول تعديل معايير التصفية"}
               </p>
               <button
                 onClick={() => {
-                  setSearchTerm("");
                   setSelectedCategory("all");
                 }}
                 className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all text-sm md:text-base"
@@ -1346,6 +1305,7 @@ const Home = () => {
         )}
       </div>
 
+      {/* Admin Floating Buttons */}
       {isAdminOrRestaurantOrBranch && (
         <div className="fixed bottom-4 left-4 flex flex-col gap-3 z-40">
           <motion.button
@@ -1439,7 +1399,7 @@ const Home = () => {
         </div>
       )}
 
-      {/* زر الكارت - يعتمد على API */}
+      {/* Cart Button */}
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -1458,6 +1418,7 @@ const Home = () => {
         </div>
       </motion.div>
 
+      {/* Categories Manager Modal */}
       <AnimatePresence>
         {showCategoriesManager && (
           <>
@@ -1481,7 +1442,6 @@ const Home = () => {
                 onClick={(e) => e.stopPropagation()}
                 dir="rtl"
               >
-                {/* Header */}
                 <div className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white p-4 sm:p-6 relative">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 sm:gap-3">
@@ -1507,7 +1467,6 @@ const Home = () => {
                 </div>
 
                 <div className="p-4 sm:p-6">
-                  {/* Add New Category Section */}
                   <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 transition-colors duration-300 shadow-lg">
                     <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                       <div className="bg-[#E41E26]/10 p-2 rounded-xl">
@@ -1600,7 +1559,6 @@ const Home = () => {
                     </div>
                   </div>
 
-                  {/* Current Categories Section */}
                   <div>
                     <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                       <div className="bg-[#FDB913]/10 p-2 rounded-xl">
