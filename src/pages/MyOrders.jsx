@@ -7,11 +7,16 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaShoppingBag,
-  FaSearch,
   FaFilter,
   FaChevronDown,
   FaEdit,
   FaTrash,
+  FaUser,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaTimes,
+  FaReceipt,
+  FaBox,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import axiosInstance from "../api/axiosInstance";
@@ -20,13 +25,19 @@ export default function MyOrders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isAdminOrRestaurantOrBranch, setIsAdminOrRestaurantOrBranch] =
     useState(false);
   const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState({ start: "", end: "" });
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [users, setUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [loadingOrderDetails, setLoadingOrderDetails] = useState(false);
+  const BASE_URL = "https://restaurant-template.runasp.net/";
 
-  // Check user role from API endpoint using axios - Same as Home page
   useEffect(() => {
     const checkUserRole = async () => {
       try {
@@ -64,163 +75,135 @@ export default function MyOrders() {
     checkUserRole();
   }, []);
 
-  // Sample orders data - UPDATED to match OrderTracking structure
-  const sampleOrders = [
-    {
-      id: 1,
-      orderNumber: "CHK001",
-      status: "delivered",
-      statusText: "Delivered",
-      date: "2024-01-15",
-      total: 130.17,
-      subtotal: 127.97,
-      discount: 10,
-      discountAmount: 12.8,
-      deliveryFee: 15,
-      items: [
-        {
-          id: 1,
-          name: "Classic Fried Chicken",
-          quantity: 2,
-          price: 45.99,
-          image:
-            "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&h=300&fit=crop",
-        },
-        {
-          id: 2,
-          name: "Spicy Chicken Wings",
-          quantity: 1,
-          price: 35.99,
-          image:
-            "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&h=300&fit=crop",
-        },
-      ],
-      customerInfo: {
-        name: "Mohamed Ahmed",
-        phone: "+20 123 456 7890",
-        address: "123 Main Street, Cairo, Egypt",
-      },
-      paymentMethod: "Cash on Delivery",
-      estimatedDelivery: "25-35 minutes",
-      createdAt: new Date("2024-01-15").toISOString(),
-    },
-    {
-      id: 2,
-      orderNumber: "CHK002",
-      status: "preparing",
-      statusText: "Preparing",
-      date: "2024-01-16",
-      total: 85.5,
-      subtotal: 70.97,
-      discount: 0,
-      discountAmount: 0,
-      deliveryFee: 15,
-      items: [
-        {
-          id: 3,
-          name: "Chicken Burger",
-          quantity: 1,
-          price: 32.99,
-          image:
-            "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop",
-        },
-        {
-          id: 4,
-          name: "Chocolate Milkshake",
-          quantity: 2,
-          price: 18.99,
-          image:
-            "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&h=300&fit=crop",
-        },
-      ],
-      customerInfo: {
-        name: "Mohamed Ahmed",
-        phone: "+20 123 456 7890",
-        address: "456 Downtown, Cairo, Egypt",
-      },
-      paymentMethod: "Cash on Delivery",
-      estimatedDelivery: "20-30 minutes",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 3,
-      orderNumber: "CHK003",
-      status: "on_the_way",
-      statusText: "On The Way",
-      date: "2024-01-16",
-      total: 60.99,
-      subtotal: 45.99,
-      discount: 0,
-      discountAmount: 0,
-      deliveryFee: 15,
-      items: [
-        {
-          id: 1,
-          name: "Classic Fried Chicken",
-          quantity: 1,
-          price: 45.99,
-          image:
-            "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&h=300&fit=crop",
-        },
-      ],
-      customerInfo: {
-        name: "Mohamed Ahmed",
-        phone: "+20 123 456 7890",
-        address: "789 Garden City, Cairo, Egypt",
-      },
-      paymentMethod: "Cash on Delivery",
-      estimatedDelivery: "15-25 minutes",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 4,
-      orderNumber: "CHK004",
-      status: "cancelled",
-      statusText: "Cancelled",
-      date: "2024-01-14",
-      total: 67.98,
-      subtotal: 71.98,
-      discount: 0,
-      discountAmount: 0,
-      deliveryFee: 15,
-      items: [
-        {
-          id: 2,
-          name: "Spicy Chicken Wings",
-          quantity: 2,
-          price: 35.99,
-          image:
-            "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&h=300&fit=crop",
-        },
-      ],
-      customerInfo: {
-        name: "Mohamed Ahmed",
-        phone: "+20 123 456 7890",
-        address: "321 Heliopolis, Cairo, Egypt",
-      },
-      paymentMethod: "Cash on Delivery",
-      estimatedDelivery: "30-40 minutes",
-      createdAt: new Date("2024-01-14").toISOString(),
-    },
-  ];
+  useEffect(() => {
+    if (isAdminOrRestaurantOrBranch) {
+      const fetchUsers = async () => {
+        try {
+          setLoadingUsers(true);
+          const token = localStorage.getItem("token");
+
+          if (!token) {
+            setUsers([]);
+            return;
+          }
+
+          const response = await axiosInstance.get("/api/Users/GetAll", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          setUsers(response.data || []);
+        } catch (error) {
+          console.error("Error fetching users:", error);
+          setUsers([]);
+        } finally {
+          setLoadingUsers(false);
+        }
+      };
+
+      fetchUsers();
+    }
+  }, [isAdminOrRestaurantOrBranch]);
 
   useEffect(() => {
-    setOrders(sampleOrders);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token");
 
-  const filteredOrders = orders.filter((order) => {
-    const matchesFilter = filter === "all" || order.status === filter;
-    const matchesSearch =
-      order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.items.some((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    return matchesFilter && matchesSearch;
-  });
+        if (!token) {
+          setOrders([]);
+          return;
+        }
+
+        let url = "/api/Orders/GetAllForUser";
+        let params = {};
+
+        if (isAdminOrRestaurantOrBranch) {
+          url = "/api/Orders/GetAll";
+
+          if (filter !== "all") {
+            params.status = filter;
+          }
+
+          if (dateRange.start) {
+            params.startRange = dateRange.start;
+          }
+          if (dateRange.end) {
+            params.endRange = dateRange.end;
+          }
+
+          if (selectedUserId) {
+            params.userId = selectedUserId;
+          }
+        } else {
+          if (filter !== "all") {
+            params.status = filter;
+          }
+
+          if (dateRange.start) {
+            params.startRange = dateRange.start;
+          }
+          if (dateRange.end) {
+            params.endRange = dateRange.end;
+          }
+        }
+
+        const response = await axiosInstance.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: params,
+        });
+
+        setOrders(response.data || []);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to load orders. Please try again.",
+          confirmButtonColor: "#E41E26",
+        });
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!loading) {
+      fetchOrders();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter, dateRange, selectedUserId, isAdminOrRestaurantOrBranch]);
+
+  // Map API status to frontend status
+  const mapStatus = (apiStatus) => {
+    const statusMap = {
+      Pending: "preparing",
+      Preparing: "preparing",
+      OnTheWay: "on_the_way",
+      Delivered: "delivered",
+      Cancelled: "cancelled",
+    };
+    return statusMap[apiStatus] || "preparing";
+  };
+
+  const getStatusText = (apiStatus) => {
+    const textMap = {
+      Pending: "Pending",
+      Preparing: "Preparing",
+      OnTheWay: "On The Way",
+      Delivered: "Delivered",
+      Cancelled: "Cancelled",
+    };
+    return textMap[apiStatus] || apiStatus;
+  };
 
   const getStatusIcon = (status) => {
-    switch (status) {
+    const mappedStatus = mapStatus(status);
+    switch (mappedStatus) {
       case "delivered":
         return <FaCheckCircle className="text-green-500" />;
       case "preparing":
@@ -235,7 +218,8 @@ export default function MyOrders() {
   };
 
   const getStatusColor = (status) => {
-    switch (status) {
+    const mappedStatus = mapStatus(status);
+    switch (mappedStatus) {
       case "delivered":
         return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300";
       case "preparing":
@@ -249,33 +233,30 @@ export default function MyOrders() {
     }
   };
 
-  // Admin Functions - Only for Admin, Restaurant or Branch role
-  const handleChangeOrderStatus = (orderId, e) => {
+  const handleChangeOrderStatus = async (orderId, e) => {
     e.stopPropagation();
 
-    Swal.fire({
+    const result = await Swal.fire({
       title: "Change Order Status",
       input: "select",
       inputOptions: {
-        preparing: "Preparing",
-        on_the_way: "On The Way",
-        delivered: "Delivered",
-        cancelled: "Cancelled",
+        Pending: "Pending",
+        Preparing: "Preparing",
+        OnTheWay: "On The Way",
+        Delivered: "Delivered",
+        Cancelled: "Cancelled",
       },
       inputPlaceholder: "Select status",
       showCancelButton: true,
       confirmButtonColor: "#E41E26",
       cancelButtonColor: "#6B7280",
       confirmButtonText: "Update Status",
-    }).then((result) => {
-      if (result.isConfirmed) {
+    });
+
+    if (result.isConfirmed) {
+      try {
+        localStorage.getItem("token");
         const newStatus = result.value;
-        const statusTextMap = {
-          preparing: "Preparing",
-          on_the_way: "On The Way",
-          delivered: "Delivered",
-          cancelled: "Cancelled",
-        };
 
         setOrders(
           orders.map((order) =>
@@ -283,27 +264,41 @@ export default function MyOrders() {
               ? {
                   ...order,
                   status: newStatus,
-                  statusText: statusTextMap[newStatus],
                 }
               : order
           )
         );
 
+        if (selectedOrder?.id === orderId && orderDetails) {
+          setOrderDetails((prev) => ({
+            ...prev,
+            status: newStatus,
+          }));
+        }
+
         Swal.fire({
           icon: "success",
           title: "Status Updated!",
-          text: `Order status changed to ${statusTextMap[newStatus]}`,
+          text: `Order status changed to ${newStatus}`,
           timer: 2000,
           showConfirmButton: false,
         });
+      } catch (error) {
+        console.error("Error updating order status:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to update order status.",
+          confirmButtonColor: "#E41E26",
+        });
       }
-    });
+    }
   };
 
-  const handleCancelOrder = (orderId, e) => {
+  const handleCancelOrder = async (orderId, e) => {
     e.stopPropagation();
 
-    Swal.fire({
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "You want to cancel this order?",
       icon: "warning",
@@ -311,19 +306,29 @@ export default function MyOrders() {
       confirmButtonColor: "#E41E26",
       cancelButtonColor: "#6B7280",
       confirmButtonText: "Yes, cancel it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
+    });
+
+    if (result.isConfirmed) {
+      try {
+        localStorage.getItem("token");
+
         setOrders(
           orders.map((order) =>
             order.id === orderId
               ? {
                   ...order,
-                  status: "cancelled",
-                  statusText: "Cancelled",
+                  status: "Cancelled",
                 }
               : order
           )
         );
+
+        if (selectedOrder?.id === orderId && orderDetails) {
+          setOrderDetails((prev) => ({
+            ...prev,
+            status: "Cancelled",
+          }));
+        }
 
         Swal.fire({
           title: "Cancelled!",
@@ -332,62 +337,86 @@ export default function MyOrders() {
           timer: 2000,
           showConfirmButton: false,
         });
+      } catch (error) {
+        console.error("Error cancelling order:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to cancel order.",
+          confirmButtonColor: "#E41E26",
+        });
       }
-    });
+    }
   };
 
-  const handleOrderClick = (order) => {
-    if (order.status === "preparing" || order.status === "on_the_way") {
-      // Save the COMPLETE order data to localStorage for tracking page
-      localStorage.setItem("currentOrder", JSON.stringify(order));
-      navigate("/order-tracking", {
-        state: { orderNumber: order.orderNumber },
-      });
-    } else {
+  const handleOrderClick = async (order) => {
+    setSelectedOrder(order);
+    setLoadingOrderDetails(true);
+
+    try {
+      const token = localStorage.getItem("token");
+      let details;
+
+      if (isAdminOrRestaurantOrBranch) {
+        const response = await axiosInstance.get(
+          `/api/Orders/GetById/${order.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        details = response.data;
+      } else {
+        const response = await axiosInstance.get(
+          `/api/Orders/GetByForUserId/${order.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        details = response.data;
+      }
+
+      setOrderDetails(details);
+    } catch (error) {
+      console.error("Error fetching order details:", error);
       Swal.fire({
-        title: "Order Details",
-        html: `
-          <div class="text-left">
-            <div class="bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] rounded-xl p-4 mb-4">
-              <h3 class="font-bold text-gray-800 mb-2">Order #${
-                order.orderNumber
-              }</h3>
-              <p class="text-sm text-gray-600">Status: <span class="font-semibold ${getStatusColor(
-                order.status
-              )} px-2 py-1 rounded-full text-xs">${order.statusText}</span></p>
-              <p class="text-sm text-gray-600">Date: ${new Date(
-                order.date
-              ).toLocaleDateString()}</p>
-            </div>
-            <div class="space-y-2">
-              ${order.items
-                .map(
-                  (item) => `
-                <div class="flex justify-between text-sm">
-                  <span>${item.name} × ${item.quantity}</span>
-                  <span class="font-semibold">EGP ${(
-                    item.price * item.quantity
-                  ).toFixed(2)}</span>
-                </div>
-              `
-                )
-                .join("")}
-            </div>
-            <div class="border-t mt-3 pt-3">
-              <div class="flex justify-between font-bold">
-                <span>Total:</span>
-                <span class="text-[#E41E26]">EGP ${order.total.toFixed(
-                  2
-                )}</span>
-              </div>
-            </div>
-          </div>
-        `,
-        icon: "info",
+        icon: "error",
+        title: "Error",
+        text: "Failed to load order details.",
         confirmButtonColor: "#E41E26",
-        confirmButtonText: "OK",
       });
+    } finally {
+      setLoadingOrderDetails(false);
     }
+  };
+
+  const closeOrderDetails = () => {
+    setSelectedOrder(null);
+    setOrderDetails(null);
+  };
+
+  const handleDateRangeChange = (type, value) => {
+    setDateRange((prev) => ({
+      ...prev,
+      [type]: value,
+    }));
+  };
+
+  const clearDateRange = () => {
+    setDateRange({ start: "", end: "" });
+  };
+
+  const clearUserFilter = () => {
+    setSelectedUserId("");
+  };
+
+  const clearAllFilters = () => {
+    setFilter("all");
+    setDateRange({ start: "", end: "" });
+    setSelectedUserId("");
   };
 
   if (loading) {
@@ -399,280 +428,765 @@ export default function MyOrders() {
   }
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 py-4 sm:py-8 transition-colors duration-300`}
-    >
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8"
-        >
-          <div className="flex items-center gap-3 sm:gap-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate(-1)}
-              className="bg-white/80 backdrop-blur-md rounded-full p-2 sm:p-3 text-[#E41E26] hover:bg-[#E41E26] hover:text-white transition-all duration-300 shadow-lg dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26]"
-            >
-              <FaArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-            </motion.button>
-            <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">
-                My Orders
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-                Track and manage your orders
-              </p>
-            </div>
-          </div>
-          <div className="text-right self-end sm:self-auto">
-            <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#E41E26]">
-              {orders.length} Orders
-            </div>
-            <div className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-              in total
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Search and Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 mb-6 sm:mb-8 relative z-30 dark:bg-gray-800/90"
-        >
-          <div className="flex flex-col sm:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 dark:text-gray-500" />
-              <input
-                type="text"
-                placeholder="Search orders or items..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-            </div>
-
-            {/* Filter */}
-            <div className="flex gap-2 w-full sm:w-auto">
-              <div className="relative w-full sm:w-48">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setOpenDropdown(openDropdown === "orders" ? null : "orders")
-                  }
-                  className="w-full flex items-center justify-between border border-gray-200 bg-white rounded-xl px-4 py-3 text-black focus:ring-2 focus:ring-[#E41E26] transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                >
-                  <span className="flex items-center gap-2">
-                    <FaFilter className="text-[#E41E26]" />
-                    {filter === "all"
-                      ? "All Orders"
-                      : filter === "preparing"
-                      ? "Preparing"
-                      : filter === "on_the_way"
-                      ? "On The Way"
-                      : filter === "delivered"
-                      ? "Delivered"
-                      : "Cancelled"}
-                  </span>
-
-                  <motion.div
-                    animate={{ rotate: openDropdown === "orders" ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <FaChevronDown className="text-[#E41E26]" />
-                  </motion.div>
-                </button>
-
-                <AnimatePresence>
-                  {openDropdown === "orders" && (
-                    <motion.ul
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute z-50 mt-2 w-full bg-white border border-gray-200 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto dark:bg-gray-700 dark:border-gray-600"
-                    >
-                      {[
-                        { value: "all", label: "All Orders" },
-                        { value: "preparing", label: "Preparing" },
-                        { value: "on_the_way", label: "On The Way" },
-                        { value: "delivered", label: "Delivered" },
-                        { value: "cancelled", label: "Cancelled" },
-                      ].map((item) => (
-                        <li
-                          key={item.value}
-                          onClick={() => {
-                            setFilter(item.value);
-                            setOpenDropdown(null);
-                          }}
-                          className="px-4 py-3 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] cursor-pointer text-gray-700 transition-all text-sm sm:text-base border-b border-gray-100 last:border-b-0 dark:hover:from-gray-600 dark:hover:to-gray-500 dark:text-gray-300 dark:border-gray-600"
-                        >
-                          {item.label}
-                        </li>
-                      ))}
-                    </motion.ul>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Orders List */}
-        <div className="space-y-4 sm:space-y-6 relative z-20">
-          <AnimatePresence>
-            {filteredOrders.map((order, index) => (
-              <motion.div
-                key={order.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 cursor-pointer hover:shadow-2xl transition-all duration-300 dark:bg-gray-800/90"
-                onClick={() => handleOrderClick(order)}
-              >
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                  {/* Order Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-3 sm:gap-6 mb-3">
-                      <div className="min-w-0">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 truncate">
-                          Order #{order.orderNumber}
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">
-                          {new Date(order.date).toLocaleDateString("en-US", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </p>
-                      </div>
-                      <div className="flex-shrink-0">
-                        <div
-                          className={`px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(
-                            order.status
-                          )} whitespace-nowrap`}
-                        >
-                          {order.statusText}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Admin Actions - Only show for Admin, Restaurant or Branch role */}
-                    {isAdminOrRestaurantOrBranch && (
-                      <div className="flex gap-2 mb-3">
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={(e) => handleChangeOrderStatus(order.id, e)}
-                          className="flex items-center gap-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-blue-600 transition-colors"
-                        >
-                          <FaEdit size={10} />
-                          Change Status
-                        </motion.button>
-                        {order.status !== "cancelled" && (
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={(e) => handleCancelOrder(order.id, e)}
-                            className="flex items-center gap-1 bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-600 transition-colors"
-                          >
-                            <FaTrash size={10} />
-                            Cancel Order
-                          </motion.button>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Order Items */}
-                    <div className="space-y-2 mb-3">
-                      {order.items.slice(0, 2).map((item, idx) => (
-                        <div key={idx} className="flex justify-between text-sm">
-                          <span className="text-gray-700 dark:text-gray-300 truncate pr-2">
-                            {item.name} × {item.quantity}
-                          </span>
-                          <span className="font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap">
-                            EGP {(item.price * item.quantity).toFixed(2)}
-                          </span>
-                        </div>
-                      ))}
-                      {order.items.length > 2 && (
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          +{order.items.length - 2} more items
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Delivery Info */}
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                      <FaShoppingBag className="text-[#E41E26] flex-shrink-0 w-3 h-3" />
-                      <span className="truncate">
-                        {order.customerInfo.address}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Total and Action */}
-                  <div className="flex flex-row sm:flex-col items-center justify-between sm:items-end lg:items-start gap-3 sm:gap-2 lg:gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-100 dark:border-gray-700">
-                    <div className="text-left sm:text-right lg:text-left">
-                      <div className="text-lg sm:text-xl font-bold text-[#E41E26]">
-                        EGP {order.total.toFixed(2)}
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400 hidden sm:block">
-                        Total Amount
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-[#E41E26]">
-                      {getStatusIcon(order.status)}
-                      <span className="text-sm font-semibold whitespace-nowrap">
-                        {order.status === "preparing" ||
-                        order.status === "on_the_way"
-                          ? "Track Order"
-                          : "View Details"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-
-          {filteredOrders.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-8 sm:py-12"
-            >
-              <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaShoppingBag className="text-gray-400 dark:text-gray-500 text-xl sm:text-3xl" />
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
-                No orders found
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm sm:text-base px-4">
-                {searchTerm || filter !== "all"
-                  ? "Try adjusting your search or filter criteria"
-                  : "You haven't placed any orders yet"}
-              </p>
+    <>
+      <div
+        className={`min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 py-4 sm:py-8 transition-colors duration-300`}
+      >
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8"
+          >
+            <div className="flex items-center gap-3 sm:gap-4">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/")}
-                className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
+                onClick={() => navigate(-1)}
+                className="bg-white/80 backdrop-blur-md rounded-full p-2 sm:p-3 text-[#E41E26] hover:bg-[#E41E26] hover:text-white transition-all duration-300 shadow-lg dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26]"
               >
-                Start Shopping
+                <FaArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.button>
-            </motion.div>
-          )}
+              <div>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">
+                  {isAdminOrRestaurantOrBranch ? "All Orders" : "My Orders"}
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+                  {isAdminOrRestaurantOrBranch
+                    ? "Manage all orders"
+                    : "Track and manage your orders"}
+                </p>
+              </div>
+            </div>
+            <div className="text-right self-end sm:self-auto">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#E41E26]">
+                {orders.length} Orders
+              </div>
+              <div className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+                in total
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Filter Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 mb-6 sm:mb-8 relative z-30 dark:bg-gray-800/90"
+          >
+            <div className="flex flex-col gap-4">
+              {/* Status and User Filters in Same Row */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                {/* Status Filter - Always shown */}
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Status
+                  </label>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setOpenDropdown(
+                          openDropdown === "status" ? null : "status"
+                        )
+                      }
+                      className="w-full flex items-center justify-between border border-gray-200 bg-white rounded-xl px-4 py-3 text-black focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    >
+                      <span className="flex items-center gap-2">
+                        <FaFilter className="text-[#E41E26]" />
+                        {filter === "all"
+                          ? "All Status"
+                          : getStatusText(filter)}
+                      </span>
+                      <motion.div
+                        animate={{
+                          rotate: openDropdown === "status" ? 180 : 0,
+                        }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <FaChevronDown className="text-[#E41E26]" />
+                      </motion.div>
+                    </button>
+
+                    <AnimatePresence>
+                      {openDropdown === "status" && (
+                        <motion.ul
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute z-50 mt-2 w-full bg-white border border-gray-200 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto dark:bg-gray-700 dark:border-gray-600"
+                        >
+                          {[
+                            { value: "all", label: "All Status" },
+                            { value: "Pending", label: "Pending" },
+                            { value: "Preparing", label: "Preparing" },
+                            { value: "OnTheWay", label: "On The Way" },
+                            { value: "Delivered", label: "Delivered" },
+                            { value: "Cancelled", label: "Cancelled" },
+                          ].map((item) => (
+                            <li
+                              key={item.value}
+                              onClick={() => {
+                                setFilter(item.value);
+                                setOpenDropdown(null);
+                              }}
+                              className="px-4 py-3 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] cursor-pointer text-gray-700 transition-all text-sm sm:text-base border-b border-gray-100 last:border-b-0 dark:hover:from-gray-600 dark:hover:to-gray-500 dark:text-gray-300 dark:border-gray-600"
+                            >
+                              {item.label}
+                            </li>
+                          ))}
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                {/* User Filter - Only for admin users */}
+                {isAdminOrRestaurantOrBranch && (
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      User
+                    </label>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setOpenDropdown(
+                            openDropdown === "user" ? null : "user"
+                          )
+                        }
+                        className="w-full flex items-center justify-between border border-gray-200 bg-white rounded-xl px-4 py-3 text-black focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      >
+                        <span className="flex items-center gap-2">
+                          <FaUser className="text-[#E41E26]" />
+                          {selectedUserId
+                            ? users.find((u) => u.id === selectedUserId)
+                                ?.firstName +
+                              " " +
+                              users.find((u) => u.id === selectedUserId)
+                                ?.lastName
+                            : "All Users"}
+                        </span>
+                        <motion.div
+                          animate={{
+                            rotate: openDropdown === "user" ? 180 : 0,
+                          }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <FaChevronDown className="text-[#E41E26]" />
+                        </motion.div>
+                      </button>
+
+                      <AnimatePresence>
+                        {openDropdown === "user" && (
+                          <motion.ul
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -5 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute z-50 mt-2 w-full bg-white border border-gray-200 shadow-2xl rounded-xl overflow-hidden max-h-64 overflow-y-auto dark:bg-gray-700 dark:border-gray-600"
+                          >
+                            <li
+                              onClick={() => {
+                                setSelectedUserId("");
+                                setOpenDropdown(null);
+                              }}
+                              className="px-4 py-3 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] cursor-pointer text-gray-700 transition-all text-sm sm:text-base border-b border-gray-100 dark:hover:from-gray-600 dark:hover:to-gray-500 dark:text-gray-300 dark:border-gray-600"
+                            >
+                              All Users
+                            </li>
+                            {loadingUsers ? (
+                              <li className="px-4 py-3 text-center text-gray-500 dark:text-gray-400">
+                                Loading users...
+                              </li>
+                            ) : (
+                              users.map((user) => (
+                                <li
+                                  key={user.id}
+                                  onClick={() => {
+                                    setSelectedUserId(user.id);
+                                    setOpenDropdown(null);
+                                  }}
+                                  className="px-4 py-3 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] cursor-pointer text-gray-700 transition-all text-sm sm:text-base border-b border-gray-100 last:border-b-0 dark:hover:from-gray-600 dark:hover:to-gray-500 dark:text-gray-300 dark:border-gray-600"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden flex-shrink-0">
+                                      {user.imageUrl &&
+                                      user.imageUrl !==
+                                        "Profiles/Default-Image.jpg" ? (
+                                        <img
+                                          src={`${BASE_URL}${user.imageUrl}`}
+                                          alt={user.firstName}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#E41E26] to-[#FDB913] text-white text-xs">
+                                          {user.firstName?.charAt(0)}
+                                          {user.lastName?.charAt(0)}
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div>
+                                      <div className="font-medium">
+                                        {user.firstName} {user.lastName}
+                                      </div>
+                                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                                        {user.email}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              ))
+                            )}
+                          </motion.ul>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Date Range Filter - Only for admin users */}
+              {isAdminOrRestaurantOrBranch && (
+                <div className="space-y-4">
+                  {/* Date Range Filter */}
+                  <div className="flex flex-col sm:flex-row gap-4 items-end">
+                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Start Date
+                        </label>
+                        <input
+                          type="date"
+                          value={dateRange.start}
+                          onChange={(e) =>
+                            handleDateRangeChange("start", e.target.value)
+                          }
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          End Date
+                        </label>
+                        <input
+                          type="date"
+                          value={dateRange.end}
+                          onChange={(e) =>
+                            handleDateRangeChange("end", e.target.value)
+                          }
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Clear Buttons */}
+                    <div className="flex gap-2">
+                      {(dateRange.start ||
+                        dateRange.end ||
+                        selectedUserId ||
+                        filter !== "all") && (
+                        <>
+                          {(dateRange.start || dateRange.end) && (
+                            <button
+                              onClick={clearDateRange}
+                              className="px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 text-sm sm:text-base whitespace-nowrap"
+                            >
+                              Clear Dates
+                            </button>
+                          )}
+                          {selectedUserId && (
+                            <button
+                              onClick={clearUserFilter}
+                              className="px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 text-sm sm:text-base whitespace-nowrap"
+                            >
+                              Clear User
+                            </button>
+                          )}
+                          <button
+                            onClick={clearAllFilters}
+                            className="px-4 py-3 bg-[#E41E26] text-white rounded-xl hover:bg-[#c91c23] transition-colors duration-200 text-sm sm:text-base whitespace-nowrap"
+                          >
+                            Clear All
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Orders List */}
+          <div className="space-y-4 sm:space-y-6 relative z-20">
+            <AnimatePresence>
+              {orders.map((order, index) => (
+                <motion.div
+                  key={order.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 cursor-pointer hover:shadow-2xl transition-all duration-300 dark:bg-gray-800/90"
+                  onClick={() => handleOrderClick(order)}
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    {/* Order Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-3 sm:gap-6 mb-3">
+                        <div className="min-w-0">
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 truncate">
+                            Order #{order.orderNumber}
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm">
+                            {new Date(order.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                weekday: "long",
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )}
+                          </p>
+                          {isAdminOrRestaurantOrBranch && order.userId && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <FaUser className="text-gray-400 dark:text-gray-500 w-3 h-3" />
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                {users.find((u) => u.id === order.userId)
+                                  ?.firstName || "Unknown User"}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-shrink-0">
+                          <div
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(
+                              order.status
+                            )} whitespace-nowrap`}
+                          >
+                            {getStatusText(order.status)}
+                          </div>
+                        </div>
+                      </div>
+
+                      {isAdminOrRestaurantOrBranch && (
+                        <div className="flex gap-2 mb-3">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={(e) =>
+                              handleChangeOrderStatus(order.id, e)
+                            }
+                            className="flex items-center gap-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-blue-600 transition-colors"
+                          >
+                            <FaEdit size={10} />
+                            Change Status
+                          </motion.button>
+                          {order.status !== "Cancelled" &&
+                            order.status !== "Rejected" && (
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={(e) => handleCancelOrder(order.id, e)}
+                                className="flex items-center gap-1 bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-600 transition-colors"
+                              >
+                                <FaTrash size={10} />
+                                Cancel Order
+                              </motion.button>
+                            )}
+                        </div>
+                      )}
+
+                      {/* Customer/Delivery Info */}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center gap-2">
+                          <FaMapMarkerAlt className="text-[#E41E26] flex-shrink-0 w-3 h-3" />
+                          <span className="truncate">
+                            {order.location?.streetName ||
+                              "Address not specified"}
+                          </span>
+                        </div>
+                        {order.location?.phoneNumber && (
+                          <div className="flex items-center gap-2 sm:ml-4">
+                            <FaPhone className="text-[#E41E26] flex-shrink-0 w-3 h-3" />
+                            <span>{order.location.phoneNumber}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Total and Action */}
+                    <div className="flex flex-row sm:flex-col items-center justify-between sm:items-end lg:items-start gap-3 sm:gap-2 lg:gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-100 dark:border-gray-700">
+                      <div className="text-left sm:text-right lg:text-left">
+                        <div className="text-lg sm:text-xl font-bold text-[#E41E26]">
+                          EGP {order.totalWithFee?.toFixed(2) || "0.00"}
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 hidden sm:block">
+                          Total Amount
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-[#E41E26]">
+                        {getStatusIcon(order.status)}
+                        <span className="text-sm font-semibold whitespace-nowrap">
+                          View Details
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+
+            {orders.length === 0 && !loading && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-8 sm:py-12"
+              >
+                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaShoppingBag className="text-gray-400 dark:text-gray-500 text-xl sm:text-3xl" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+                  No orders found
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm sm:text-base px-4">
+                  {filter !== "all" ||
+                  dateRange.start ||
+                  dateRange.end ||
+                  selectedUserId
+                    ? "Try adjusting your filter criteria"
+                    : "You haven't placed any orders yet"}
+                </p>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate("/")}
+                  className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
+                >
+                  Start Shopping
+                </motion.button>
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Order Details Modal */}
+      <AnimatePresence>
+        {selectedOrder && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeOrderDetails}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            />
+
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+                {/* Modal Header */}
+                <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] dark:from-gray-800 dark:to-gray-700">
+                  <div className="flex items-center gap-3">
+                    <FaReceipt className="text-[#E41E26] text-2xl" />
+                    <div>
+                      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200">
+                        Order #{selectedOrder.orderNumber}
+                      </h2>
+                      {orderDetails && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(
+                              orderDetails.status
+                            )}`}
+                          >
+                            {getStatusText(orderDetails.status)}
+                          </span>
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {new Date(
+                              orderDetails.createdAt
+                            ).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={closeOrderDetails}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
+                  >
+                    <FaTimes className="text-gray-500 dark:text-gray-400 w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Modal Content */}
+                <div className="flex-1 overflow-y-auto p-6">
+                  {loadingOrderDetails ? (
+                    <div className="flex items-center justify-center h-64">
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#E41E26]"></div>
+                    </div>
+                  ) : orderDetails ? (
+                    <div className="space-y-6">
+                      {/* Customer Information */}
+                      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-5">
+                        <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2 text-lg">
+                          <FaUser className="text-[#E41E26]" />
+                          Customer Information
+                        </h3>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3">
+                            <FaPhone className="text-gray-400 dark:text-gray-500" />
+                            <div>
+                              <p className="font-medium text-gray-800 dark:text-gray-200">
+                                {orderDetails.location?.phoneNumber || "N/A"}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start gap-3">
+                            <FaMapMarkerAlt className="text-gray-400 dark:text-gray-500 mt-1 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium text-gray-800 dark:text-gray-200">
+                                {orderDetails.location?.streetName || ""}{" "}
+                                {orderDetails.location?.buildingNumber || ""}
+                              </p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {orderDetails.location?.city?.name || ""} -
+                                Floor {orderDetails.location?.floorNumber || ""}
+                                , Flat {orderDetails.location?.flatNumber || ""}
+                              </p>
+                              {orderDetails.location?.detailedDescription && (
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                  {orderDetails.location.detailedDescription}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Order Items */}
+                      {orderDetails.items && orderDetails.items.length > 0 && (
+                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-5">
+                          <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2 text-lg">
+                            <FaBox className="text-[#E41E26]" />
+                            Order Items ({orderDetails.items.length})
+                          </h3>
+                          <div className="space-y-4">
+                            {orderDetails.items.map((item, index) => (
+                              <div
+                                key={index}
+                                className="flex items-start gap-4 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                              >
+                                <div className="flex-shrink-0 w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+                                  {item.menuItemImageUrlSnapshotAtOrder ? (
+                                    <img
+                                      src={`${BASE_URL}${item.menuItemImageUrlSnapshotAtOrder}`}
+                                      alt={item.menuItemNameSnapshotAtOrder}
+                                      className="w-full h-full object-cover"
+                                      onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src =
+                                          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z'/%3E%3C/svg%3E";
+                                      }}
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-600">
+                                      <FaBox className="text-gray-400 dark:text-gray-500 text-2xl" />
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="font-semibold text-gray-800 dark:text-gray-200 truncate">
+                                    {item.menuItemNameSnapshotAtOrder}
+                                  </h4>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                    Quantity: {item.quantity}
+                                  </p>
+                                  {item.menuItemDescriptionAtOrder && (
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">
+                                      {item.menuItemDescriptionAtOrder}
+                                    </p>
+                                  )}
+                                  {item.options && item.options.length > 0 && (
+                                    <div className="mt-2">
+                                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Options:
+                                      </p>
+                                      <div className="flex flex-wrap gap-1">
+                                        {item.options.map((opt, optIndex) => (
+                                          <span
+                                            key={optIndex}
+                                            className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded"
+                                          >
+                                            {opt.name}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="text-right flex-shrink-0">
+                                  <p className="font-bold text-gray-800 dark:text-gray-200">
+                                    EGP {item.totalPrice?.toFixed(2) || "0.00"}
+                                  </p>
+                                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    EGP{" "}
+                                    {(
+                                      item.menuItemBasePriceSnapshotAtOrder || 0
+                                    ).toFixed(2)}{" "}
+                                    each
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Order Summary */}
+                      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-5">
+                        <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-4 text-lg">
+                          Order Summary
+                        </h3>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600 dark:text-gray-400">
+                              Subtotal:
+                            </span>
+                            <span className="font-medium text-gray-800 dark:text-gray-200">
+                              EGP{" "}
+                              {orderDetails.totalWithoutFee?.toFixed(2) ||
+                                "0.00"}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600 dark:text-gray-400">
+                              Delivery Fee:
+                            </span>
+                            <span className="font-medium text-gray-800 dark:text-gray-200">
+                              EGP{" "}
+                              {orderDetails.deliveryCost?.toFixed(2) || "0.00"}
+                            </span>
+                          </div>
+                          {orderDetails.deliveryFee && (
+                            <div className="text-sm text-gray-500 dark:text-gray-400 pl-4">
+                              <i>
+                                {orderDetails.deliveryFee.areaName} -{" "}
+                                {orderDetails.deliveryFee.estimatedTimeMin}-
+                                {orderDetails.deliveryFee.estimatedTimeMax}{" "}
+                                minutes
+                              </i>
+                            </div>
+                          )}
+                          <div className="border-t pt-3 mt-3">
+                            <div className="flex justify-between font-bold text-lg">
+                              <span className="text-gray-800 dark:text-gray-200">
+                                Total:
+                              </span>
+                              <span className="text-[#E41E26]">
+                                EGP{" "}
+                                {orderDetails.totalWithFee?.toFixed(2) ||
+                                  "0.00"}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Notes */}
+                      {orderDetails.notes && (
+                        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-5">
+                          <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                            <svg
+                              className="w-5 h-5 text-yellow-600 dark:text-yellow-400"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            Special Notes
+                          </h3>
+                          <p className="text-gray-700 dark:text-gray-300">
+                            {orderDetails.notes}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Admin Actions */}
+                      {isAdminOrRestaurantOrBranch && (
+                        <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={(e) =>
+                              handleChangeOrderStatus(orderDetails.id, e)
+                            }
+                            className="flex-1 flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+                          >
+                            <FaEdit />
+                            Change Status
+                          </motion.button>
+                          {orderDetails.status !== "Cancelled" &&
+                            orderDetails.status !== "Rejected" && (
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={(e) =>
+                                  handleCancelOrder(orderDetails.id, e)
+                                }
+                                className="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-red-600 transition-colors"
+                              >
+                                <FaTrash />
+                                Cancel Order
+                              </motion.button>
+                            )}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <FaTimesCircle className="text-red-500 text-4xl mx-auto mb-4" />
+                      <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+                        Failed to load order details
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Please try again later
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
