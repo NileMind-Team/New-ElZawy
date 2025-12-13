@@ -956,10 +956,11 @@ export default function Cart() {
       const response = await axiosInstance.post("/api/Orders/Add", orderData);
 
       if (response.status === 200 || response.status === 201) {
-        const orderNumber = Math.random()
-          .toString(36)
-          .substr(2, 9)
-          .toUpperCase();
+        // const orderNumber = Math.random()
+        //   .toString(36)
+        //   .substr(2, 9)
+        //   .toUpperCase();
+        // <p class="font-semibold text-green-800 dark:text-green-300">رقم الطلب #${orderNumber}</p>
 
         Swal.fire({
           title:
@@ -973,7 +974,6 @@ export default function Cart() {
               </div>
               <p class="text-lg text-gray-600 dark:text-gray-400 mb-4">تم تقديم طلبك بنجاح!</p>
               <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl p-4 border border-green-200 dark:border-green-800">
-                <p class="font-semibold text-green-800 dark:text-green-300">رقم الطلب #${orderNumber}</p>
                 <p class="text-sm text-green-600 dark:text-green-400 mt-1">
                   سيتم تجهيز طلبك في فرع ${selectedBranch.name}
                   ${
@@ -993,7 +993,7 @@ export default function Cart() {
             confirmButton: "px-8 py-3 rounded-xl font-bold text-lg",
           },
         }).then(() => {
-          navigate("/order-tracking", { state: { orderData: response.data } });
+          navigate("/my-orders", { state: { orderData: response.data } });
         });
       }
     } catch (error) {
