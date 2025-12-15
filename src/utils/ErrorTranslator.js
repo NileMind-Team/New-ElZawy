@@ -326,4 +326,105 @@ export const translateErrorMessageAdminBranches = (errorData) => {
   return translatedErrors;
 };
 
+export const translateErrorMessage = (errorData, useHTML = true) => {
+  if (!errorData) return "حدث خطأ غير معروف";
+
+  if (errorData.status === 409 && Array.isArray(errorData.errors)) {
+    const error = errorData.errors[0];
+    switch (error.code) {
+      case "DeliveryFee.AlreadyExists":
+        return "تكلفة توصيل لهذه المنطقة موجودة بالفعل لهذا الفرع";
+      default:
+        return error.description || "حدث خطأ في البيانات المدخلة";
+    }
+  }
+
+  if (errorData.errors && typeof errorData.errors === "object") {
+    const errorMessages = [];
+
+    Object.keys(errorData.errors).forEach((key) => {
+      const errorValue = errorData.errors[key];
+
+      if (Array.isArray(errorValue)) {
+        errorValue.forEach((msg) => {
+          let translatedMsg = msg;
+
+          if (key === "EstimatedTimeMin") {
+            if (
+              msg.includes("greater than 0") ||
+              msg.includes("greater than or equal to 0")
+            ) {
+              translatedMsg = "الحد الأدنى للوقت المتوقع يجب أن يكون أكبر من 0";
+            } else if (msg.includes("required")) {
+              translatedMsg = "الحد الأدنى للوقت المتوقع مطلوب";
+            }
+          } else if (key === "EstimatedTimeMax") {
+            if (msg.includes("greater than minimum")) {
+              translatedMsg =
+                "الحد الأقصى للوقت المتوقع يجب أن يكون أكبر من الحد الأدنى";
+            } else if (msg.includes("required")) {
+              translatedMsg = "الحد الأقصى للوقت المتوقع مطلوب";
+            }
+          } else if (key === "AreaName") {
+            if (msg.includes("required")) {
+              translatedMsg = "اسم المنطقة مطلوب";
+            } else if (msg.includes("already exists")) {
+              translatedMsg = "اسم المنطقة موجود بالفعل";
+            }
+          } else if (key === "Fee") {
+            if (msg.includes("greater than")) {
+              translatedMsg = "تكلفة التوصيل يجب أن تكون أكبر من 0";
+            } else if (msg.includes("required")) {
+              translatedMsg = "تكلفة التوصيل مطلوبة";
+            }
+          } else if (key === "BranchId") {
+            if (msg.includes("required")) {
+              translatedMsg = "الفرع مطلوب";
+            }
+          }
+
+          errorMessages.push(translatedMsg);
+        });
+      } else if (typeof errorValue === "string") {
+        errorMessages.push(errorValue);
+      }
+    });
+
+    if (errorMessages.length > 1) {
+      if (useHTML) {
+        const htmlMessages = errorMessages.map(
+          (msg) =>
+            `<div style="direction: rtl; text-align: right; margin-bottom: 8px; padding-right: 15px; position: relative;">
+             ${msg}
+             <span style="position: absolute; right: 0; top: 0;">-</span>
+           </div>`
+        );
+        return htmlMessages.join("");
+      } else {
+        return errorMessages.map((msg) => `${msg} -`).join("<br>");
+      }
+    } else if (errorMessages.length === 1) {
+      return errorMessages[0];
+    } else {
+      return "بيانات غير صالحة";
+    }
+  }
+
+  if (typeof errorData.message === "string") {
+    const msg = errorData.message.toLowerCase();
+    if (msg.includes("invalid") || msg.includes("credentials")) {
+      return "بيانات غير صحيحة";
+    }
+    if (msg.includes("network") || msg.includes("internet")) {
+      return "يرجى التحقق من اتصالك بالإنترنت";
+    }
+    if (msg.includes("timeout") || msg.includes("time out")) {
+      return "انتهت المهلة، يرجى المحاولة مرة أخرى";
+    }
+    return errorData.message;
+  }
+
+  return "حدث خطأ غير متوقع";
+};
+
 export default ErrorTranslator;
