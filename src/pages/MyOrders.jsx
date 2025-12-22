@@ -20,6 +20,7 @@ import {
   FaPlusCircle,
   FaChevronLeft,
   FaChevronRight,
+  FaSyncAlt,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import axiosInstance from "../api/axiosInstance";
@@ -47,6 +48,12 @@ export default function MyOrders() {
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [selectedOrderForStatus, setSelectedOrderForStatus] = useState(null);
+  const [newStatus, setNewStatus] = useState("");
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+  const statusDropdownRef = useRef(null);
 
   const addTwoHoursToDate = (dateString) => {
     const date = new Date(dateString);
@@ -205,6 +212,8 @@ export default function MyOrders() {
           title: "خطأ",
           text: "فشل تحميل الطلبات. يرجى المحاولة مرة أخرى.",
           confirmButtonColor: "#E41E26",
+          timer: 2500,
+          showConfirmButton: false,
         });
       }
       setOrders([]);
@@ -214,6 +223,117 @@ export default function MyOrders() {
       setFetchingOrders(false);
     }
   };
+
+  const handleUpdateStatus = async (orderId, currentStatus) => {
+    setSelectedOrderForStatus(orders.find((order) => order.id === orderId));
+    setNewStatus(currentStatus || "");
+    setShowStatusModal(true);
+  };
+
+  const submitStatusUpdate = async () => {
+    if (!selectedOrderForStatus || !newStatus) {
+      Swal.fire({
+        icon: "warning",
+        title: "تحذير",
+        text: "يرجى اختيار حالة جديدة",
+        confirmButtonColor: "#E41E26",
+        timer: 2500,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    try {
+      setUpdatingStatus(true);
+      const token = localStorage.getItem("token");
+
+      console.log("Updating order status...", {
+        orderId: selectedOrderForStatus.id,
+        newStatus: newStatus,
+        token: token ? "Token exists" : "No token",
+      });
+
+      const response = await axiosInstance.put(
+        `/api/Orders/UpdateStatus/${selectedOrderForStatus.id}`,
+        { orderStatus: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Status update response:", response);
+
+      if (response.status === 200 || response.status === 204) {
+        closeStatusModal();
+
+        await Swal.fire({
+          icon: "success",
+          title: "تم بنجاح!",
+          text: `تم تحديث حالة الطلب #${
+            selectedOrderForStatus.orderNumber
+          } إلى "${getStatusText(newStatus)}"`,
+          timer: 2500,
+          showConfirmButton: false,
+        });
+
+        setOrders(
+          orders.map((order) =>
+            order.id === selectedOrderForStatus.id
+              ? { ...order, status: newStatus }
+              : order
+          )
+        );
+
+        if (selectedOrder?.id === selectedOrderForStatus.id && orderDetails) {
+          setOrderDetails((prev) => ({
+            ...prev,
+            status: newStatus,
+          }));
+        }
+
+        await fetchOrders();
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+
+      let errorMessage = "فشل تحديث حالة الطلب. يرجى المحاولة مرة أخرى.";
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        errorMessage = error.response.data.message || errorMessage;
+      }
+
+      await Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: errorMessage,
+        timer: 2500,
+        showConfirmButton: false,
+      });
+    } finally {
+      setUpdatingStatus(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        statusDropdownOpen &&
+        statusDropdownRef.current &&
+        !statusDropdownRef.current.contains(event.target) &&
+        !event.target.closest(".status-dropdown-trigger")
+      ) {
+        setStatusDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [statusDropdownOpen]);
 
   useEffect(() => {
     const checkUserRole = async () => {
@@ -404,6 +524,26 @@ export default function MyOrders() {
     }
   };
 
+  const getStatusIconForOption = (status) => {
+    const mappedStatus = mapStatus(status);
+    switch (mappedStatus) {
+      case "delivered":
+        return <FaCheckCircle className="text-green-500 w-4 h-4" />;
+      case "confirmed":
+        return <FaCheckCircle className="text-blue-500 w-4 h-4" />;
+      case "pending":
+        return <FaClock className="text-yellow-500 w-4 h-4" />;
+      case "preparing":
+        return <FaClock className="text-orange-500 w-4 h-4" />;
+      case "out_for_delivery":
+        return <FaShoppingBag className="text-purple-500 w-4 h-4" />;
+      case "cancelled":
+        return <FaTimesCircle className="text-red-500 w-4 h-4" />;
+      default:
+        return <FaClock className="text-gray-500 w-4 h-4" />;
+    }
+  };
+
   const handleCancelOrder = async (orderId, e) => {
     e.stopPropagation();
 
@@ -444,7 +584,7 @@ export default function MyOrders() {
           title: "تم الإلغاء!",
           text: "تم إلغاء الطلب.",
           icon: "success",
-          timer: 2000,
+          timer: 2500,
           showConfirmButton: false,
         });
 
@@ -458,6 +598,8 @@ export default function MyOrders() {
           title: "خطأ",
           text: "فشل إلغاء الطلب.",
           confirmButtonColor: "#E41E26",
+          timer: 2500,
+          showConfirmButton: false,
         });
       }
     }
@@ -537,6 +679,8 @@ export default function MyOrders() {
         title: "خطأ",
         text: "فشل تحميل تفاصيل الطلب.",
         confirmButtonColor: "#E41E26",
+        timer: 2500,
+        showConfirmButton: false,
       });
     } finally {
       setLoadingOrderDetails(false);
@@ -546,6 +690,13 @@ export default function MyOrders() {
   const closeOrderDetails = () => {
     setSelectedOrder(null);
     setOrderDetails(null);
+  };
+
+  const closeStatusModal = () => {
+    setShowStatusModal(false);
+    setSelectedOrderForStatus(null);
+    setNewStatus("");
+    setStatusDropdownOpen(false);
   };
 
   const handleDateRangeChange = (type, value) => {
@@ -624,6 +775,15 @@ export default function MyOrders() {
 
     return range;
   };
+
+  const statusOptions = [
+    { value: "Pending", label: "قيد الانتظار" },
+    { value: "Confirmed", label: "تم التأكيد" },
+    { value: "Preparing", label: "قيد التحضير" },
+    { value: "OutForDelivery", label: "قيد التوصيل" },
+    { value: "Delivered", label: "تم التوصيل" },
+    { value: "Cancelled", label: "ملغي" },
+  ];
 
   if (loading && isInitialLoad) {
     return (
@@ -1043,6 +1203,18 @@ export default function MyOrders() {
 
                           {isAdminOrRestaurantOrBranch && (
                             <div className="flex gap-2 mb-3">
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleUpdateStatus(order.id, order.status);
+                                }}
+                                className="flex items-center gap-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:from-blue-600 hover:to-blue-700 transition-all"
+                              >
+                                <FaSyncAlt size={10} />
+                                تغيير الحالة
+                              </motion.button>
                               {order.status !== "Cancelled" &&
                                 order.status !== "Rejected" && (
                                   <motion.button
@@ -1202,6 +1374,201 @@ export default function MyOrders() {
           )}
         </div>
       </div>
+
+      {/* Status Update Modal */}
+      <AnimatePresence>
+        {showStatusModal && selectedOrderForStatus && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeStatusModal}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed inset-0 z-[101] flex items-center justify-center p-4"
+            >
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md overflow-visible mx-auto relative">
+                {/* Modal Header */}
+                <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-5 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <FaSyncAlt className="text-white text-xl sm:text-2xl" />
+                      <h2 className="text-lg sm:text-xl font-bold text-white">
+                        تغيير حالة الطلب
+                      </h2>
+                    </div>
+                    <button
+                      onClick={closeStatusModal}
+                      className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
+                    >
+                      <FaTimes className="text-white w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+                  </div>
+                  <p className="text-blue-100 text-sm sm:text-base mt-2">
+                    طلب #{selectedOrderForStatus.orderNumber}
+                  </p>
+                </div>
+
+                {/* Modal Content */}
+                <div className="p-5 sm:p-6 relative">
+                  <div className="mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        الحالة الحالية:
+                      </span>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                          selectedOrderForStatus.status
+                        )}`}
+                      >
+                        {getStatusText(selectedOrderForStatus.status)}
+                      </span>
+                    </div>
+
+                    <div className="space-y-4">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        اختر الحالة الجديدة:
+                      </label>
+
+                      {/* Custom Dropdown - Same design as main filter */}
+                      <div className="relative" ref={statusDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setStatusDropdownOpen(!statusDropdownOpen)
+                          }
+                          className="status-dropdown-trigger w-full flex items-center justify-between border border-gray-200 bg-white dark:bg-gray-700 dark:border-gray-600 rounded-xl px-4 py-3 text-black dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        >
+                          <span className="flex items-center gap-2">
+                            <FaFilter className="text-blue-500" />
+                            {newStatus
+                              ? getStatusText(newStatus)
+                              : "اختر حالة جديدة"}
+                          </span>
+                          <motion.div
+                            animate={{ rotate: statusDropdownOpen ? 180 : 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <FaChevronDown className="text-blue-500" />
+                          </motion.div>
+                        </button>
+
+                        <AnimatePresence>
+                          {statusDropdownOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -5 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -5 }}
+                              transition={{ duration: 0.2 }}
+                              className="absolute z-[1000] mt-2 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto"
+                              style={{
+                                position: "absolute",
+                                top: "100%",
+                                left: 0,
+                                right: 0,
+                              }}
+                            >
+                              {statusOptions.map((option) => (
+                                <div
+                                  key={option.value}
+                                  onClick={() => {
+                                    setNewStatus(option.value);
+                                    setStatusDropdownOpen(false);
+                                  }}
+                                  className="px-4 py-3 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-600 dark:hover:to-gray-500 cursor-pointer text-gray-700 dark:text-gray-300 transition-all border-b border-gray-100 dark:border-gray-600 last:border-b-0"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    {getStatusIconForOption(option.value)}
+                                    <span>{option.label}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      {newStatus &&
+                        newStatus !== selectedOrderForStatus.status && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg mt-4"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
+                                  سيتم تغيير الحالة من:
+                                </p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <div
+                                    className={`px-2 py-1 rounded text-xs ${getStatusColor(
+                                      selectedOrderForStatus.status
+                                    )}`}
+                                  >
+                                    {getStatusText(
+                                      selectedOrderForStatus.status
+                                    )}
+                                  </div>
+                                  <span className="text-gray-500">→</span>
+                                  <div
+                                    className={`px-2 py-1 rounded text-xs ${getStatusColor(
+                                      newStatus
+                                    )}`}
+                                  >
+                                    {getStatusText(newStatus)}
+                                  </div>
+                                </div>
+                              </div>
+                              {getStatusIconForOption(newStatus)}
+                            </div>
+                          </motion.div>
+                        )}
+                    </div>
+                  </div>
+
+                  {/* Modal Actions */}
+                  <div className="flex gap-3">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={closeStatusModal}
+                      disabled={updatingStatus}
+                      className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
+                    >
+                      إلغاء
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={submitStatusUpdate}
+                      disabled={updatingStatus || !newStatus}
+                      className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {updatingStatus ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          جاري التحديث...
+                        </div>
+                      ) : (
+                        "تحديث الحالة"
+                      )}
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {selectedOrder && (
@@ -1562,6 +1929,21 @@ export default function MyOrders() {
                       {/* Admin Actions */}
                       {isAdminOrRestaurantOrBranch && (
                         <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUpdateStatus(
+                                orderDetails.id,
+                                orderDetails.status
+                              );
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all text-sm sm:text-base"
+                          >
+                            <FaSyncAlt className="w-3 h-3 sm:w-4 sm:h-4" />
+                            تغيير حالة الطلب
+                          </motion.button>
                           {orderDetails.status !== "Cancelled" &&
                             orderDetails.status !== "Rejected" && (
                               <motion.button

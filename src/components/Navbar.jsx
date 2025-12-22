@@ -16,7 +16,6 @@ import {
   FaSun,
   FaMoneyBillWave,
   FaCity,
-  FaCashRegister,
   FaStore,
   FaCodeBranch,
   FaUserCircle,
@@ -172,10 +171,10 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
     navigate("/admin/cities");
   };
 
-  const handleCashierClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/cashier");
-  };
+  // const handleCashierClick = () => {
+  //   setIsSidebarOpen(false);
+  //   navigate("/cashier");
+  // };
 
   const handleItemOffersClick = () => {
     setIsSidebarOpen(false);
@@ -260,7 +259,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
   const getInitial = (name) => (!name ? "?" : name.charAt(0).toUpperCase());
 
-  const hasCashierAccess = isAdmin || isRestaurant || isBranch;
+  // const hasCashierAccess = isAdmin || isRestaurant || isBranch;
 
   if (loading) {
     return (
@@ -536,7 +535,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                     </button>
                   </motion.div>
 
-                  {hasCashierAccess && (
+                  {/* {hasCashierAccess && (
                     <motion.div
                       whileHover={{ scale: 1.02, x: -4 }}
                       whileTap={{ scale: 0.98 }}
@@ -552,7 +551,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                         <span className="text-lg">الكاشير</span>
                       </button>
                     </motion.div>
-                  )}
+                  )} */}
 
                   {isAdmin && (
                     <>

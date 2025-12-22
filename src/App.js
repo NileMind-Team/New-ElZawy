@@ -18,7 +18,6 @@ import AdminBranches from "./pages/AdminBranches";
 import DeliveryCostManagement from "./pages/DeliveryCostManagement";
 import CitiesManagement from "./pages/CitiesManagement";
 import ProductDetails from "./pages/ProductDetails";
-import Cashier from "./pages/Cashier";
 import Favorites from "./pages/Favorites";
 import Branches from "./pages/Branches";
 import ItemOffersManagement from "./pages/ItemOffersManagement";
@@ -107,7 +106,7 @@ function App() {
           {/* <Route path="/admin/coupons" element={<CouponsManagement />} /> */}
           <Route path="/admin/cities" element={<CitiesManagement />} />
           <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/cashier" element={<Cashier />} />
+          {/* <Route path="/cashier" element={<Cashier />} /> */}
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/branches" element={<Branches />} />
           <Route path="/admin/item-offers" element={<ItemOffersManagement />} />
