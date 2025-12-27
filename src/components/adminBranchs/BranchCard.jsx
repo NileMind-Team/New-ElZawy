@@ -11,22 +11,17 @@ import {
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
-const BranchCard = ({
-  branch,
-  onEdit,
-  onToggleActive,
-  getPhoneTypeArabic,
-}) => {
+const BranchCard = ({ branch, onEdit, onToggleActive, getPhoneTypeArabic }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 border-2 border-gray-200/50 dark:border-gray-600/50 hover:shadow-lg transition-all duration-300"
+      className="bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 border-2 border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300"
     >
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
         <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white flex items-center justify-center font-semibold text-base sm:text-lg md:text-xl border-2 border-[#FDB913]">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-[#E41E26] text-white flex items-center justify-center font-semibold text-base sm:text-lg md:text-xl border-2 border-white">
               <FaBuilding className="text-sm sm:text-base md:text-lg" />
             </div>
           </div>
@@ -38,19 +33,19 @@ const BranchCard = ({
               </h3>
               <div className="flex items-center gap-2">
                 <div
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  className={`px-2 py-1 rounded-full text-xs font-medium border ${
                     branch.isActive
-                      ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
-                      : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                      ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-300"
+                      : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-300"
                   }`}
                 >
                   {branch.isActive ? "نشط" : "غير نشط"}
                 </div>
                 <div
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  className={`px-2 py-1 rounded-full text-xs font-medium border ${
                     branch.status === "Open"
-                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
-                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-300"
+                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-300"
                   }`}
                 >
                   {branch.status === "Open" ? "مفتوح" : "مغلق"}
@@ -60,39 +55,39 @@ const BranchCard = ({
 
             <div className="space-y-1 sm:space-y-2 text-gray-700 dark:text-gray-300 text-sm sm:text-base">
               <div className="flex items-center gap-2">
-                <FaMapMarkerAlt className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm" />
+                <FaMapMarkerAlt className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm border border-[#E41E26] rounded p-0.5" />
                 <span className="truncate">{branch.address}</span>
               </div>
               <div className="flex items-center gap-2">
-                <FaEnvelope className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm" />
+                <FaEnvelope className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm border border-[#E41E26] rounded p-0.5" />
                 <span className="truncate">{branch.email}</span>
               </div>
               <div className="flex items-center gap-2">
-                <FaClock className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm" />
+                <FaClock className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm border border-[#E41E26] rounded p-0.5" />
                 <span>
                   {branch.openingTime} - {branch.closingTime}
                 </span>
               </div>
               {branch.city && (
                 <div className="flex items-center gap-2">
-                  <FaCity className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm" />
+                  <FaCity className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm border border-[#E41E26] rounded p-0.5" />
                   <span>{branch.city.name}</span>
                 </div>
               )}
               {branch.phoneNumbers && branch.phoneNumbers.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <FaPhone className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm" />
+                  <FaPhone className="text-[#E41E26] flex-shrink-0 text-xs sm:text-sm border border-[#E41E26] rounded p-0.5" />
                   {branch.phoneNumbers.map((phone, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-1 bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded-lg text-xs"
+                      className="flex items-center gap-1 bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded-lg text-xs border border-gray-300 dark:border-gray-500"
                     >
                       <span>{phone.phone}</span>
                       <span className="text-gray-500">
                         ({getPhoneTypeArabic(phone.type)})
                       </span>
                       {phone.isWhatsapp && (
-                        <FaWhatsapp className="text-green-500 text-xs" />
+                        <FaWhatsapp className="text-green-500 text-xs border border-green-500 rounded p-0.5" />
                       )}
                     </div>
                   ))}
@@ -107,7 +102,7 @@ const BranchCard = ({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onEdit(branch)}
-            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border border-blue-300 dark:border-blue-700"
           >
             <FaEdit className="text-xs sm:text-sm" />
             <span className="whitespace-nowrap">تعديل</span>
@@ -116,10 +111,10 @@ const BranchCard = ({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onToggleActive(branch.id, branch.isActive)}
-            className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center ${
+            className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border ${
               branch.isActive
-                ? "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/50"
-                : "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/50"
+                ? "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/50 border-yellow-300 dark:border-yellow-700"
+                : "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/50 border-green-300 dark:border-green-700"
             }`}
           >
             {branch.isActive ? "تعطيل" : "تفعيل"}

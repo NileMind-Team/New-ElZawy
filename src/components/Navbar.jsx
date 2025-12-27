@@ -292,7 +292,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
       </div>
     );
@@ -300,7 +300,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
   return (
     <>
-      <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-lg py-4 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-50 border-b border-[#E41E26]/20 dark:border-gray-700 transition-colors duration-300">
+      <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-lg py-4 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-50 border-b border-[#E41E26]/30 dark:border-gray-700 transition-colors duration-300">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -313,11 +313,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           >
             <img
               src={darkMode ? logoDark : logo}
-              alt="Chicken One logo"
+              alt="New - ElZawy logo"
               className="w-14 h-12 object-contain"
             />
-            <h1 className="hidden md:block text-xl lg:text-2xl font-bold bg-gradient-to-r from-[#E41E26] to-[#FDB913] bg-clip-text text-transparent dark:from-[#FDB913] dark:to-[#E41E26]">
-              Chicken One
+            <h1 className="hidden md:block text-xl lg:text-2xl font-bold text-[#E41E26] dark:text-[#E41E26]">
+              New - ElZawy
             </h1>
           </Link>
         </motion.div>
@@ -327,7 +327,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={toggleDarkMode}
-            className="p-2.5 bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] dark:from-gray-800 dark:to-gray-700 rounded-xl border border-[#FDB913]/30 dark:border-gray-600 hover:shadow-lg transition-all duration-300 flex items-center justify-center"
+            className="p-2.5 bg-white dark:bg-gray-800 rounded-xl border border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
             aria-label={
               darkMode
                 ? "التبديل إلى الوضع النهاري"
@@ -337,7 +337,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
             {darkMode ? (
               <FaSun className="text-yellow-500 text-lg" />
             ) : (
-              <FaMoon className="text-gray-700 text-lg" />
+              <FaMoon className="text-gray-700 dark:text-gray-300 text-lg" />
             )}
           </motion.button>
 
@@ -347,15 +347,15 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
               whileHover={{ scale: 1.05 }}
               onClick={() => setIsSidebarOpen(true)}
             >
-              <div className="flex items-center gap-2 bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] dark:from-gray-800 dark:to-gray-700 px-3 py-2 sm:px-4 sm:py-2 rounded-xl border border-[#FDB913]/30 dark:border-gray-600 hover:shadow-lg transition-all duration-300">
+              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-2 sm:px-4 sm:py-2 rounded-xl border border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                 {userData.avatar ? (
                   <img
                     src={userData.avatar}
                     alt="صورة المستخدم"
-                    className="w-8 h-8 rounded-full object-cover border border-[#FDB913]/50 dark:border-gray-500"
+                    className="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-500"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-[#E41E26] text-white flex items-center justify-center font-semibold border border-[#FDB913]/50 dark:border-gray-500">
+                  <div className="w-8 h-8 rounded-full bg-[#E41E26] text-white flex items-center justify-center font-semibold border border-gray-300 dark:border-gray-500">
                     {getInitial(userData.firstName)}
                   </div>
                 )}
@@ -371,7 +371,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                 whileHover={{ scale: 1.05 }}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <div className="flex items-center gap-2 bg-gradient-to-r from-[#E41E26] to-[#FDB913] px-4 sm:px-6 py-2.5 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl hover:shadow-[#E41E26]/25 transition-all duration-300">
+                <div className="flex items-center gap-2 bg-[#E41E26] px-4 sm:px-6 py-2.5 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl hover:bg-[#d11c24] transition-all duration-300 border border-[#E41E26]">
                   <span>ابدأ الآن</span>
                   <motion.div
                     animate={{ rotate: isDropdownOpen ? 180 : 0 }}
@@ -389,17 +389,17 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full right-0 mt-2 w-64 sm:w-72 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl shadow-2xl rounded-2xl border border-[#E41E26]/20 dark:border-gray-600 overflow-hidden z-50"
+                    className="absolute top-full right-0 mt-2 w-64 sm:w-72 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-300 dark:border-gray-600 overflow-hidden z-50"
                   >
                     <div className="p-2">
-                      <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                         <p
                           className="text-sm text-gray-600 dark:text-gray-400 text-right"
                           dir="rtl"
                         >
                           انضم إلى{" "}
                           <span className="font-semibold text-gray-800 dark:text-gray-200">
-                            Chicken One
+                            New - ElZawy
                           </span>
                         </p>
                         <p
@@ -418,10 +418,10 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                         >
                           <button
                             onClick={() => handleAuthClick(link.path)}
-                            className={`w-full text-right flex items-center justify-between gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-lg ${
+                            className={`w-full text-right flex items-center justify-between gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-lg border ${
                               location.pathname === link.path
-                                ? "bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] dark:from-gray-700 dark:to-gray-600 text-[#E41E26] dark:text-[#FDB913]"
-                                : ""
+                                ? "bg-gray-100 dark:bg-gray-700 text-[#E41E26] dark:text-[#E41E26] border-gray-300 dark:border-gray-600"
+                                : "border-transparent"
                             }`}
                             dir="rtl"
                           >
@@ -460,16 +460,16 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                 damping: 30,
                 stiffness: 300,
               }}
-              className="fixed top-0 right-0 h-full w-full max-w-xs bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-l border-[#E41E26]/20 dark:border-gray-700 z-[70] overflow-y-auto transition-colors duration-300"
+              className="fixed top-0 right-0 h-full w-full max-w-xs bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-l border-gray-300 dark:border-gray-700 z-[70] overflow-y-auto transition-colors duration-300"
             >
-              <div className="relative p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] dark:from-gray-800 dark:to-gray-700">
+              <div className="relative p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setIsSidebarOpen(false)}
-                  className="p-2 absolute top-3 right-3 hover:bg-white/50 dark:hover:bg-gray-600/50 rounded-full transition-colors duration-200"
+                  className="p-2 absolute top-3 right-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200 border border-gray-300 dark:border-gray-600"
                 >
-                  <FaTimes className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                  <FaTimes className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                 </motion.button>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -477,10 +477,10 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                       <img
                         src={userData.avatar}
                         alt="صورة المستخدم"
-                        className="w-12 h-12 rounded-full object-cover border-2 border-[#FDB913] dark:border-[#E41E26]"
+                        className="w-12 h-12 rounded-full object-cover border-2 border-[#E41E26] dark:border-[#E41E26]"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-[#E41E26] text-white flex items-center justify-center font-semibold text-lg border-2 border-[#FDB913] dark:border-[#E41E26]">
+                      <div className="w-12 h-12 rounded-full bg-[#E41E26] text-white flex items-center justify-center font-semibold text-lg border-2 border-[#E41E26] dark:border-[#E41E26]">
                         {getInitial(userData.firstName)}
                       </div>
                     )}
@@ -495,11 +495,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                       <div className="flex flex-wrap gap-1 mt-1">
                         {hasRole("Admin") && (
                           <div
-                            className="flex flex-row items-center gap-1 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 px-2 py-1 rounded-full"
+                            className="flex flex-row items-center gap-1 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 px-2 py-1 rounded-full border border-[#E41E26]/20"
                             dir="rtl"
                           >
-                            <FaUserShield className="text-[#E41E26] dark:text-[#FDB913] text-xs" />
-                            <span className="text-xs text-[#E41E26] dark:text-[#FDB913] font-semibold truncate">
+                            <FaUserShield className="text-[#E41E26] dark:text-[#E41E26] text-xs" />
+                            <span className="text-xs text-[#E41E26] dark:text-[#E41E26] font-semibold truncate">
                               مدير
                             </span>
                           </div>
@@ -507,7 +507,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
                         {hasRole("Restaurant") && (
                           <div
-                            className="flex flex-row items-center gap-1 bg-green-500/10 dark:bg-green-500/20 px-2 py-1 rounded-full"
+                            className="flex flex-row items-center gap-1 bg-green-500/10 dark:bg-green-500/20 px-2 py-1 rounded-full border border-green-500/20"
                             dir="rtl"
                           >
                             <FaStore className="text-green-600 dark:text-green-400 text-xs" />
@@ -519,7 +519,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
                         {hasRole("Branch") && (
                           <div
-                            className="flex flex-row items-center gap-1 bg-blue-500/10 dark:bg-blue-500/20 px-2 py-1 rounded-full"
+                            className="flex flex-row items-center gap-1 bg-blue-500/10 dark:bg-blue-500/20 px-2 py-1 rounded-full border border-blue-500/20"
                             dir="rtl"
                           >
                             <FaCodeBranch className="text-blue-600 dark:text-blue-400 text-xs" />
@@ -531,7 +531,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
                         {hasRole("User") && (
                           <div
-                            className="flex flex-row items-center gap-1 bg-purple-500/10 dark:bg-purple-500/20 px-2 py-1 rounded-full"
+                            className="flex flex-row items-center gap-1 bg-purple-500/10 dark:bg-purple-500/20 px-2 py-1 rounded-full border border-purple-500/20"
                             dir="rtl"
                           >
                             <FaUserCircle className="text-purple-600 dark:text-purple-400 text-xs" />
@@ -554,11 +554,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                   >
                     <button
                       onClick={handleHomeClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                       dir="rtl"
                     >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaHome className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                        <FaHome className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                       </div>
                       <span className="text-lg truncate">الصفحة الرئيسية</span>
                     </button>
@@ -578,14 +578,15 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                         >
                           <button
                             onClick={item.onClick}
-                            className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                            className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                             dir="rtl"
                           >
                             <div
-                              className="flex-shrink-0 p-2 rounded-lg"
+                              className="flex-shrink-0 p-2 rounded-lg border"
                               style={{
                                 backgroundColor: `${item.color}10`,
                                 color: item.color,
+                                borderColor: `${item.color}20`,
                               }}
                             >
                               <item.icon className="text-lg" />
@@ -605,11 +606,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                   >
                     <button
                       onClick={handleProfileClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                       dir="rtl"
                     >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaUser className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                        <FaUser className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                       </div>
                       <span className="text-lg truncate">ملفي الشخصي</span>
                     </button>
@@ -621,11 +622,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                   >
                     <button
                       onClick={handleOrdersClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                       dir="rtl"
                     >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaClipboardList className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                        <FaClipboardList className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                       </div>
                       <span className="text-lg truncate">طلباتي</span>
                     </button>
@@ -637,11 +638,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                   >
                     <button
                       onClick={handleCartClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                       dir="rtl"
                     >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaShoppingCart className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                        <FaShoppingCart className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                       </div>
                       <span className="text-lg truncate">عربة التسوق</span>
                     </button>
@@ -653,11 +654,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                   >
                     <button
                       onClick={handleFavoritesClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                       dir="rtl"
                     >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaHeart className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                        <FaHeart className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                       </div>
                       <span className="text-lg truncate">المفضلة</span>
                     </button>
@@ -669,11 +670,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                   >
                     <button
                       onClick={handleAddressesClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                       dir="rtl"
                     >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaMapMarkerAlt className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                        <FaMapMarkerAlt className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                       </div>
                       <span className="text-lg truncate">عناويني</span>
                     </button>
@@ -685,11 +686,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                   >
                     <button
                       onClick={handleReviewsClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                       dir="rtl"
                     >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaStar className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                        <FaStar className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                       </div>
                       <span className="text-lg truncate">تقييماتي</span>
                     </button>
@@ -701,11 +702,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                   >
                     <button
                       onClick={handleBranchesClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
+                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                       dir="rtl"
                     >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaMap className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                        <FaMap className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                       </div>
                       <span className="text-lg truncate">فروعنا</span>
                     </button>
@@ -718,11 +719,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                     >
                       <button
                         onClick={handleLogout}
-                        className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-[#E41E26] dark:hover:text-[#FDB913] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#E41E26]/30 dark:hover:border-[#FDB913]/30"
+                        className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-[#E41E26] dark:hover:text-[#E41E26] transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-red-200 dark:hover:border-red-800"
                         dir="rtl"
                       >
-                        <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                          <FaSignOutAlt className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
+                        <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#E41E26]/20 rounded-lg border border-[#E41E26]/20">
+                          <FaSignOutAlt className="text-[#E41E26] dark:text-[#E41E26] text-lg" />
                         </div>
                         <span className="text-lg truncate">تسجيل الخروج</span>
                       </button>

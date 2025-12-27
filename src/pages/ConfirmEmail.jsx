@@ -194,11 +194,11 @@ export default function ConfirmEmail() {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4 relative font-sans overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4 relative font-sans overflow-hidden transition-colors duration-300">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-20 -top-20 w-80 h-80 bg-gradient-to-r from-[#E41E26]/10 to-[#FDB913]/10 dark:from-[#E41E26]/20 dark:to-[#FDB913]/20 rounded-full blur-3xl"></div>
-        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-gradient-to-r from-[#FDB913]/10 to-[#E41E26]/10 dark:from-[#FDB913]/20 dark:to-[#E41E26]/20 rounded-full blur-3xl"></div>
+        <div className="absolute -left-20 -top-20 w-80 h-80 bg-gradient-to-r from-[#E41E26]/10 to-[#000000]/10 dark:from-[#E41E26]/20 dark:to-[#000000]/20 rounded-full blur-3xl"></div>
+        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-gradient-to-r from-[#000000]/10 to-[#E41E26]/10 dark:from-[#000000]/20 dark:to-[#E41E26]/20 rounded-full blur-3xl"></div>
       </div>
 
       <motion.div
@@ -209,7 +209,7 @@ export default function ConfirmEmail() {
       >
         {/* Form Background Pattern */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#E41E26]/5 to-transparent rounded-bl-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#FDB913]/5 to-transparent rounded-tr-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#000000]/5 to-transparent rounded-tr-3xl"></div>
 
         <div className="p-8">
           {loading ? (
@@ -219,11 +219,11 @@ export default function ConfirmEmail() {
               className="flex flex-col items-center space-y-6 py-4"
             >
               <div className="relative">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26] dark:border-[#FDB913]"></div>
-                <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FDB913] dark:border-[#E41E26] opacity-75"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
+                <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-t-4 border-b-4 border-[#000000] opacity-75"></div>
               </div>
 
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-[#E41E26] to-[#FDB913] bg-clip-text text-transparent text-center">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-[#E41E26] to-[#000000] bg-clip-text text-transparent text-center">
                 جاري تأكيد بريدك الإلكتروني...
               </h2>
 
@@ -235,7 +235,7 @@ export default function ConfirmEmail() {
               <div className="flex space-x-2 justify-center mt-4">
                 <div className="w-3 h-3 bg-[#E41E26] rounded-full animate-bounce"></div>
                 <div
-                  className="w-3 h-3 bg-[#FDB913] rounded-full animate-bounce"
+                  className="w-3 h-3 bg-[#000000] rounded-full animate-bounce"
                   style={{ animationDelay: "0.2s" }}
                 ></div>
                 <div
@@ -264,7 +264,7 @@ export default function ConfirmEmail() {
                 )}
               </div>
 
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-[#E41E26] to-[#FDB913] bg-clip-text text-transparent text-center">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-[#E41E26] to-[#000000] bg-clip-text text-transparent text-center">
                 {success ? "تم تأكيد البريد الإلكتروني" : "فشل التأكيد"}
               </h2>
 
@@ -277,7 +277,7 @@ export default function ConfirmEmail() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => navigate("/login")}
-                  className="mt-4 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl hover:shadow-[#E41E26]/25 transition-all duration-300"
+                  className="mt-4 bg-[#E41E26] text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl hover:shadow-[#E41E26]/25 transition-all duration-300 hover:bg-[#d11c24] border border-[#E41E26]"
                 >
                   العودة لتسجيل الدخول
                 </motion.button>
@@ -288,7 +288,7 @@ export default function ConfirmEmail() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => navigate("/register")}
-                  className="mt-4 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl hover:shadow-[#E41E26]/25 transition-all duration-300"
+                  className="mt-4 bg-[#E41E26] text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl hover:shadow-[#E41E26]/25 transition-all duration-300 hover:bg-[#d11c24] border border-[#E41E26]"
                 >
                   المحاولة مرة أخرى
                 </motion.button>
@@ -298,7 +298,7 @@ export default function ConfirmEmail() {
               <div className="flex space-x-2 justify-center mt-4">
                 <div className="w-2 h-2 bg-[#E41E26] rounded-full animate-bounce"></div>
                 <div
-                  className="w-2 h-2 bg-[#FDB913] rounded-full animate-bounce"
+                  className="w-2 h-2 bg-[#000000] rounded-full animate-bounce"
                   style={{ animationDelay: "0.2s" }}
                 ></div>
                 <div

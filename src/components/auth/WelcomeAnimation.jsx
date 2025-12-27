@@ -24,7 +24,7 @@ export default function WelcomeAnimation({ userName }) {
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-[#E41E26] to-[#FDB913] bg-clip-text text-transparent mb-4 font-poppins drop-shadow-lg"
+            className="text-4xl md:text-5xl font-extrabold text-[#E41E26] mb-4 font-poppins drop-shadow-lg"
           >
             !مرحباً، {userName}
           </motion.h1>
@@ -40,7 +40,7 @@ export default function WelcomeAnimation({ userName }) {
               animate={{ scale: 1 }}
               transition={{ delay: 0.8, type: "spring" }}
             >
-              <FaCheckCircle className="text-[#FDB913]" size={28} />
+              <FaCheckCircle className="text-[#E41E26]" size={28} />
             </motion.div>
           </motion.div>
         </motion.div>

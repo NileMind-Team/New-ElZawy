@@ -178,6 +178,7 @@ const ProductForm = () => {
         confirmButtonText: "حاول مرة أخرى",
         timer: 2500,
         showConfirmButton: false,
+        confirmButtonColor: "#E41E26",
       });
     }
   };
@@ -1158,7 +1159,7 @@ const ProductForm = () => {
 
   if (isLoadingProduct) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
       </div>
     );
@@ -1166,21 +1167,21 @@ const ProductForm = () => {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-2 xs:px-3 sm:px-4 md:px-6 py-2 xs:py-3 sm:py-6 relative font-sans overflow-hidden transition-colors duration-300`}
+      className={`min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-2 xs:px-3 sm:px-4 md:px-6 py-2 xs:py-3 sm:py-6 relative font-sans overflow-hidden transition-colors duration-300`}
       dir="rtl"
     >
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-8 xs:-left-10 sm:-left-20 -top-8 xs:-top-10 sm:-top-20 w-32 h-32 xs:w-40 xs:h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#E41E26]/10 to-[#FDB913]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
-        <div className="absolute -right-8 xs:-right-10 sm:-right-20 -bottom-8 xs:-bottom-10 sm:-bottom-20 w-32 h-32 xs:w-40 xs:h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#FDB913]/10 to-[#E41E26]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
+        <div className="absolute -left-8 xs:-left-10 sm:-left-20 -top-8 xs:-top-10 sm:-top-20 w-32 h-32 xs:w-40 xs:h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#E41E26]/10 to-[#E41E26]/05 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
+        <div className="absolute -right-8 xs:-right-10 sm:-right-20 -bottom-8 xs:-bottom-10 sm:-bottom-20 w-32 h-32 xs:w-40 xs:h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#E41E26]/05 to-[#E41E26]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, type: "spring" }}
-        className="max-w-6xl xl:max-w-5xl mx-auto bg-white/90 backdrop-blur-xl shadow-lg xs:shadow-xl sm:shadow-2xl rounded-xl xs:rounded-2xl sm:rounded-3xl border border-white/50 relative overflow-hidden dark:bg-gray-800/90 dark:border-gray-700/50"
+        className="max-w-6xl xl:max-w-5xl mx-auto bg-white/90 backdrop-blur-xl shadow-lg xs:shadow-xl sm:shadow-2xl rounded-xl xs:rounded-2xl sm:rounded-3xl border border-gray-200 relative overflow-hidden dark:bg-gray-800/90 dark:border-gray-700"
       >
-        <div className="relative h-28 xs:h-32 sm:h-40 md:h-44 lg:h-52 bg-gradient-to-r from-[#E41E26] to-[#FDB913] overflow-hidden">
+        <div className="relative h-28 xs:h-32 sm:h-40 md:h-44 lg:h-52 bg-[#E41E26] overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="absolute -top-3 xs:-top-4 sm:-top-6 -right-3 xs:-right-4 sm:-right-6 w-12 h-12 xs:w-16 xs:h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 bg-white/10 rounded-full"></div>
           <div className="absolute -bottom-3 xs:-bottom-4 sm:-bottom-6 -left-3 xs:-left-4 sm:-left-6 w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-32 lg:h-32 bg-white/10 rounded-full"></div>
@@ -1189,7 +1190,7 @@ const ProductForm = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => navigate(-1)}
-            className="absolute top-2 xs:top-3 sm:top-6 left-2 xs:left-3 sm:left-6 z-50 bg-white/80 backdrop-blur-md hover:bg-[#E41E26] hover:text-white rounded-full p-1.5 xs:p-2 sm:p-3 text-[#E41E26] border border-[#E41E26]/30 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl group dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26]"
+            className="absolute top-2 xs:top-3 sm:top-6 left-2 xs:left-3 sm:left-6 z-50 bg-white/80 backdrop-blur-md hover:bg-[#E41E26] hover:text-white rounded-full p-1.5 xs:p-2 sm:p-3 text-[#E41E26] border border-[#E41E26] shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl group dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26]"
           >
             <FaArrowLeft
               size={12}
@@ -1232,7 +1233,7 @@ const ProductForm = () => {
             transition={{ delay: 0.4 }}
             className="mt-4 xs:mt-5 sm:mt-6 md:mt-8"
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-lg xs:rounded-xl sm:rounded-2xl p-3 xs:p-4 sm:p-6 md:p-8 border border-gray-200/50 dark:bg-gray-700/80 dark:border-gray-600/50">
+            <div className="bg-white/80 backdrop-blur-sm rounded-lg xs:rounded-xl sm:rounded-2xl p-3 xs:p-4 sm:p-6 md:p-8 border border-gray-200 dark:bg-gray-700/80 dark:border-gray-600">
               <form
                 onSubmit={handleSubmit}
                 className="space-y-4 xs:space-y-5 sm:space-y-6"
@@ -1248,7 +1249,7 @@ const ProductForm = () => {
                         name="Name"
                         value={formData.Name}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-200 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                        className="w-full border border-gray-300 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                         placeholder="اسم المنتج"
                         required
                       />
@@ -1280,8 +1281,8 @@ const ProductForm = () => {
                                 }
                                 className={`flex flex-col items-center gap-1 xs:gap-1.5 sm:gap-2 p-1.5 xs:p-2 sm:p-3 rounded-lg border-2 transition-all duration-200 ${
                                   formData.CategoryId === category.id
-                                    ? "border-[#E41E26] bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] text-[#E41E26] dark:from-gray-600 dark:to-gray-500"
-                                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
+                                    ? "border-[#E41E26] bg-white text-[#E41E26] dark:bg-gray-600"
+                                    : "border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
                                 }`}
                               >
                                 <span className="text-[10px] xs:text-xs sm:text-sm font-medium text-center leading-tight">
@@ -1307,7 +1308,7 @@ const ProductForm = () => {
                             className={`flex items-center justify-center gap-1.5 xs:gap-2 p-2 xs:p-3 rounded-lg border-2 transition-all duration-200 ${
                               !formData.IsPriceBasedOnRequest
                                 ? "border-[#E41E26] bg-white text-[#E41E26] shadow-md dark:bg-gray-600"
-                                : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
+                                : "border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
                             }`}
                           >
                             <FaDollarSign className="text-xs xs:text-sm" />
@@ -1324,7 +1325,7 @@ const ProductForm = () => {
                             className={`flex items-center justify-center gap-1.5 xs:gap-2 p-2 xs:p-3 rounded-lg border-2 transition-all duration-200 ${
                               formData.IsPriceBasedOnRequest
                                 ? "border-[#E41E26] bg-white text-[#E41E26] shadow-md dark:bg-gray-600"
-                                : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
+                                : "border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
                             }`}
                           >
                             <FaQuestionCircle className="text-xs xs:text-sm" />
@@ -1348,7 +1349,7 @@ const ProductForm = () => {
                             step="0.01"
                             min="0.01"
                             onWheel={(e) => e.target.blur()}
-                            className="w-full border border-gray-200 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                            className="w-full border border-gray-300 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                             placeholder="0.00"
                             required={!formData.IsPriceBasedOnRequest}
                           />
@@ -1399,7 +1400,7 @@ const ProductForm = () => {
                           onChange={handleNumberInputChange}
                           min="0"
                           onWheel={(e) => e.target.blur()}
-                          className="w-full border border-gray-200 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white pr-10"
+                          className="w-full border border-gray-300 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white pr-10"
                           placeholder="عدد السعرات الحرارية"
                         />
                       </div>
@@ -1419,7 +1420,7 @@ const ProductForm = () => {
                             onChange={handlePreparationTimeChange}
                             min="0"
                             onWheel={(e) => e.target.blur()}
-                            className="w-full border border-gray-200 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white pr-8"
+                            className="w-full border border-gray-300 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white pr-8"
                             placeholder="من"
                           />
                         </div>
@@ -1432,7 +1433,7 @@ const ProductForm = () => {
                             onChange={handlePreparationTimeChange}
                             min="0"
                             onWheel={(e) => e.target.blur()}
-                            className="w-full border border-gray-200 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white pr-8"
+                            className="w-full border border-gray-300 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white pr-8"
                             placeholder="إلى"
                           />
                         </div>
@@ -1452,7 +1453,7 @@ const ProductForm = () => {
                       <label className="block text-xs sm:text-sm lg:text-base font-semibold text-gray-700 dark:text-gray-300 mb-1 xs:mb-1.5 sm:mb-2">
                         الحالة *
                       </label>
-                      <div className="flex gap-3 bg-gray-50/80 dark:bg-gray-600/80 rounded-lg p-2 xs:p-3 border border-gray-200 dark:border-gray-500">
+                      <div className="flex gap-3 bg-gray-50/80 dark:bg-gray-600/80 rounded-lg p-2 xs:p-3 border border-gray-300 dark:border-gray-500">
                         <label className="flex-1 flex items-center justify-center gap-2 cursor-pointer p-2 xs:p-3 rounded-lg transition-all duration-200 border-2 border-transparent hover:border-[#E41E26]/30">
                           <div className="relative">
                             <input
@@ -1517,7 +1518,7 @@ const ProductForm = () => {
                       <label className="block text-xs sm:text-sm lg:text-base font-semibold text-gray-700 dark:text-gray-300 mb-1 xs:mb-1.5 sm:mb-2">
                         عرض في السلايدر
                       </label>
-                      <div className="flex gap-3 bg-gray-50/80 dark:bg-gray-600/80 rounded-lg p-2 xs:p-3 border border-gray-200 dark:border-gray-500">
+                      <div className="flex gap-3 bg-gray-50/80 dark:bg-gray-600/80 rounded-lg p-2 xs:p-3 border border-gray-300 dark:border-gray-500">
                         <label className="flex-1 flex items-center justify-center gap-2 cursor-pointer p-2 xs:p-3 rounded-lg transition-all duration-200 border-2 border-transparent hover:border-[#E41E26]/30">
                           <div className="relative">
                             <input
@@ -1601,7 +1602,7 @@ const ProductForm = () => {
                           className={`flex-1 flex items-center justify-center gap-1.5 xs:gap-2 p-2 xs:p-2.5 rounded-lg border-2 transition-all duration-200 ${
                             imageInputMode === "upload"
                               ? "border-[#E41E26] bg-white text-[#E41E26] shadow-md dark:bg-gray-600"
-                              : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
+                              : "border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
                           }`}
                         >
                           <FaUpload className="text-xs xs:text-sm" />
@@ -1617,7 +1618,7 @@ const ProductForm = () => {
                           className={`flex-1 flex items-center justify-center gap-1.5 xs:gap-2 p-2 xs:p-2.5 rounded-lg border-2 transition-all duration-200 ${
                             imageInputMode === "url"
                               ? "border-[#E41E26] bg-white text-[#E41E26] shadow-md dark:bg-gray-600"
-                              : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
+                              : "border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
                           }`}
                         >
                           <FaLink className="text-xs xs:text-sm" />
@@ -1681,7 +1682,7 @@ const ProductForm = () => {
                                   value={imageUrl}
                                   onChange={(e) => setImageUrl(e.target.value)}
                                   placeholder="أدخل رابط الصورة"
-                                  className="flex-1 border border-gray-200 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                  className="flex-1 border border-gray-300 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                 />
                                 <motion.button
                                   type="button"
@@ -1693,7 +1694,7 @@ const ProductForm = () => {
                                   }
                                   className={`px-3 xs:px-4 py-2 xs:py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center gap-1.5 xs:gap-2 text-xs xs:text-sm ${
                                     imageUrl.trim() && !isDownloadingImage
-                                      ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white hover:shadow-xl hover:shadow-[#E41E26]/25 cursor-pointer"
+                                      ? "bg-[#E41E26] text-white hover:shadow-xl hover:shadow-[#E41E26]/25 cursor-pointer"
                                       : "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400"
                                   }`}
                                 >
@@ -1753,7 +1754,7 @@ const ProductForm = () => {
                         value={formData.Description}
                         onChange={handleInputChange}
                         rows="3"
-                        className="w-full border border-gray-200 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 resize-none text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                        className="w-full border border-gray-300 bg-white text-black rounded-lg px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 resize-none text-xs sm:text-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                         placeholder="قم بوصف المنتج بالتفصيل..."
                         required
                       />
@@ -1792,7 +1793,7 @@ const ProductForm = () => {
                             className={`bg-white/80 rounded-lg p-3 xs:p-4 border ${
                               isRequired && formData.IsPriceBasedOnRequest
                                 ? "border-yellow-300 border-2"
-                                : "border-gray-200"
+                                : "border-gray-300"
                             } dark:bg-gray-600/80 dark:border-gray-500`}
                           >
                             <div className="flex items-center justify-between mb-3">
@@ -1831,7 +1832,7 @@ const ProductForm = () => {
                                         : optionType.id
                                     )
                                   }
-                                  className="w-full flex items-center justify-between border border-gray-200 bg-white rounded-lg px-3 py-2 text-black focus:ring-2 focus:ring-purple-500 transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                  className="w-full flex items-center justify-between border border-gray-300 bg-white rounded-lg px-3 py-2 text-black focus:ring-2 focus:ring-purple-500 transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                 >
                                   <span>
                                     {optionType.typeId
@@ -1864,7 +1865,7 @@ const ProductForm = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -5 }}
                                     transition={{ duration: 0.2 }}
-                                    className="absolute z-50 mt-1 w-full bg-white border border-gray-200 shadow-2xl rounded-lg overflow-hidden max-h-48 overflow-y-auto dark:bg-gray-600 dark:border-gray-500"
+                                    className="absolute z-50 mt-1 w-full bg-white border border-gray-300 shadow-2xl rounded-lg overflow-hidden max-h-48 overflow-y-auto dark:bg-gray-600 dark:border-gray-500"
                                   >
                                     {optionTypes.map((type) => (
                                       <li
@@ -1922,7 +1923,7 @@ const ProductForm = () => {
                                           e.target.value
                                         )
                                       }
-                                      className="w-full border border-gray-200 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                      className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                       placeholder="اسم الإضافة"
                                       required
                                     />
@@ -1945,7 +1946,7 @@ const ProductForm = () => {
                                       }
                                       step="0.01"
                                       min="0"
-                                      className="w-full border border-gray-200 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                      className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                       placeholder="0.00"
                                       required
                                     />
@@ -2051,7 +2052,7 @@ const ProductForm = () => {
                 )}
 
                 {/*
-                <div className="bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] rounded-lg xs:rounded-xl sm:rounded-2xl p-3 xs:p-4 sm:p-6 border border-[#FDB913]/30 dark:from-gray-600 dark:to-gray-500 dark:border-gray-500">
+                <div className="bg-gradient-to-r from-[#fff5f5] to-[#ffe5e5] rounded-lg xs:rounded-xl sm:rounded-2xl p-3 xs:p-4 sm:p-6 border border-[#E41E26]/30 dark:from-gray-600 dark:to-gray-500 dark:border-gray-500">
                   <div className="flex items-center gap-2 xs:gap-3 mb-3 xs:mb-4">
                     <FaClock className="text-[#E41E26] text-base xs:text-lg sm:text-xl" />
                     <h3 className="text-sm xs:text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200">
@@ -2068,7 +2069,7 @@ const ProductForm = () => {
                       className={`flex items-center justify-center gap-1.5 xs:gap-2 p-2 xs:p-3 rounded-lg border-2 transition-all duration-200 ${
                         formData.availabilityType === "always"
                           ? "border-[#E41E26] bg-white text-[#E41E26] shadow-md dark:bg-gray-600"
-                          : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
+                          : "border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
                       }`}
                     >
                       <FaClock className="text-xs xs:text-sm" />
@@ -2085,7 +2086,7 @@ const ProductForm = () => {
                       className={`flex items-center justify-center gap-1.5 xs:gap-2 p-2 xs:p-3 rounded-lg border-2 transition-all duration-200 ${
                         formData.availabilityType === "custom"
                           ? "border-[#E41E26] bg-white text-[#E41E26] shadow-md dark:bg-gray-600"
-                          : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
+                          : "border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300 dark:hover:border-gray-400"
                       }`}
                     >
                       <FaCalendarAlt className="text-xs xs:text-sm" />
@@ -2107,7 +2108,7 @@ const ProductForm = () => {
                         {schedules.map((schedule, index) => (
                           <div
                             key={schedule.id}
-                            className="bg-white/80 rounded-lg p-3 xs:p-4 border border-gray-200 dark:bg-gray-600/80 dark:border-gray-500"
+                            className="bg-white/80 rounded-lg p-3 xs:p-4 border border-gray-300 dark:bg-gray-600/80 dark:border-gray-500"
                           >
                             <div className="flex items-center justify-between mb-3">
                               <h4 className="text-xs xs:text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -2139,7 +2140,7 @@ const ProductForm = () => {
                                           : schedule.id
                                       )
                                     }
-                                    className="w-full flex items-center justify-between border border-gray-200 bg-white rounded-lg px-3 py-2 text-black focus:ring-2 focus:ring-[#E41E26] transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                    className="w-full flex items-center justify-between border border-gray-300 bg-white rounded-lg px-3 py-2 text-black focus:ring-2 focus:ring-[#E41E26] transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                     required
                                   >
                                     <span>{schedule.Day || "اختر اليوم"}</span>
@@ -2165,7 +2166,7 @@ const ProductForm = () => {
                                       animate={{ opacity: 1, y: 0 }}
                                       exit={{ opacity: 0, y: -5 }}
                                       transition={{ duration: 0.2 }}
-                                      className="absolute z-50 mt-1 w-full bg-white border border-gray-200 shadow-2xl rounded-lg overflow-hidden max-h-48 overflow-y-auto dark:bg-gray-600 dark:border-gray-500"
+                                      className="absolute z-50 mt-1 w-full bg-white border border-gray-300 shadow-2xl rounded-lg overflow-hidden max-h-48 overflow-y-auto dark:bg-gray-600 dark:border-gray-500"
                                     >
                                       {daysOfWeek.map((day) => (
                                         <li
@@ -2178,7 +2179,7 @@ const ProductForm = () => {
                                             );
                                             setOpenDropdown(null);
                                           }}
-                                          className="px-3 py-2 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] cursor-pointer text-gray-700 transition-all text-xs border-b border-gray-100 last:border-b-0 dark:hover:from-gray-500 dark:hover:to-gray-400 dark:text-gray-300 dark:border-gray-500"
+                                          className="px-3 py-2 hover:bg-gradient-to-r hover:from-[#fff5f5] hover:to-[#ffe5e5] cursor-pointer text-gray-700 transition-all text-xs border-b border-gray-100 last:border-b-0 dark:hover:from-gray-500 dark:hover:to-gray-400 dark:text-gray-300 dark:border-gray-500"
                                         >
                                           {day.name}
                                         </li>
@@ -2202,7 +2203,7 @@ const ProductForm = () => {
                                       e.target.value
                                     )
                                   }
-                                  className="w-full border border-gray-200 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                  className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                   required
                                 />
                               </div>
@@ -2221,7 +2222,7 @@ const ProductForm = () => {
                                       e.target.value
                                     )
                                   }
-                                  className="w-full border border-gray-200 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                  className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                   required
                                 />
                               </div>
@@ -2265,7 +2266,7 @@ const ProductForm = () => {
                 </div>
                 */}
 
-                <div className="flex gap-2 xs:gap-3 sm:gap-4 pt-3 xs:pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-600">
+                <div className="flex gap-2 xs:gap-3 sm:gap-4 pt-3 xs:pt-4 sm:pt-6 border-t border-gray-300 dark:border-gray-600">
                   <motion.button
                     type="button"
                     whileHover={{ scale: 1.02 }}
@@ -2295,7 +2296,7 @@ const ProductForm = () => {
                       (!formData.IsPriceBasedOnRequest ||
                         hasRequiredOptionTypes() ||
                         isEditing)
-                        ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white hover:shadow-xl hover:shadow-[#E41E26]/25 cursor-pointer"
+                        ? "bg-[#E41E26] text-white hover:shadow-xl hover:shadow-[#E41E26]/25 cursor-pointer"
                         : "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400"
                     }`}
                   >
@@ -2319,7 +2320,7 @@ const ProductForm = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={handleOpenOptionTypesManager}
-        className="fixed bottom-4 left-4 z-40 bg-purple-500 text-white rounded-full p-3 sm:p-4 shadow-2xl hover:bg-purple-600 transition-colors duration-200"
+        className="fixed bottom-4 left-4 z-40 bg-gray-800 text-white rounded-full p-3 sm:p-4 shadow-2xl hover:bg-gray-900 transition-colors duration-200 border border-white"
       >
         <FaCog className="w-4 h-4 sm:w-6 sm:h-6" />
       </motion.button>
@@ -2343,14 +2344,14 @@ const ProductForm = () => {
               onClick={handleCloseOptionTypesManager}
             >
               <div
-                className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden w-full max-w-4xl mx-auto my-auto max-h-[90vh] overflow-y-auto transition-colors duration-300"
+                className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden w-full max-w-4xl mx-auto my-auto max-h-[90vh] overflow-y-auto transition-colors duration-300 border border-gray-300"
                 onClick={(e) => e.stopPropagation()}
                 dir="rtl"
               >
-                <div className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white p-4 sm:p-6 relative">
+                <div className="bg-[#E41E26] text-white p-4 sm:p-6 relative border-b border-white">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="bg-white/20 p-2 sm:p-3 rounded-2xl backdrop-blur-sm">
+                      <div className="bg-white/20 p-2 sm:p-3 rounded-2xl backdrop-blur-sm border border-white">
                         <FaCog className="text-xl sm:text-2xl" />
                       </div>
                       <div>
@@ -2364,7 +2365,7 @@ const ProductForm = () => {
                     </div>
                     <button
                       onClick={handleCloseOptionTypesManager}
-                      className="bg-white/20 backdrop-blur-sm rounded-full p-2 sm:p-3 text-white hover:bg-white/30 transition-all duration-200 hover:scale-110"
+                      className="bg-white/20 backdrop-blur-sm rounded-full p-2 sm:p-3 text-white hover:bg-white/30 transition-all duration-200 hover:scale-110 border border-white"
                     >
                       <FaTimes size={16} className="sm:w-5" />
                     </button>
@@ -2372,9 +2373,9 @@ const ProductForm = () => {
                 </div>
 
                 <div className="p-4 sm:p-6">
-                  <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 transition-colors duration-300 shadow-lg">
+                  <div className="bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 transition-colors duration-300 shadow-lg">
                     <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                      <div className="bg-[#E41E26]/10 p-2 rounded-xl">
+                      <div className="bg-[#E41E26]/10 p-2 rounded-xl border border-[#E41E26]/20">
                         <FaPlus className="text-[#E41E26] text-base sm:text-lg" />
                       </div>
                       <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200">
@@ -2399,7 +2400,7 @@ const ProductForm = () => {
                               })
                             }
                             placeholder="أدخل اسم نوع الإضافة الجديد..."
-                            className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-600 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-[#E41E26] outline-none transition-all text-right text-base sm:text-lg font-medium"
+                            className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-600 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-[#E41E26] outline-none transition-all text-right text-base sm:text-lg font-medium"
                           />
                         </div>
                       </div>
@@ -2422,7 +2423,7 @@ const ProductForm = () => {
                               <div
                                 className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
                                   newOptionType.canSelectMultipleOptions
-                                    ? "bg-green-500 border-green-500"
+                                    ? "bg-green-500 border-green-600"
                                     : "bg-white border-gray-300 dark:bg-gray-600 dark:border-gray-500"
                                 }`}
                               >
@@ -2459,7 +2460,7 @@ const ProductForm = () => {
                               <div
                                 className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
                                   newOptionType.isSelectionRequired
-                                    ? "bg-red-500 border-red-500"
+                                    ? "bg-red-500 border-red-600"
                                     : "bg-white border-gray-300 dark:bg-gray-600 dark:border-gray-500"
                                 }`}
                               >
@@ -2486,7 +2487,7 @@ const ProductForm = () => {
                         whileHover={{ scale: 1.02, y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={handleAddOptionType}
-                        className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold hover:shadow-xl transition-all flex items-center gap-2 sm:gap-3 text-sm sm:text-base shadow-lg"
+                        className="bg-green-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold hover:shadow-xl transition-all flex items-center gap-2 sm:gap-3 text-sm sm:text-base shadow-lg border border-green-600 hover:bg-green-600"
                       >
                         <FaPlus />
                         إضافة نوع إضافة جديد
@@ -2496,8 +2497,8 @@ const ProductForm = () => {
 
                   <div>
                     <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                      <div className="bg-[#FDB913]/10 p-2 rounded-xl">
-                        <FaList className="text-[#FDB913] text-base sm:text-lg" />
+                      <div className="bg-[#E41E26]/10 p-2 rounded-xl border border-[#E41E26]/20">
+                        <FaList className="text-[#E41E26] text-base sm:text-lg" />
                       </div>
                       <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200">
                         أنواع الإضافات الحالية ({optionTypes.length})
@@ -2510,7 +2511,7 @@ const ProductForm = () => {
                           key={optionType.id}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 hover:border-[#E41E26]/30 dark:hover:border-[#E41E26]/30 rounded-2xl p-4 sm:p-6 transition-all duration-300 hover:shadow-lg group"
+                          className="bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 hover:border-[#E41E26]/30 dark:hover:border-[#E41E26]/30 rounded-2xl p-4 sm:p-6 transition-all duration-300 hover:shadow-lg group"
                         >
                           {editingOptionType &&
                           editingOptionType.id === optionType.id ? (
@@ -2529,7 +2530,7 @@ const ProductForm = () => {
                                         name: e.target.value,
                                       })
                                     }
-                                    className="w-full px-3 sm:px-4 py-3 sm:py-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-600 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-[#E41E26] outline-none transition-all text-right text-base sm:text-lg font-medium"
+                                    className="w-full px-3 sm:px-4 py-3 sm:py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-600 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-[#E41E26] outline-none transition-all text-right text-base sm:text-lg font-medium"
                                     dir="rtl"
                                   />
                                 </div>
@@ -2556,7 +2557,7 @@ const ProductForm = () => {
                                       <div
                                         className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
                                           editingOptionType.canSelectMultipleOptions
-                                            ? "bg-green-500 border-green-500"
+                                            ? "bg-green-500 border-green-600"
                                             : "bg-white border-gray-300 dark:bg-gray-600 dark:border-gray-500"
                                         }`}
                                       >
@@ -2596,7 +2597,7 @@ const ProductForm = () => {
                                       <div
                                         className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
                                           editingOptionType.isSelectionRequired
-                                            ? "bg-red-500 border-red-500"
+                                            ? "bg-red-500 border-red-600"
                                             : "bg-white border-gray-300 dark:bg-gray-600 dark:border-gray-500"
                                         }`}
                                       >
@@ -2618,7 +2619,7 @@ const ProductForm = () => {
                                 </div>
                               </div>
 
-                              <div className="flex gap-2 sm:gap-3 justify-start pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-600">
+                              <div className="flex gap-2 sm:gap-3 justify-start pt-3 sm:pt-4 border-t border-gray-300 dark:border-gray-600">
                                 <motion.button
                                   whileHover={{ scale: 1.02 }}
                                   whileTap={{ scale: 0.98 }}
@@ -2631,7 +2632,7 @@ const ProductForm = () => {
                                   whileHover={{ scale: 1.02, y: -2 }}
                                   whileTap={{ scale: 0.98 }}
                                   onClick={handleSaveOptionType}
-                                  className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 text-sm sm:text-base shadow-lg"
+                                  className="bg-[#E41E26] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 text-sm sm:text-base shadow-lg border border-[#E41E26] hover:bg-[#d11c24]"
                                 >
                                   <FaSave />
                                   حفظ التغييرات
@@ -2642,7 +2643,7 @@ const ProductForm = () => {
                             // View Mode
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                               <div className="flex items-center gap-3 sm:gap-4">
-                                <div className="bg-blue-100 dark:bg-blue-900/30 p-2 sm:p-3 rounded-xl">
+                                <div className="bg-blue-100 dark:bg-blue-900/30 p-2 sm:p-3 rounded-xl border border-blue-200">
                                   <FaCog className="text-blue-600 text-base sm:text-lg" />
                                 </div>
                                 <div>
@@ -2656,10 +2657,10 @@ const ProductForm = () => {
                                   </h4>
                                   <div className="flex gap-3 mt-2">
                                     <div
-                                      className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 ${
+                                      className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 border ${
                                         optionType.canSelectMultipleOptions
-                                          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
-                                          : "bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-300"
+                                          ? "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700"
+                                          : "bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:border-gray-500"
                                       }`}
                                     >
                                       {optionType.canSelectMultipleOptions ? (
@@ -2675,10 +2676,10 @@ const ProductForm = () => {
                                       )}
                                     </div>
                                     <div
-                                      className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 ${
+                                      className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 border ${
                                         optionType.isSelectionRequired
-                                          ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
-                                          : "bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-300"
+                                          ? "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700"
+                                          : "bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:border-gray-500"
                                       }`}
                                     >
                                       {optionType.isSelectionRequired ? (
@@ -2704,7 +2705,7 @@ const ProductForm = () => {
                                   onClick={() =>
                                     handleEditOptionType(optionType)
                                   }
-                                  className="bg-blue-500 text-white p-2 sm:p-3 rounded-xl hover:bg-blue-600 transition-all shadow-md"
+                                  className="bg-blue-500 text-white p-2 sm:p-3 rounded-xl hover:bg-blue-600 transition-all shadow-md border border-blue-600"
                                   title="تعديل نوع الإضافة"
                                 >
                                   <FaEdit size={16} className="sm:w-4 sm:h-4" />
@@ -2715,7 +2716,7 @@ const ProductForm = () => {
                                   onClick={() =>
                                     handleDeleteOptionType(optionType.id)
                                   }
-                                  className="bg-red-500 text-white p-2 sm:p-3 rounded-xl hover:bg-red-600 transition-all shadow-md"
+                                  className="bg-red-500 text-white p-2 sm:p-3 rounded-xl hover:bg-red-600 transition-all shadow-md border border-red-600"
                                   title="حذف نوع الإضافة"
                                 >
                                   <FaTrash

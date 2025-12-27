@@ -74,7 +74,7 @@ const ProductDetails = () => {
         icon: type,
         title: title,
         text: text,
-        confirmButtonColor: options.confirmButtonColor || "#E41E26",
+        confirmButtonColor: options.confirmButtonColor || "#E41E26", // Updated: Red primary color
         timer: options.timer || 2500,
         showConfirmButton:
           options.showConfirmButton !== undefined
@@ -145,7 +145,7 @@ const ProductDetails = () => {
         icon: type,
         title: title,
         text: text,
-        confirmButtonColor: options.confirmButtonColor || "#E41E26",
+        confirmButtonColor: options.confirmButtonColor || "#E41E26", // Updated: Red primary color
         timer: options.timer || 2500,
         showConfirmButton:
           options.showConfirmButton !== undefined
@@ -502,7 +502,7 @@ const ProductDetails = () => {
         text: "يجب تسجيل الدخول لإضافة المنتجات إلى السلة",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#E41E26",
+        confirmButtonColor: "#E41E26", // Updated: Red primary color
         cancelButtonColor: "#6B7280",
         confirmButtonText: "تسجيل الدخول",
         cancelButtonText: "إنشاء حساب جديد",
@@ -590,7 +590,7 @@ const ProductDetails = () => {
       text: "لن تتمكن من التراجع عن هذا الإجراء!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#E41E26",
+      confirmButtonColor: "#E41E26", // Updated: Red primary color
       cancelButtonColor: "#6B7280",
       confirmButtonText: "نعم، احذفه!",
       cancelButtonText: "إلغاء",
@@ -760,7 +760,7 @@ const ProductDetails = () => {
       text: "لن تتمكن من التراجع عن هذا الإجراء!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#E41E26",
+      confirmButtonColor: "#E41E26", // Updated: Red primary color
       cancelButtonColor: "#6B7280",
       confirmButtonText: "نعم، احذفه!",
       cancelButtonText: "إلغاء",
@@ -923,7 +923,7 @@ const ProductDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
       </div>
     );
@@ -931,14 +931,14 @@ const ProductDetails = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
             المنتج غير موجود
           </h2>
           <button
             onClick={() => navigate("/")}
-            className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
+            className="bg-[#E41E26] text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all border border-[#E41E26] hover:bg-[#d11c24]"
           >
             العودة للرئيسية
           </button>
@@ -948,7 +948,7 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-300">
       {/* Option Modal */}
       {showOptionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -956,7 +956,7 @@ const ProductDetails = () => {
             ref={modalRef}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6"
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 border border-gray-300"
             dir="rtl"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1008,13 +1008,13 @@ const ProductDetails = () => {
             <div className="flex gap-3 mt-8">
               <button
                 onClick={handleCloseOptionModal}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300"
               >
                 إلغاء
               </button>
               <button
                 onClick={handleSaveOption}
-                className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-[#E41E26] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 border border-[#E41E26] hover:bg-[#d11c24]"
               >
                 <FaSave />
                 {editingOption ? "تحديث" : "حفظ"}
@@ -1031,7 +1031,7 @@ const ProductDetails = () => {
             ref={addonTypeModalRef}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 overflow-y-auto max-h-[90vh]"
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 overflow-y-auto max-h-[90vh] border border-gray-300"
             dir="rtl"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1111,7 +1111,7 @@ const ProductDetails = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={addNewOptionField}
-                    className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
+                    className="bg-green-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:shadow-lg transition-all border border-green-600 hover:bg-green-600"
                   >
                     <FaPlusCircle className="text-xs" />
                     إضافة خيار
@@ -1185,13 +1185,13 @@ const ProductDetails = () => {
             <div className="flex gap-3 mt-8">
               <button
                 onClick={handleCloseAddonTypeModal}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300"
               >
                 إلغاء
               </button>
               <button
                 onClick={handleSaveAddonType}
-                className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+                className="flex-1 py-3 bg-[#E41E26] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap border border-[#E41E26] hover:bg-[#d11c24]"
               >
                 <FaSave />
                 حفظ
@@ -1208,7 +1208,7 @@ const ProductDetails = () => {
             ref={notesModalRef}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6"
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 border border-gray-300"
             dir="rtl"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1261,20 +1261,20 @@ const ProductDetails = () => {
             <div className="flex gap-3">
               <button
                 onClick={handleClearNotes}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300 flex items-center justify-center gap-2"
               >
                 <FaTrash className="text-sm" />
                 مسح
               </button>
               <button
                 onClick={handleCloseNotesModal}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300"
               >
                 إلغاء
               </button>
               <button
                 onClick={handleSaveNotes}
-                className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-[#E41E26] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 border border-[#E41E26] hover:bg-[#d11c24]"
               >
                 <FaCheck className="text-sm" />
                 حفظ
@@ -1287,7 +1287,7 @@ const ProductDetails = () => {
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-full p-3 sm:p-4 shadow-2xl z-40 cursor-pointer hover:scale-110 transition-transform duration-200 ${
+        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#E41E26] text-white rounded-full p-3 sm:p-4 shadow-2xl z-40 cursor-pointer hover:scale-110 transition-transform duration-200 border-2 border-white ${
           cartItemsCount === 0 ? "opacity-70" : ""
         }`}
         onClick={navigateToCart}
@@ -1295,7 +1295,7 @@ const ProductDetails = () => {
         <div className="relative">
           <FaShoppingCart className="w-4 h-4 sm:w-6 sm:h-6" />
           {cartItemsCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-white text-[#E41E26] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold">
+            <span className="absolute -top-2 -right-2 bg-white text-[#E41E26] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold border border-[#E41E26]">
               {cartItemsCount}
             </span>
           )}
@@ -1309,7 +1309,7 @@ const ProductDetails = () => {
             animate={{ opacity: 1, x: 0 }}
             className="relative"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl overflow-hidden border border-gray-200">
               <img
                 src={product.image}
                 alt={product.name}
@@ -1317,10 +1317,10 @@ const ProductDetails = () => {
               />
 
               <div
-                className={`absolute top-3 md:top-4 right-3 md:right-4 px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold ${
+                className={`absolute top-3 md:top-4 right-3 md:right-4 px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold border ${
                   product.isActive
-                    ? "bg-green-500 text-white"
-                    : "bg-red-500 text-white"
+                    ? "bg-green-500 text-white border-green-600"
+                    : "bg-red-500 text-white border-red-600"
                 }`}
               >
                 {product.isActive ? "نشط" : "غير نشط"}
@@ -1332,7 +1332,7 @@ const ProductDetails = () => {
                   animate={{ scale: 1 }}
                   className="absolute top-3 md:top-4 left-3 md:left-4 z-10"
                 >
-                  <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-xl shadow-2xl flex items-center gap-1.5 md:gap-2">
+                  <div className="bg-[#E41E26] text-white px-3 py-1.5 md:px-4 md:py-2 rounded-xl shadow-2xl flex items-center gap-1.5 md:gap-2 border border-white">
                     <FaFire className="text-white animate-pulse" size={14} />
                     <span className="text-xs md:text-sm font-bold whitespace-nowrap">
                       {formatOfferText(product.itemOffer)}
@@ -1348,10 +1348,10 @@ const ProductDetails = () => {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleToggleActive}
                     disabled={!canToggleProductActive()}
-                    className={`p-2 md:p-3 rounded-xl shadow-lg transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm ${
+                    className={`p-2 md:p-3 rounded-xl shadow-lg transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm border ${
                       product.isActive
-                        ? "bg-yellow-500 text-white hover:bg-yellow-600"
-                        : "bg-green-500 text-white hover:bg-green-600"
+                        ? "bg-yellow-500 text-white hover:bg-yellow-600 border-yellow-600"
+                        : "bg-green-500 text-white hover:bg-green-600 border-green-600"
                     } ${
                       !canToggleProductActive()
                         ? "opacity-50 cursor-not-allowed"
@@ -1369,7 +1369,7 @@ const ProductDetails = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleEditProduct}
-                    className="bg-blue-500 text-white p-2 md:p-3 rounded-xl shadow-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm"
+                    className="bg-blue-500 text-white p-2 md:p-3 rounded-xl shadow-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm border border-blue-600"
                   >
                     <FaEdit className="text-sm md:text-base" />
                     <span>تعديل</span>
@@ -1378,7 +1378,7 @@ const ProductDetails = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleManageOffers}
-                    className="bg-purple-500 text-white p-2 md:p-3 rounded-xl shadow-lg hover:bg-purple-600 transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm"
+                    className="bg-purple-500 text-white p-2 md:p-3 rounded-xl shadow-lg hover:bg-purple-600 transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm border border-purple-600"
                   >
                     <FaPercent className="text-sm md:text-base" />
                     <span>خصومات</span>
@@ -1387,7 +1387,7 @@ const ProductDetails = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleDeleteProduct}
-                    className="bg-red-500 text-white p-2 md:p-3 rounded-xl shadow-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm"
+                    className="bg-red-500 text-white p-2 md:p-3 rounded-xl shadow-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm border border-red-600"
                   >
                     <FaTrash className="text-sm md:text-base" />
                     <span>حذف</span>
@@ -1402,7 +1402,7 @@ const ProductDetails = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 mb-4 md:mb-6 h-auto lg:max-h-[555px] flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 mb-4 md:mb-6 h-auto lg:max-h-[555px] flex flex-col border border-gray-200">
               <div className="flex-1 overflow-hidden">
                 <div className="h-full overflow-y-auto custom-scrollbar pr-2 pb-4">
                   <div className="mb-4 md:mb-6">
@@ -1428,7 +1428,7 @@ const ProductDetails = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
                     {product.calories && (
                       <div
-                        className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 p-3 md:p-4 rounded-xl md:rounded-2xl text-center"
+                        className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 p-3 md:p-4 rounded-xl md:rounded-2xl text-center border border-orange-200"
                         dir="rtl"
                       >
                         <div className="flex items-center justify-center gap-2 mb-1 md:mb-2">
@@ -1447,7 +1447,7 @@ const ProductDetails = () => {
                     {(product.preparationTimeStart ||
                       product.preparationTimeEnd) && (
                       <div
-                        className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-3 md:p-4 rounded-xl md:rounded-2xl text-center"
+                        className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-3 md:p-4 rounded-xl md:rounded-2xl text-center border border-blue-200"
                         dir="rtl"
                       >
                         <div className="flex items-center justify-center gap-2 mb-1 md:mb-2">
@@ -1484,7 +1484,7 @@ const ProductDetails = () => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={handleOpenAddAddonTypeModal}
-                          className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
+                          className="bg-[#8B5CF6] text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 hover:shadow-lg transition-all border border-[#8B5CF6] hover:bg-[#7C3AED]"
                           dir="rtl"
                         >
                           <FaLayerGroup />
@@ -1506,12 +1506,12 @@ const ProductDetails = () => {
                                 {addon.title}
                               </h3>
                               {addon.isSelectionRequired && (
-                                <span className="text-xs bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-300 px-2 py-1 rounded-full">
+                                <span className="text-xs bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-300 px-2 py-1 rounded-full border border-red-300">
                                   مطلوب
                                 </span>
                               )}
                               {addon.canSelectMultipleOptions && (
-                                <span className="text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-1 rounded-full">
+                                <span className="text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-300">
                                   متعدد
                                 </span>
                               )}
@@ -1524,7 +1524,7 @@ const ProductDetails = () => {
                                 onClick={() =>
                                   handleOpenAddOptionModal(addon.id)
                                 }
-                                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
+                                className="bg-green-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:shadow-lg transition-all border border-green-600 hover:bg-green-600"
                               >
                                 <FaPlusCircle className="text-xs" />
                                 إضافة خيار
@@ -1590,7 +1590,7 @@ const ProductDetails = () => {
                                             option
                                           );
                                         }}
-                                        className="bg-blue-500 text-white p-1.5 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
+                                        className="bg-blue-500 text-white p-1.5 rounded-lg hover:bg-blue-600 transition-colors shadow-md border border-blue-600"
                                         title="تعديل"
                                       >
                                         <FaEdit className="text-xs" />
@@ -1602,7 +1602,7 @@ const ProductDetails = () => {
                                           e.stopPropagation();
                                           handleDeleteOption(option.id);
                                         }}
-                                        className="bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors shadow-md"
+                                        className="bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors shadow-md border border-red-600"
                                         title="حذف"
                                       >
                                         <FaTrash className="text-xs" />
@@ -1619,19 +1619,19 @@ const ProductDetails = () => {
                     {/* التعديلات هنا: عرض التعليمات مباشرة إذا كانت موجودة */}
                     <div
                       onClick={handleOpenNotesModal}
-                      className={`w-full rounded-xl md:rounded-2xl p-3 md:p-4 text-center transition-all duration-300 cursor-pointer ${
+                      className={`w-full rounded-xl md:rounded-2xl p-3 md:p-4 text-center transition-all duration-300 cursor-pointer border ${
                         additionalNotes
-                          ? "bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-solid border-green-300 dark:border-green-600 hover:border-green-400 dark:hover:border-green-500"
-                          : "bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 border-2 border-dashed border-indigo-300 dark:border-indigo-600 hover:border-solid hover:border-indigo-400 dark:hover:border-indigo-500"
+                          ? "bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-600 hover:border-green-400 dark:hover:border-green-500"
+                          : "bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 border-indigo-300 dark:border-indigo-600 hover:border-indigo-400 dark:hover:border-indigo-500"
                       }`}
                       dir="rtl"
                     >
                       <div className="flex flex-col items-center justify-center gap-2">
                         <div
-                          className={`p-2 rounded-full ${
+                          className={`p-2 rounded-full border ${
                             additionalNotes
-                              ? "bg-green-100 dark:bg-green-800/50"
-                              : "bg-indigo-100 dark:bg-indigo-800/50"
+                              ? "bg-green-100 dark:bg-green-800/50 border-green-300"
+                              : "bg-indigo-100 dark:bg-indigo-800/50 border-indigo-300"
                           }`}
                         >
                           <FaStickyNote
@@ -1678,7 +1678,7 @@ const ProductDetails = () => {
 
             <div
               id="cart-section"
-              className={`bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 transition-all duration-300 ${
+              className={`bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 transition-all duration-300 border border-gray-200 ${
                 isSticky
                   ? "sticky bottom-4 z-10 lg:relative lg:bottom-0"
                   : "relative"
@@ -1689,7 +1689,7 @@ const ProductDetails = () => {
                 dir="rtl"
               >
                 <div
-                  className="w-[95px] sm:w-auto flex items-center justify-between sm:justify-start gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg md:rounded-xl p-1.5 sm:p-3 flex-shrink-0 order-2 sm:order-1"
+                  className="w-[95px] sm:w-auto flex items-center justify-between sm:justify-start gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg md:rounded-xl p-1.5 sm:p-3 flex-shrink-0 order-2 sm:order-1 border border-gray-300"
                   dir="ltr"
                 >
                   <button
@@ -1722,10 +1722,10 @@ const ProductDetails = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={handleAddToCart}
                 disabled={!isProductAvailableForCart()}
-                className={`w-full py-3 md:py-4 rounded-xl md:rounded-2xl font-semibold text-lg md:text-xl hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3 md:gap-4 ${
+                className={`w-full py-3 md:py-4 rounded-xl md:rounded-2xl font-semibold text-lg md:text-xl hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3 md:gap-4 border ${
                   isProductAvailableForCart()
-                    ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
-                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                    ? "bg-[#E41E26] text-white border-[#E41E26] hover:bg-[#d11c24]"
+                    : "bg-gray-400 text-gray-200 cursor-not-allowed border-gray-400"
                 }`}
                 dir="rtl"
               >

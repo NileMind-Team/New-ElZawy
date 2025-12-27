@@ -73,7 +73,7 @@ const showMessage = (type, title, text, options = {}) => {
       icon: type,
       title: title,
       text: text,
-      confirmButtonColor: options.confirmButtonColor || "#E41E26",
+      confirmButtonColor: options.confirmButtonColor || "#E41E26", // Updated: Red color
       timer: options.timer || 2500,
       showConfirmButton:
         options.showConfirmButton !== undefined
@@ -393,7 +393,7 @@ export default function CitiesManagement() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
       </div>
     );
@@ -405,8 +405,7 @@ export default function CitiesManagement() {
 
   return (
     <>
-
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 py-4 sm:py-8 transition-colors duration-300">
+      <div className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 py-4 sm:py-8 transition-colors duration-300">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <motion.div
@@ -419,7 +418,7 @@ export default function CitiesManagement() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate(-1)}
-                className="bg-white/80 backdrop-blur-md rounded-full p-2 sm:p-3 text-[#E41E26] hover:bg-[#E41E26] hover:text-white transition-all duration-300 shadow-lg dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26]"
+                className="bg-white dark:bg-gray-800 rounded-full p-2 sm:p-3 text-[#E41E26] hover:bg-[#E41E26] hover:text-white transition-all duration-300 shadow-lg border border-gray-300 dark:border-gray-600"
               >
                 <FaArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.button>
@@ -447,14 +446,14 @@ export default function CitiesManagement() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 mb-6 sm:mb-8 relative z-30 dark:bg-gray-800/90"
+            className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 mb-6 sm:mb-8 relative z-30 border border-gray-200 dark:border-gray-600"
           >
             <div className="flex justify-end">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleAddNewCity}
-                className="flex items-center gap-2 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-4 sm:px-5 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base whitespace-nowrap"
+                className="flex items-center gap-2 bg-[#E41E26] text-white px-4 sm:px-5 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:bg-[#d11c24] transition-all duration-300 text-sm sm:text-base whitespace-nowrap border border-[#E41E26]"
               >
                 <FaPlus className="text-sm" />
                 <span className="hidden sm:inline">إضافة مدينة</span>
@@ -475,7 +474,7 @@ export default function CitiesManagement() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200/50 dark:bg-gray-700/80 dark:border-gray-600"
+                  className="text-center py-12 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-600"
                 >
                   <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#E41E26] mx-auto mb-4"></div>
                 </motion.div>
@@ -488,13 +487,13 @@ export default function CitiesManagement() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 hover:shadow-2xl transition-all duration-300 dark:bg-gray-800/90"
+                        className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-600"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                              <div className="p-2 sm:p-3 bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] dark:from-gray-700 dark:to-gray-600 rounded-xl sm:rounded-2xl border border-[#FDB913]/30 dark:border-gray-500">
-                                <FaCity className="text-[#E41E26] dark:text-[#FDB913] text-lg sm:text-xl" />
+                              <div className="p-2 sm:p-3 bg-gray-100 dark:bg-gray-700 rounded-xl sm:rounded-2xl border border-gray-300 dark:border-gray-500">
+                                <FaCity className="text-[#E41E26] dark:text-[#E41E26] text-lg sm:text-xl" />
                               </div>
                               <div className="min-w-0 flex-1">
                                 <h3 className="font-bold text-gray-800 dark:text-gray-200 text-lg sm:text-xl">
@@ -509,7 +508,7 @@ export default function CitiesManagement() {
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => handleEdit(city)}
-                              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center"
+                              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border border-blue-200 dark:border-blue-700"
                             >
                               <FaEdit className="text-xs sm:text-sm" />
                               <span className="whitespace-nowrap">تعديل</span>
@@ -524,7 +523,7 @@ export default function CitiesManagement() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-center py-8 sm:py-10 md:py-12 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200/50 dark:bg-gray-700/80 dark:border-gray-600"
+                      className="text-center py-8 sm:py-10 md:py-12 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-600"
                     >
                       <FaCity className="mx-auto text-3xl sm:text-4xl md:text-5xl text-gray-400 dark:text-gray-500 mb-3 sm:mb-4" />
                       <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">
@@ -537,7 +536,7 @@ export default function CitiesManagement() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleAddNewCity}
-                        className="flex items-center gap-2 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base mx-auto"
+                        className="flex items-center gap-2 bg-[#E41E26] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-lg hover:shadow-xl hover:bg-[#d11c24] transition-all duration-300 text-sm sm:text-base mx-auto border border-[#E41E26]"
                       >
                         <FaPlus className="text-xs sm:text-sm" />
                         <span>أضف أول مدينة</span>
@@ -557,14 +556,14 @@ export default function CitiesManagement() {
                   exit={{ opacity: 0, x: 20 }}
                   className="xl:col-span-1"
                 >
-                  <div className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-5 lg:p-6 border border-gray-200/50 dark:bg-gray-800/90 dark:border-gray-600 sticky top-4 sm:top-6 transition-colors duration-300">
+                  <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-5 lg:p-6 border border-gray-300 dark:border-gray-600 sticky top-4 sm:top-6 transition-colors duration-300">
                     <div className="flex items-center justify-between mb-3 sm:mb-4">
                       <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200">
                         {editingId ? "تعديل المدينة" : "إضافة مدينة جديدة"}
                       </h3>
                       <button
                         onClick={resetForm}
-                        className="text-gray-500 hover:text-[#E41E26] dark:text-gray-400 dark:hover:text-[#FDB913] transition-colors duration-200 flex-shrink-0 ml-2"
+                        className="text-gray-500 hover:text-[#E41E26] dark:text-gray-400 dark:hover:text-[#E41E26] transition-colors duration-200 flex-shrink-0 ml-2 border border-gray-300 dark:border-gray-600 p-1 rounded-full"
                       >
                         <FaTimes size={16} className="sm:size-5" />
                       </button>
@@ -587,7 +586,7 @@ export default function CitiesManagement() {
                             value={formData.name}
                             onChange={handleInputChange}
                             required
-                            className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-9 pr-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                            className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-9 pr-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                             placeholder="أدخل اسم المدينة"
                           />
                         </div>
@@ -610,8 +609,8 @@ export default function CitiesManagement() {
                           disabled={!isFormValid()}
                           className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center justify-center gap-1 sm:gap-2 ${
                             isFormValid()
-                              ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white hover:shadow-xl hover:shadow-[#E41E26]/25 cursor-pointer"
-                              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                              ? "bg-[#E41E26] text-white hover:bg-[#d11c24] hover:shadow-xl cursor-pointer border border-[#E41E26]"
+                              : "bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-300"
                           }`}
                         >
                           <FaSave className="text-xs sm:text-sm" />

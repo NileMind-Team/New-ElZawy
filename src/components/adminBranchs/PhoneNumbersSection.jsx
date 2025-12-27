@@ -97,7 +97,7 @@ const PhoneNumbersSection = ({ phoneNumbers, setPhoneNumbers }) => {
         أرقام الهاتف *
       </label>
 
-      <div className="bg-gray-50 dark:bg-gray-600/50 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
+      <div className="bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
         <div className="grid grid-cols-1 gap-2 sm:gap-3">
           <div>
             <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
@@ -110,7 +110,7 @@ const PhoneNumbersSection = ({ phoneNumbers, setPhoneNumbers }) => {
                 name="phone"
                 value={phoneNumber.phone}
                 onChange={handlePhoneInputChange}
-                className="w-full border border-gray-200 dark:border-gray-500 bg-white dark:bg-gray-600 text-black dark:text-white rounded-lg pr-9 pl-3 py-2 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm"
+                className="w-full border-2 border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 text-black dark:text-white rounded-lg pr-9 pl-3 py-2 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-[#E41E26] transition-all duration-200 text-sm"
                 placeholder="أدخل رقم الهاتف"
               />
             </div>
@@ -128,7 +128,7 @@ const PhoneNumbersSection = ({ phoneNumbers, setPhoneNumbers }) => {
                     openDropdown === "phoneType" ? null : "phoneType"
                   )
                 }
-                className="w-full flex items-center justify-between border border-gray-200 dark:border-gray-500 bg-white dark:bg-gray-600 text-black dark:text-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm"
+                className="w-full flex items-center justify-between border-2 border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 text-black dark:text-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-[#E41E26] transition-all duration-200 text-sm"
               >
                 <span className="flex items-center gap-2">
                   <FaPhone className="text-[#E41E26] text-xs" />
@@ -151,7 +151,7 @@ const PhoneNumbersSection = ({ phoneNumbers, setPhoneNumbers }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto"
+                    className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-600 border-2 border-gray-300 dark:border-gray-500 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto"
                     dir="rtl"
                   >
                     {[
@@ -162,7 +162,7 @@ const PhoneNumbersSection = ({ phoneNumbers, setPhoneNumbers }) => {
                       <li
                         key={type.value}
                         onClick={() => handlePhoneTypeSelect(type.value)}
-                        className="px-4 py-3 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-500 dark:hover:to-gray-400 cursor-pointer text-gray-700 dark:text-gray-300 transition-all text-sm border-b border-gray-100 dark:border-gray-500 last:border-b-0 text-right"
+                        className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-500 cursor-pointer text-gray-700 dark:text-gray-300 transition-all text-sm border-b border-gray-200 dark:border-gray-500 last:border-b-0 text-right"
                       >
                         {type.label}
                       </li>
@@ -214,10 +214,10 @@ const PhoneNumbersSection = ({ phoneNumbers, setPhoneNumbers }) => {
             whileTap={{ scale: 0.98 }}
             onClick={addPhoneNumber}
             disabled={!phoneNumber.phone.trim()}
-            className={`py-2 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center gap-2 ${
+            className={`py-2 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center gap-2 border-2 ${
               phoneNumber.phone.trim()
-                ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white hover:shadow-lg"
-                : "bg-gray-300 dark:bg-gray-500 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                ? "bg-[#E41E26] text-white hover:bg-[#d11c24] border-[#E41E26]"
+                : "bg-gray-300 dark:bg-gray-500 text-gray-500 dark:text-gray-400 cursor-not-allowed border-gray-300 dark:border-gray-500"
             }`}
           >
             <FaPlus className="text-xs" />
@@ -234,7 +234,7 @@ const PhoneNumbersSection = ({ phoneNumbers, setPhoneNumbers }) => {
           {phoneNumbers.map((phone, index) => (
             <div
               key={index}
-              className="flex items-center justify-between bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded-lg p-2 sm:p-3"
+              className="flex items-center justify-between bg-white dark:bg-gray-600 border-2 border-gray-300 dark:border-gray-500 rounded-lg p-2 sm:p-3"
             >
               <div className="flex items-center gap-2 sm:gap-3 flex-1">
                 <FaPhone className="text-[#E41E26] text-xs sm:text-sm" />

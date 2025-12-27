@@ -16,7 +16,7 @@ export default function SearchBar({ searchTerm, setSearchTerm }) {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-gray-200 bg-white text-black rounded-xl sm:rounded-2xl pr-10 pl-4 py-3 sm:py-4 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base shadow-lg"
+            className="w-full border-2 border-gray-300 bg-white text-black rounded-xl sm:rounded-2xl pr-10 pl-4 py-3 sm:py-4 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-[#E41E26] transition-all duration-200 text-sm sm:text-base shadow-lg"
             placeholder="...البحث بالاسم، البريد الإلكتروني، أو رقم الهاتف"
             style={{ textAlign: "right" }}
           />

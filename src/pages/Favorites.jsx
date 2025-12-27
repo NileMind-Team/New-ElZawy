@@ -37,7 +37,7 @@ const Favorites = () => {
         confirmButtonText: options.confirmButtonText,
         showCancelButton: options.showCancelButton,
         cancelButtonText: options.cancelButtonText,
-        confirmButtonColor: "#E41E26",
+        confirmButtonColor: "#E41E26", // Updated: Red color
         cancelButtonColor: "#6B7280",
         ...options.swalOptions,
       });
@@ -81,7 +81,7 @@ const Favorites = () => {
         text: text,
         timer: options.timer || 2000,
         showConfirmButton: false,
-        confirmButtonColor: "#E41E26",
+        confirmButtonColor: "#E41E26", // Updated: Red color
         ...options.swalOptions,
       });
     }
@@ -255,7 +255,7 @@ const Favorites = () => {
         text: "يجب تسجيل الدخول لإضافة المنتجات إلى السلة",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#E41E26",
+        confirmButtonColor: "#E41E26", // Updated: Red color
         cancelButtonColor: "#6B7280",
         confirmButtonText: "تسجيل الدخول",
         cancelButtonText: "إنشاء حساب جديد",
@@ -326,7 +326,7 @@ const Favorites = () => {
               confirmButtonText: "عرض التفاصيل",
               showCancelButton: true,
               cancelButtonText: "إلغاء",
-              confirmButtonColor: "#E41E26",
+              confirmButtonColor: "#E41E26", // Updated: Red color
               cancelButtonColor: "#6B7280",
             }).then((result) => {
               if (result.isConfirmed) {
@@ -447,26 +447,26 @@ const Favorites = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 md:px-6 py-3 sm:py-6 relative font-sans overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 md:px-6 py-3 sm:py-6 relative font-sans overflow-hidden transition-colors duration-300">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-10 sm:-left-20 -top-10 sm:-top-20 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#E41E26]/10 to-[#FDB913]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
-        <div className="absolute -right-10 sm:-right-20 -bottom-10 sm:-bottom-20 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#FDB913]/10 to-[#E41E26]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
+        <div className="absolute -left-10 sm:-left-20 -top-10 sm:-top-20 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-[#E41E26]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
+        <div className="absolute -right-10 sm:-right-20 -bottom-10 sm:-bottom-20 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-[#E41E26]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, type: "spring" }}
-        className="max-w-7xl mx-auto bg-white/90 backdrop-blur-xl shadow-xl sm:shadow-2xl rounded-2xl sm:rounded-3xl border border-white/50 relative overflow-hidden dark:bg-gray-800/90 dark:border-gray-700/50"
+        className="max-w-7xl mx-auto bg-white/90 backdrop-blur-xl shadow-xl sm:shadow-2xl rounded-2xl sm:rounded-3xl border border-gray-300 relative overflow-hidden dark:bg-gray-800/90 dark:border-gray-600"
       >
-        <div className="relative h-36 sm:h-40 md:h-44 lg:h-52 bg-gradient-to-r from-[#E41E26] to-[#FDB913] overflow-hidden">
+        <div className="relative h-36 sm:h-40 md:h-44 lg:h-52 bg-[#E41E26] overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="absolute -top-4 sm:-top-6 -right-4 sm:-right-6 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 bg-white/10 rounded-full"></div>
           <div className="absolute -bottom-4 sm:-bottom-6 -left-4 sm:-left-6 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-32 lg:h-32 bg-white/10 rounded-full"></div>
@@ -478,7 +478,7 @@ const Favorites = () => {
               transition={{ delay: 0.2 }}
               className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3"
             >
-              <div className="p-2 sm:p-3 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl">
+              <div className="p-2 sm:p-3 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/30">
                 <FaHeart className="text-white text-xl sm:text-2xl md:text-3xl" />
               </div>
               <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white">
@@ -502,10 +502,10 @@ const Favorites = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:bg-gray-700/80 dark:border-gray-600/50 my-6"
+              className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-300 dark:bg-gray-700/80 dark:border-gray-600 my-6"
             >
               <div className="max-w-md mx-auto">
-                <div className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="bg-[#E41E26] w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white">
                   <FaHeart className="text-white text-3xl" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
@@ -518,7 +518,7 @@ const Favorites = () => {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleContinueShopping}
-                  className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-8 py-4 rounded-2xl font-bold hover:shadow-2xl transition-all duration-300 flex items-center gap-3 mx-auto text-lg"
+                  className="bg-[#E41E26] text-white px-8 py-4 rounded-2xl font-bold hover:shadow-2xl hover:bg-[#d11c24] transition-all duration-300 flex items-center gap-3 mx-auto text-lg border border-[#E41E26]"
                 >
                   <FaHome />
                   ابدأ التسوق الآن
@@ -540,7 +540,7 @@ const Favorites = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
-                  className={`bg-white/80 backdrop-blur-sm dark:bg-gray-700/80 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-600/50 cursor-pointer group w-full relative min-h-[180px] ${
+                  className={`bg-white/80 backdrop-blur-sm dark:bg-gray-700/80 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-300 dark:border-gray-600 cursor-pointer group w-full relative min-h-[180px] ${
                     !product.isActive ? "opacity-70" : ""
                   }`}
                   onClick={(e) => {
@@ -559,7 +559,7 @@ const Favorites = () => {
                       animate={{ scale: 1 }}
                       className="absolute top-2 right-2 z-10"
                     >
-                      <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1.5">
+                      <div className="bg-[#E41E26] text-white px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1.5 border border-white">
                         <FaFire
                           className="text-white animate-pulse"
                           size={12}
@@ -575,7 +575,7 @@ const Favorites = () => {
                     <div className="p-3">
                       <div className="flex">
                         <div className="w-28 flex-shrink-0 ml-3">
-                          <div className="relative h-32 w-full overflow-hidden rounded-xl">
+                          <div className="relative h-32 w-full overflow-hidden rounded-xl border border-gray-300">
                             <img
                               src={product.image}
                               alt={product.name}
@@ -613,10 +613,10 @@ const Favorites = () => {
                           whileTap={{ scale: 0.95 }}
                           onClick={(e) => handleAddToCart(product, e)}
                           disabled={!product.isActive}
-                          className={`flex-1 py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-xs no-product-details ${
+                          className={`flex-1 py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-xs no-product-details border ${
                             product.isActive
-                              ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
-                              : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                              ? "bg-[#E41E26] text-white hover:bg-[#d11c24] border-[#E41E26]"
+                              : "bg-gray-400 text-gray-200 cursor-not-allowed border-gray-400"
                           }`}
                         >
                           <FaShoppingCart className="w-3.5 h-3.5" />
@@ -632,7 +632,7 @@ const Favorites = () => {
                             e.stopPropagation();
                             handleProductDetails(product);
                           }}
-                          className="flex-1 py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-xs no-product-details bg-gradient-to-r from-gray-600 to-gray-800 text-white"
+                          className="flex-1 py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-xs no-product-details bg-gray-800 text-white hover:bg-gray-900 border border-gray-800"
                         >
                           <FaEye className="w-3.5 h-3.5" />
                           <span>عرض التفاصيل</span>
@@ -648,7 +648,7 @@ const Favorites = () => {
                               product.name
                             );
                           }}
-                          className="p-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center text-xs no-product-details text-red-500 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30"
+                          className="p-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center text-xs no-product-details text-[#E41E26] bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-700"
                         >
                           <FaHeart size={16} />
                         </motion.button>
@@ -693,7 +693,7 @@ const Favorites = () => {
                               product.name
                             );
                           }}
-                          className="p-2 sm:p-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center no-product-details text-red-500 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30"
+                          className="p-2 sm:p-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center no-product-details text-[#E41E26] bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-700"
                         >
                           <FaHeart size={18} />
                         </motion.button>
@@ -705,10 +705,10 @@ const Favorites = () => {
                           whileTap={{ scale: 0.95 }}
                           onClick={(e) => handleAddToCart(product, e)}
                           disabled={!product.isActive}
-                          className={`flex-1 py-2 sm:py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm no-product-details ${
+                          className={`flex-1 py-2 sm:py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm no-product-details border ${
                             product.isActive
-                              ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
-                              : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                              ? "bg-[#E41E26] text-white hover:bg-[#d11c24] border-[#E41E26]"
+                              : "bg-gray-400 text-gray-200 cursor-not-allowed border-gray-400"
                           }`}
                         >
                           <FaShoppingCart className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -724,7 +724,7 @@ const Favorites = () => {
                             e.stopPropagation();
                             handleProductDetails(product);
                           }}
-                          className="flex-1 py-2 sm:py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm no-product-details bg-gradient-to-r from-gray-600 to-gray-800 text-white"
+                          className="flex-1 py-2 sm:py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm no-product-details bg-gray-800 text-white hover:bg-gray-900 border border-gray-800"
                         >
                           <FaEye className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           <span className="xs:hidden">عرض التفاصيل</span>
@@ -743,7 +743,7 @@ const Favorites = () => {
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-full p-3 sm:p-4 shadow-2xl z-40 cursor-pointer hover:scale-110 transition-transform duration-200 no-product-details ${
+        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#E41E26] text-white rounded-full p-3 sm:p-4 shadow-2xl z-40 cursor-pointer hover:scale-110 transition-transform duration-200 no-product-details border-2 border-white ${
           cartItemsCount === 0 ? "opacity-70" : ""
         }`}
         onClick={() => navigate("/cart")}
@@ -751,7 +751,7 @@ const Favorites = () => {
         <div className="relative">
           <FaShoppingCart className="w-4 h-4 sm:w-6 sm:h-6" />
           {cartItemsCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-white text-[#E41E26] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold">
+            <span className="absolute -top-2 -right-2 bg-white text-[#E41E26] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold border border-[#E41E26]">
               {cartItemsCount}
             </span>
           )}

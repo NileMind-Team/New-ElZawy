@@ -16,8 +16,8 @@ export default function DeliveryAreaCard({
 }) {
   const getStatusColor = (isActive) => {
     return isActive
-      ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
-      : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300";
+      ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border border-green-300"
+      : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border border-red-300";
   };
 
   return (
@@ -25,13 +25,13 @@ export default function DeliveryAreaCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
-      className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 hover:shadow-2xl transition-all duration-300 dark:bg-gray-800/90"
+      className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 hover:shadow-2xl transition-all duration-300 dark:bg-gray-800/90 border border-gray-300 dark:border-gray-600"
     >
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-            <div className="p-2 sm:p-3 bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] dark:from-gray-700 dark:to-gray-600 rounded-xl sm:rounded-2xl border border-[#FDB913]/30 dark:border-gray-500">
-              <FaMapMarkerAlt className="text-[#E41E26] dark:text-[#FDB913] text-lg sm:text-xl" />
+            <div className="p-2 sm:p-3 bg-white dark:bg-gray-700 rounded-xl sm:rounded-2xl border border-gray-300 dark:border-gray-500">
+              <FaMapMarkerAlt className="text-[#E41E26] text-lg sm:text-xl" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 mb-1">
@@ -55,24 +55,24 @@ export default function DeliveryAreaCard({
           </div>
 
           <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
-            <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl border border-green-200 dark:border-green-700">
-              <FaMoneyBillWave className="text-green-600 dark:text-green-400 text-lg flex-shrink-0" />
+            <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white dark:bg-gray-700 rounded-xl border border-gray-300 dark:border-gray-600">
+              <FaMoneyBillWave className="text-[#E41E26] text-lg flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-600 dark:text-gray-400">
                   تكلفة التوصيل
                 </p>
-                <p className="font-bold text-green-600 dark:text-green-400 text-lg">
+                <p className="font-bold text-[#E41E26] text-lg">
                   ج.م {area.deliveryCost.toFixed(2)}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl border border-blue-200 dark:border-blue-700">
-              <FaTruck className="text-blue-600 dark:text-blue-400 text-lg flex-shrink-0" />
+            <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white dark:bg-gray-700 rounded-xl border border-gray-300 dark:border-gray-600">
+              <FaTruck className="text-gray-600 dark:text-gray-400 text-lg flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-600 dark:text-gray-400">
                   الوقت المتوقع
                 </p>
-                <p className="font-bold text-blue-600 dark:text-blue-400 text-lg">
+                <p className="font-bold text-gray-800 dark:text-gray-300 text-lg">
                   {area.estimatedTime}
                 </p>
               </div>
@@ -87,8 +87,8 @@ export default function DeliveryAreaCard({
             onClick={(e) => onToggleActive(area.id, e)}
             className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 ${
               area.isActive
-                ? "bg-yellow-50 text-yellow-700 hover:bg-yellow-100 dark:bg-yellow-900/50 dark:text-yellow-300 dark:hover:bg-yellow-800"
-                : "bg-green-50 text-green-700 hover:bg-green-100 dark:bg-green-900/50 dark:text-green-300 dark:hover:bg-green-800"
+                ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-300 dark:hover:bg-yellow-800 border border-yellow-300"
+                : "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/50 dark:text-green-300 dark:hover:bg-green-800 border border-green-300"
             } rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center`}
           >
             {area.isActive ? "تعطيل" : "تفعيل"}
@@ -97,7 +97,7 @@ export default function DeliveryAreaCard({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onEdit(area)}
-            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border border-blue-300"
           >
             <FaEdit className="text-xs sm:text-sm" />
             <span className="whitespace-nowrap">تعديل</span>
@@ -106,7 +106,7 @@ export default function DeliveryAreaCard({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onDelete(area.id)}
-            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/50 dark:text-red-300 dark:hover:bg-red-800 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900/50 dark:text-red-300 dark:hover:bg-red-800 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border border-red-300"
           >
             <FaTrash className="text-xs sm:text-sm" />
             <span className="whitespace-nowrap">حذف</span>

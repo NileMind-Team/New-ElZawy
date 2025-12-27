@@ -22,7 +22,7 @@ export default function HeaderStats({ deliveryAreasCount, navigate }) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate(-1)}
-          className="bg-white/80 backdrop-blur-md rounded-full p-2 sm:p-3 text-[#E41E26] hover:bg-[#E41E26] hover:text-white transition-all duration-300 shadow-lg dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26]"
+          className="bg-white/80 backdrop-blur-md rounded-full p-2 sm:p-3 text-[#E41E26] hover:bg-[#E41E26] hover:text-white transition-all duration-300 shadow-lg border border-gray-300 dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26] dark:border-gray-600"
         >
           <FaArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
         </motion.button>

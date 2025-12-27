@@ -455,14 +455,14 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
       </div>
     );
   }
 
   const fieldClass =
-    "w-full border border-gray-200 bg-white/80 backdrop-blur-sm text-black rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 hover:border-[#E41E26]/50 dark:bg-gray-600/80 dark:border-gray-500 dark:text-white text-right";
+    "w-full border border-gray-300 bg-white/80 backdrop-blur-sm text-black rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 hover:border-[#E41E26] dark:bg-gray-600/80 dark:border-gray-500 dark:text-white text-right";
 
   const tabs = [
     {
@@ -481,14 +481,14 @@ export default function Profile() {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4 py-4 sm:py-8 relative font-sans overflow-hidden transition-colors duration-300`}
+      className={`min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4 py-4 sm:py-8 relative font-sans overflow-hidden transition-colors duration-300`}
       dir="rtl"
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-20 -top-20 w-60 h-60 sm:w-80 sm:h-80 bg-gradient-to-r from-[#E41E26]/10 to-[#FDB913]/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -right-20 -bottom-20 w-60 h-60 sm:w-80 sm:h-80 bg-gradient-to-r from-[#FDB913]/10 to-[#E41E26]/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 sm:w-96 sm:h-96 bg-gradient-to-r from-[#E41E26]/5 to-[#FDB913]/5 rounded-full blur-3xl"></div>
+        <div className="absolute -left-20 -top-20 w-60 h-60 sm:w-80 sm:h-80 bg-[#E41E26]/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -right-20 -bottom-20 w-60 h-60 sm:w-80 sm:h-80 bg-[#E41E26]/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 sm:w-96 sm:h-96 bg-[#E41E26]/5 rounded-full blur-3xl"></div>
       </div>
 
       {/* Back Button */}
@@ -496,7 +496,7 @@ export default function Profile() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         onClick={() => navigate(-1)}
-        className="fixed top-4 left-4 z-50 bg-white/80 backdrop-blur-md hover:bg-[#E41E26] hover:text-white rounded-full p-2 sm:p-3 text-[#E41E26] border border-[#E41E26]/30 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl group dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26]"
+        className="fixed top-4 left-4 z-50 bg-white/80 backdrop-blur-md hover:bg-[#E41E26] hover:text-white rounded-full p-2 sm:p-3 text-[#E41E26] border border-gray-300 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl group dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-[#E41E26] dark:border-gray-600"
       >
         <FaArrowLeft
           size={16}
@@ -508,10 +508,10 @@ export default function Profile() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, type: "spring" }}
-        className="max-w-4xl mx-auto bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl border border-white/50 relative overflow-hidden dark:bg-gray-800/90 dark:border-gray-700/50"
+        className="max-w-4xl mx-auto bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl border border-gray-300 relative overflow-hidden dark:bg-gray-800/90 dark:border-gray-600"
       >
         {/* Header Background */}
-        <div className="relative h-24 sm:h-32 bg-gradient-to-r from-[#E41E26] to-[#FDB913] overflow-hidden">
+        <div className="relative h-24 sm:h-32 bg-[#E41E26] overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="absolute -top-6 -right-6 w-24 h-24 sm:w-40 sm:h-40 bg-white/10 rounded-full"></div>
           <div className="absolute -bottom-6 -left-6 w-20 h-20 sm:w-32 sm:h-32 bg-white/10 rounded-full"></div>
@@ -535,13 +535,13 @@ export default function Profile() {
                   className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-white shadow-2xl dark:border-gray-800"
                 />
               ) : (
-                <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white flex items-center justify-center text-2xl sm:text-3xl lg:text-4xl font-bold border-4 border-white shadow-2xl dark:border-gray-800">
+                <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full bg-[#E41E26] text-white flex items-center justify-center text-2xl sm:text-3xl lg:text-4xl font-bold border-4 border-white shadow-2xl dark:border-gray-800">
                   {user.firstName?.charAt(0).toUpperCase() || "م"}
                 </div>
               )}
 
               {isEditingProfile && activeTab === "profile" && (
-                <label className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 bg-[#E41E26] hover:bg-[#FDB913] text-white p-2 sm:p-3 rounded-full shadow-2xl cursor-pointer transition-all duration-300 hover:scale-110 group-hover:scale-110">
+                <label className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 bg-[#E41E26] hover:bg-[#d11c24] text-white p-2 sm:p-3 rounded-full shadow-2xl cursor-pointer transition-all duration-300 hover:scale-110 group-hover:scale-110 border border-white">
                   <input
                     type="file"
                     className="hidden"
@@ -588,7 +588,7 @@ export default function Profile() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setIsEditingProfile(true)}
-                  className="flex items-center gap-2 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:shadow-[#E41E26]/25 transition-all duration-300 text-sm sm:text-base"
+                  className="flex items-center gap-2 bg-[#E41E26] text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:bg-[#d11c24] transition-all duration-300 text-sm sm:text-base border border-[#E41E26]"
                 >
                   <FaEdit className="flex-shrink-0" />
                   <span className="hidden sm:inline">تعديل الملف الشخصي</span>
@@ -601,10 +601,10 @@ export default function Profile() {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleSaveProfile}
                     disabled={!hasChanges}
-                    className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold shadow-lg transition-all duration-300 text-sm sm:text-base ${
+                    className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold shadow-lg transition-all duration-300 text-sm sm:text-base border ${
                       hasChanges
-                        ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white hover:shadow-xl hover:shadow-[#E41E26]/25"
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400"
+                        ? "bg-[#E41E26] text-white hover:shadow-xl hover:bg-[#d11c24] border-[#E41E26]"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
                     }`}
                   >
                     <FaSave className="flex-shrink-0" />
@@ -622,7 +622,7 @@ export default function Profile() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-full flex items-center justify-between bg-gray-100/80 backdrop-blur-sm rounded-2xl p-4 font-semibold transition-all duration-300 dark:bg-gray-700/80 dark:text-gray-200"
+              className="w-full flex items-center justify-between bg-gray-100/80 backdrop-blur-sm rounded-2xl p-4 font-semibold transition-all duration-300 dark:bg-gray-700/80 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
             >
               <div className="flex items-center gap-3">
                 {tabs.find((tab) => tab.id === activeTab)?.icon &&
@@ -644,7 +644,7 @@ export default function Profile() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="bg-white/95 backdrop-blur-sm rounded-2xl mt-2 overflow-hidden shadow-lg border border-gray-200/50 dark:bg-gray-700/95 dark:border-gray-600/50"
+                  className="bg-white/95 backdrop-blur-sm rounded-2xl mt-2 overflow-hidden shadow-lg border border-gray-300 dark:bg-gray-700/95 dark:border-gray-600"
                 >
                   {tabs.map((tab) => (
                     <motion.button
@@ -657,10 +657,14 @@ export default function Profile() {
                           setIsEditingProfile(false);
                         }
                       }}
-                      className={`w-full flex items-center gap-3 p-4 text-right transition-all duration-200 ${
+                      className={`w-full flex items-center gap-3 p-4 text-right transition-all duration-200 border-b ${
                         activeTab === tab.id
-                          ? "bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] text-[#E41E26] dark:from-gray-600 dark:to-gray-500"
+                          ? "bg-gray-100 text-[#E41E26] dark:bg-gray-600"
                           : "text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-600"
+                      } ${
+                        tab.id === tabs[tabs.length - 1].id
+                          ? "border-b-0"
+                          : "border-gray-300 dark:border-gray-600"
                       }`}
                     >
                       <tab.icon className="text-xl flex-shrink-0" />
@@ -678,7 +682,7 @@ export default function Profile() {
           </div>
 
           {/* Desktop Tabs Navigation */}
-          <div className="hidden lg:flex gap-1 bg-gray-100/80 backdrop-blur-sm rounded-2xl p-1 mb-6 sm:mb-8 w-full dark:bg-gray-700/80">
+          <div className="hidden lg:flex gap-1 bg-gray-100/80 backdrop-blur-sm rounded-2xl p-1 mb-6 sm:mb-8 w-full dark:bg-gray-700/80 border border-gray-300 dark:border-gray-600">
             {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
@@ -690,10 +694,10 @@ export default function Profile() {
                     setIsEditingProfile(false);
                   }
                 }}
-                className={`flex items-center gap-3 flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 text-right ${
+                className={`flex items-center gap-3 flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 text-right border ${
                   activeTab === tab.id
-                    ? "bg-white text-[#E41E26] shadow-lg dark:bg-gray-600 dark:text-[#E41E26]"
-                    : "text-gray-600 hover:text-[#E41E26] hover:bg-white/50 dark:text-gray-300 dark:hover:bg-gray-600/50"
+                    ? "bg-white text-[#E41E26] shadow-lg dark:bg-gray-600 dark:text-[#E41E26] border-[#E41E26] dark:border-[#E41E26]"
+                    : "text-gray-600 hover:text-[#E41E26] hover:bg-white/50 dark:text-gray-300 dark:hover:bg-gray-600/50 border-transparent"
                 }`}
               >
                 <tab.icon className="text-xl flex-shrink-0" />
@@ -724,7 +728,7 @@ export default function Profile() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-gray-200/50 shadow-lg dark:bg-gray-700/80 dark:border-gray-600/50">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-gray-300 shadow-lg dark:bg-gray-700/80 dark:border-gray-600">
                   <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 mb-3 sm:mb-4 flex items-center gap-2 justify-start">
                     <FaUser className="text-[#E41E26]" />
                     المعلومات الشخصية
@@ -753,7 +757,7 @@ export default function Profile() {
                             dir="rtl"
                           />
                         ) : (
-                          <div className="w-full border border-gray-200 bg-white/50 text-gray-800 text-base sm:text-lg font-medium pr-10 sm:pr-12 py-3 sm:py-3.5 rounded-xl dark:bg-gray-600/50 dark:text-gray-200 dark:border-gray-500 text-right">
+                          <div className="w-full border border-gray-300 bg-white/50 text-gray-800 text-base sm:text-lg font-medium pr-10 sm:pr-12 py-3 sm:py-3.5 rounded-xl dark:bg-gray-600/50 dark:text-gray-200 dark:border-gray-500 text-right">
                             {user.firstName}
                           </div>
                         )}
@@ -782,7 +786,7 @@ export default function Profile() {
                             dir="rtl"
                           />
                         ) : (
-                          <div className="w-full border border-gray-200 bg-white/50 text-gray-800 text-base sm:text-lg font-medium pr-10 sm:pr-12 py-3 sm:py-3.5 rounded-xl dark:bg-gray-600/50 dark:text-gray-200 dark:border-gray-500 text-right">
+                          <div className="w-full border border-gray-300 bg-white/50 text-gray-800 text-base sm:text-lg font-medium pr-10 sm:pr-12 py-3 sm:py-3.5 rounded-xl dark:bg-gray-600/50 dark:text-gray-200 dark:border-gray-500 text-right">
                             {user.lastName}
                           </div>
                         )}
@@ -796,7 +800,7 @@ export default function Profile() {
                       </label>
                       <div className="relative group">
                         <FaEnvelope className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-[#E41E26] text-lg transition-all duration-300 opacity-70" />
-                        <div className="w-full border border-gray-200 bg-gray-100/50 text-gray-800 text-base sm:text-lg font-medium pr-10 sm:pr-12 py-3 sm:py-3.5 rounded-xl truncate dark:bg-gray-600/50 dark:text-gray-200 dark:border-gray-500 text-right">
+                        <div className="w-full border border-gray-300 bg-gray-100/50 text-gray-800 text-base sm:text-lg font-medium pr-10 sm:pr-12 py-3 sm:py-3.5 rounded-xl truncate dark:bg-gray-600/50 dark:text-gray-200 dark:border-gray-500 text-right">
                           {user.email}
                         </div>
                       </div>
@@ -824,7 +828,7 @@ export default function Profile() {
                             dir="rtl"
                           />
                         ) : (
-                          <div className="w-full border border-gray-200 bg-white/50 text-gray-800 text-base sm:text-lg font-medium pr-10 sm:pr-12 py-3 sm:py-3.5 rounded-xl dark:bg-gray-600/50 dark:text-gray-200 dark:border-gray-500 text-right">
+                          <div className="w-full border border-gray-300 bg-white/50 text-gray-800 text-base sm:text-lg font-medium pr-10 sm:pr-12 py-3 sm:py-3.5 rounded-xl dark:bg-gray-600/50 dark:text-gray-200 dark:border-gray-500 text-right">
                             {user.phoneNumber || "غير متوفر"}
                           </div>
                         )}
@@ -844,7 +848,7 @@ export default function Profile() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-gray-200/50 shadow-lg dark:bg-gray-700/80 dark:border-gray-600/50">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-gray-300 shadow-lg dark:bg-gray-700/80 dark:border-gray-600">
                   <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 mb-3 sm:mb-4 flex items-center gap-2 justify-start">
                     <FaKey className="text-[#E41E26]" />
                     تغيير كلمة المرور
@@ -916,7 +920,7 @@ export default function Profile() {
                     </div>
 
                     {/* Password Requirements */}
-                    <div className="bg-gradient-to-r from-[#fff8e7] to-[#ffe5b4] p-3 sm:p-4 rounded-xl border border-[#FDB913]/30 space-y-2 dark:from-gray-600 dark:to-gray-500 dark:border-gray-500">
+                    <div className="bg-gray-100 p-3 sm:p-4 rounded-xl border border-gray-300 space-y-2 dark:bg-gray-600 dark:border-gray-500">
                       <p className="text-sm font-semibold text-[#E41E26] mb-2 text-right">
                         متطلبات كلمة المرور:
                       </p>
@@ -945,10 +949,10 @@ export default function Profile() {
                       whileTap={{ scale: 0.98 }}
                       onClick={handleSavePassword}
                       disabled={!allPasswordValid || !passwordData.oldPassword}
-                      className={`w-full font-semibold py-3 sm:py-3.5 rounded-xl transition-all duration-300 text-base sm:text-lg ${
+                      className={`w-full font-semibold py-3 sm:py-3.5 rounded-xl transition-all duration-300 text-base sm:text-lg border ${
                         allPasswordValid && passwordData.oldPassword
-                          ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white hover:shadow-xl hover:shadow-[#E41E26]/25"
-                          : "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400"
+                          ? "bg-[#E41E26] text-white hover:bg-[#d11c24] hover:shadow-xl border-[#E41E26]"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
                       }`}
                     >
                       تحديث كلمة المرور

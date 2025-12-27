@@ -397,10 +397,10 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
         className="relative bg-white dark:bg-gray-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] p-6 relative">
+        <div className="bg-[#E41E26] p-6 relative border-b border-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl border border-white">
                 <FaClipboardList className="text-white text-2xl" />
               </div>
               <div>
@@ -411,7 +411,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors border border-white/30"
             >
               <FaTimes className="text-white text-xl" />
             </button>
@@ -421,7 +421,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
         {/* Content */}
         <div className="overflow-y-auto max-h-[calc(90vh-80px)] p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
               <div className="flex items-center gap-2 mb-4">
                 <FaUser className="text-[#E41E26]" />
                 <h3 className="font-bold text-gray-800 dark:text-white">
@@ -458,7 +458,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
               <div className="flex items-center gap-2 mb-4">
                 <FaMapMarkerAlt className="text-[#E41E26]" />
                 <h3 className="font-bold text-gray-800 dark:text-white">
@@ -535,7 +535,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
                         {(item.menuItem?.imageUrl ||
                           item.menuItemImageUrlSnapshotAtOrder) && (
                           <div className="md:w-1/4">
-                            <div className="relative w-full h-48 md:h-40 rounded-lg overflow-hidden">
+                            <div className="relative w-full h-48 md:h-40 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                               <img
                                 src={`${BASE_URL}/${
                                   item.menuItem?.imageUrl ||
@@ -603,7 +603,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
                               </p>
                               <p className="font-bold text-lg text-green-600 dark:text-green-400">
                                 {isPriceBasedOnRequest ? (
-                                  <span className="text-[#E41E26] dark:text-[#FDB913]">
+                                  <span className="text-[#E41E26]">
                                     السعر حسب الطلب
                                   </span>
                                 ) : (
@@ -614,7 +614,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
                           </div>
 
                           {item.options && item.options.length > 0 && (
-                            <div className="mt-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg p-3">
+                            <div className="mt-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
                               <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 الاضافات المختارة:
                               </p>
@@ -680,7 +680,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
                                   الإجمالي النهائي للمنتج
                                 </p>
-                                <p className="text-lg font-bold text-[#E41E26] dark:text-[#FDB913]">
+                                <p className="text-lg font-bold text-[#E41E26]">
                                   {itemFinalPrice.toFixed(2)} ج.م
                                 </p>
                               </div>
@@ -693,7 +693,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
                 })}
               </div>
             ) : (
-              <div className="text-center py-8 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+              <div className="text-center py-8 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-700">
                 <FaBox className="mx-auto text-3xl text-gray-400 dark:text-gray-500 mb-3" />
                 <p className="text-gray-600 dark:text-gray-400">
                   لا توجد منتجات في هذا الطلب
@@ -724,14 +724,14 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
                   المبلغ النهائي
                 </p>
-                <p className="text-xl font-bold text-[#E41E26] dark:text-[#FDB913]">
+                <p className="text-xl font-bold text-[#E41E26]">
                   {order.totalWithFee?.toFixed(2) || "0.00"} ج.م
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
@@ -750,7 +750,7 @@ const OrderDetailsModal = ({ order, onClose, users }) => {
               </div>
             </div>
             {order.notes && (
-              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                   ملاحظات:
                 </p>
@@ -1172,7 +1172,7 @@ const SalesReports = () => {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تقرير المبيعات - Chicken One</title>
+<title>تقرير المبيعات - New - ElZawy</title>
 <style>
   @media print {
     @page { margin: 0; size: A4 portrait; }
@@ -1362,7 +1362,7 @@ const SalesReports = () => {
 <body>
 
 <div class="print-header">
-  <h1>تقرير المبيعات - Chicken One</h1>
+  <h1>تقرير المبيعات - New - ElZawy</h1>
   <p>نظام إدارة المطاعم</p>
 </div>
 
@@ -1511,7 +1511,7 @@ ${
     /\d/g,
     (d) => toArabicNumbers(d)
   )}</p>
-  <p>Chicken One © ${toArabicNumbers(new Date().getFullYear())}</p>
+  <p>New - ElZawy © ${toArabicNumbers(new Date().getFullYear())}</p>
 </div>
 
 </body>
@@ -1574,7 +1574,7 @@ ${
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
       </div>
     );
@@ -1583,12 +1583,12 @@ ${
   return (
     <div
       dir="rtl"
-      className="min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 md:px-6 py-6 relative font-sans overflow-hidden transition-colors duration-300"
+      className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 md:px-6 py-6 relative font-sans overflow-hidden transition-colors duration-300"
     >
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-10 -top-10 w-40 h-40 sm:w-60 sm:h-60 bg-gradient-to-r from-[#E41E26]/10 to-[#FDB913]/10 rounded-full blur-2xl animate-pulse"></div>
-        <div className="absolute -right-10 -bottom-10 w-40 h-40 sm:w-60 sm:h-60 bg-gradient-to-r from-[#FDB913]/10 to-[#E41E26]/10 rounded-full blur-2xl animate-pulse"></div>
+        <div className="absolute -left-10 -top-10 w-40 h-40 sm:w-60 sm:h-60 bg-gradient-to-r from-[#E41E26]/10 to-[#000000]/10 rounded-full blur-2xl animate-pulse"></div>
+        <div className="absolute -right-10 -bottom-10 w-40 h-40 sm:w-60 sm:h-60 bg-gradient-to-r from-[#000000]/10 to-[#E41E26]/10 rounded-full blur-2xl animate-pulse"></div>
       </div>
 
       <motion.div
@@ -1598,11 +1598,11 @@ ${
         className="max-w-7xl mx-auto bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-xl rounded-2xl sm:rounded-3xl border border-white/50 dark:border-gray-700/50 relative overflow-hidden transition-colors duration-300"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] px-6 py-8 relative overflow-hidden">
+        <div className="bg-[#E41E26] px-6 py-8 relative overflow-hidden border-b border-white">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl border border-white">
                 <FaChartBar className="text-white text-2xl" />
               </div>
               <div>
@@ -1692,7 +1692,7 @@ ${
                     disabled={!startDate || !endDate}
                     className={`flex-1 px-4 py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 ${
                       startDate && endDate
-                        ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white cursor-pointer"
+                        ? "bg-[#E41E26] text-white cursor-pointer hover:bg-[#d11c24] border border-[#E41E26]"
                         : "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                     }`}
                   >
@@ -1705,10 +1705,10 @@ ${
                       whileTap={{ scale: 0.95 }}
                       onClick={handlePrint}
                       disabled={isPrinting}
-                      className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 ${
+                      className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 border ${
                         isPrinting
-                          ? "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-blue-600 to-cyan-600 text-white cursor-pointer"
+                          ? "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed border-gray-400"
+                          : "bg-blue-600 text-white cursor-pointer hover:bg-blue-700 border-blue-700"
                       }`}
                     >
                       {isPrinting ? (
@@ -1738,7 +1738,7 @@ ${
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
             >
               {/* Total Sales Card */}
-              <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-5 text-white shadow-lg">
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-5 text-white shadow-lg border border-white/20">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm opacity-90">إجمالي المبيعات</p>
@@ -1746,14 +1746,14 @@ ${
                       {formatCurrency(summary.totalSales)}
                     </p>
                   </div>
-                  <div className="p-3 bg-white/20 rounded-xl">
+                  <div className="p-3 bg-white/20 rounded-xl border border-white/30">
                     <FaMoneyBill className="text-2xl" />
                   </div>
                 </div>
               </div>
 
               {/* Total Orders Card */}
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl p-5 text-white shadow-lg">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl p-5 text-white shadow-lg border border-white/20">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm opacity-90">إجمالي الطلبات</p>
@@ -1761,14 +1761,14 @@ ${
                       {summary.totalOrders}
                     </p>
                   </div>
-                  <div className="p-3 bg-white/20 rounded-xl">
+                  <div className="p-3 bg-white/20 rounded-xl border border-white/30">
                     <FaShoppingCart className="text-2xl" />
                   </div>
                 </div>
               </div>
 
               {/* Delivery Orders */}
-              <div className="bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl p-5 text-white shadow-lg">
+              <div className="bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl p-5 text-white shadow-lg border border-white/20">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm opacity-90">طلبات التوصيل</p>
@@ -1776,14 +1776,14 @@ ${
                       {summary.deliveryOrders}
                     </p>
                   </div>
-                  <div className="p-3 bg-white/20 rounded-xl">
+                  <div className="p-3 bg-white/20 rounded-xl border border-white/30">
                     <FaTruck className="text-2xl" />
                   </div>
                 </div>
               </div>
 
               {/* Pickup Orders */}
-              <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-5 text-white shadow-lg">
+              <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-5 text-white shadow-lg border border-white/20">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm opacity-90">طلبات الاستلام</p>
@@ -1791,7 +1791,7 @@ ${
                       {summary.pickupOrders}
                     </p>
                   </div>
-                  <div className="p-3 bg-white/20 rounded-xl">
+                  <div className="p-3 bg-white/20 rounded-xl border border-white/30">
                     <FaStore className="text-2xl" />
                   </div>
                 </div>
@@ -1823,10 +1823,10 @@ ${
                 {summary.topProducts.map((product, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 border border-gray-200 dark:border-gray-700"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#E41E26] to-[#FDB913] flex items-center justify-center text-white font-bold">
+                      <div className="w-8 h-8 rounded-lg bg-[#E41E26] flex items-center justify-center text-white font-bold border border-white">
                         {index + 1}
                       </div>
                       <div>
@@ -1945,7 +1945,7 @@ ${
                             {getStatusLabel(order.status)}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center font-bold text-[#E41E26] dark:text-[#FDB913]">
+                        <td className="px-4 py-3 text-center font-bold text-[#E41E26]">
                           {formatCurrency(order.totalWithFee)}
                         </td>
                         <td className="px-4 py-3 text-center">
@@ -1954,7 +1954,7 @@ ${
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleViewOrderDetails(order.id)}
                             disabled={loadingDetails}
-                            className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300 mx-auto"
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-[#E41E26] text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300 mx-auto hover:bg-[#d11c24] border border-[#E41E26]"
                           >
                             {loadingDetails &&
                             selectedOrder?.id === order.id ? (
@@ -1977,7 +1977,7 @@ ${
                         المجموع الكلي:
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <span className="text-xl font-bold text-[#E41E26] dark:text-[#FDB913]">
+                        <span className="text-xl font-bold text-[#E41E26]">
                           {formatCurrency(summary?.totalSales || 0)}
                         </span>
                       </td>
@@ -1995,10 +1995,10 @@ ${
                       whileTap={{ scale: 0.95 }}
                       onClick={handlePrevPage}
                       disabled={currentPage === 1}
-                      className={`p-2 sm:p-3 rounded-xl transition-all ${
+                      className={`p-2 sm:p-3 rounded-xl transition-all border ${
                         currentPage === 1
-                          ? "bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed"
-                          : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
+                          ? "bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed border-gray-300"
+                          : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
                       }`}
                     >
                       <FaChevronRight className="text-sm sm:text-base" />
@@ -2016,10 +2016,10 @@ ${
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => handlePageChange(pageNum)}
-                              className={`px-3 sm:px-4 py-1 sm:py-2 rounded-xl font-semibold transition-all ${
+                              className={`px-3 sm:px-4 py-1 sm:py-2 rounded-xl font-semibold transition-all border ${
                                 currentPage === pageNum
-                                  ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white shadow-lg"
-                                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
+                                  ? "bg-[#E41E26] text-white shadow-lg border-[#E41E26]"
+                                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
                               }`}
                             >
                               {pageNum}
@@ -2034,10 +2034,10 @@ ${
                       whileTap={{ scale: 0.95 }}
                       onClick={handleNextPage}
                       disabled={currentPage === totalPages}
-                      className={`p-2 sm:p-3 rounded-xl transition-all ${
+                      className={`p-2 sm:p-3 rounded-xl transition-all border ${
                         currentPage === totalPages
-                          ? "bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed"
-                          : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
+                          ? "bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed border-gray-300"
+                          : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
                       }`}
                     >
                       <FaChevronLeft className="text-sm sm:text-base" />
