@@ -23,6 +23,8 @@ import {
   FaPlusCircle,
   FaUser,
   FaExchangeAlt,
+  FaPhone,
+  FaMapPin,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import axiosInstance from "../api/axiosInstance";
@@ -60,6 +62,13 @@ export default function Cart() {
   // eslint-disable-next-line no-unused-vars
   const [loadingDeliveryFees, setLoadingDeliveryFees] = useState(false);
   const [itemNotes, setItemNotes] = useState("");
+  const [showMissingInfoModal, setShowMissingInfoModal] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [showPhoneInputModal, setShowPhoneInputModal] = useState(false);
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
 
   const notesModalRef = React.useRef(null);
   const productDetailsModalRef = React.useRef(null);
@@ -72,6 +81,7 @@ export default function Cart() {
     fetchBranches();
     fetchUserAddresses();
     fetchDeliveryFees();
+    fetchUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -122,6 +132,77 @@ export default function Cart() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
+
+  // New function: Fetch user profile
+  const fetchUserProfile = async () => {
+    try {
+      setLoadingProfile(true);
+      const response = await axiosInstance.get("/api/Account/Profile");
+      setUserProfile(response.data);
+      setPhoneNumber(response.data.phoneNumber || "");
+      setNewPhoneNumber(response.data.phoneNumber || "");
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
+  // New function: Update phone number
+  const updatePhoneNumber = async () => {
+    try {
+      if (!newPhoneNumber.trim()) {
+        toast.error("الرجاء إدخال رقم هاتف صحيح", {
+          position: "top-right",
+          autoClose: 2000,
+          rtl: true,
+        });
+        return;
+      }
+
+      setLoadingProfile(true);
+      await axiosInstance.put("/api/Account/UpdateProfile", {
+        firstName: userProfile?.firstName || "",
+        lastName: userProfile?.lastName || "",
+        phoneNumber: newPhoneNumber,
+      });
+
+      toast.success("تم تحديث رقم الهاتف بنجاح", {
+        position: "top-right",
+        autoClose: 2000,
+        rtl: true,
+      });
+
+      setShowPhoneInputModal(false);
+      setShowMissingInfoModal(false);
+      fetchUserProfile();
+
+      setTimeout(() => {
+        handleCheckout();
+      }, 500);
+    } catch (error) {
+      console.error("Error updating phone number:", error);
+      toast.error("فشل في تحديث رقم الهاتف", {
+        position: "top-right",
+        autoClose: 2000,
+        rtl: true,
+      });
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
+  // Function to open phone input modal
+  const openPhoneInputModal = () => {
+    setShowMissingInfoModal(false);
+    setShowPhoneInputModal(true);
+  };
+
+  // Function to handle adding address
+  const handleAddAddress = () => {
+    setShowMissingInfoModal(false);
+    navigate("/addresses", { state: { fromCart: true, requireDefault: true } });
+  };
 
   const fetchDeliveryFees = async () => {
     try {
@@ -1050,7 +1131,6 @@ export default function Cart() {
   };
 
   const handleCheckout = async () => {
-    // Case 1: User logged in but cart is empty
     if (cartItems.length === 0) {
       if (isMobile()) {
         toast.warning(
@@ -1121,7 +1201,6 @@ export default function Cart() {
     }
 
     if (deliveryType === "delivery") {
-      // Case 2: User logged in but no addresses
       if (userAddresses.length === 0) {
         if (isMobile()) {
           toast.warning("يجب إضافة عنوان للتوصيل أولاً.", {
@@ -1144,7 +1223,6 @@ export default function Cart() {
         return;
       }
 
-      // Case 3: User logged in with addresses but none selected
       if (!selectedAddress) {
         if (isMobile()) {
           toast.warning("الرجاء اختيار عنوان التوصيل", {
@@ -1240,12 +1318,28 @@ export default function Cart() {
     } catch (error) {
       console.error("Error creating order:", error);
 
-      if (error.response?.data?.errors) {
-        const errors = error.response.data.errors;
+      if (!error.response?.data?.errors) {
+        showGenericError();
+        return;
+      }
 
-        let errorMessages = [];
+      const errors = error.response.data.errors;
 
-        errors.forEach((errorItem) => {
+      let errorMessages = [];
+      let showModalOnly = false;
+
+      errors.forEach((errorItem) => {
+        // ✅ الحالة الخاصة فقط
+        if (
+          errorItem.code === "User.MissingInfo" &&
+          errorItem.description ===
+            "User must have a phone number or a default location."
+        ) {
+          showModalOnly = true;
+          setShowMissingInfoModal(true);
+          fetchUserProfile();
+        } else {
+          // أي Error تاني
           if (
             errorItem.code === "User" &&
             errorItem.description === "User is not active."
@@ -1290,13 +1384,20 @@ export default function Cart() {
                 deliveryType === "delivery" ? "التوصيل" : "الاستلام"
               } غير متاحة لهذا الفرع حالياً. الرجاء اختيار فرع آخر أو طريقة استلام مختلفة.`
             );
+          } else {
+            // fallback لأي رسالة غير مترجمة
+            errorMessages.push("فشل في إنشاء الطلب. الرجاء المحاولة مرة أخرى.");
           }
-        });
-
-        if (errorMessages.length === 0) {
-          errorMessages.push("فشل في إنشاء الطلب. الرجاء المحاولة مرة أخرى.");
         }
+      });
 
+      // لو showModalOnly = true ومافيش أي رسائل تانية، نوقف هنا
+      if (showModalOnly && errorMessages.length === 0) {
+        return;
+      }
+
+      // عرض الرسائل لو في أي رسالة
+      if (errorMessages.length > 0) {
         if (isMobile()) {
           toast.error(errorMessages.join(" "), {
             position: "top-right",
@@ -1317,25 +1418,28 @@ export default function Cart() {
             },
           });
         }
+      }
+    }
+
+    // helper
+    function showGenericError() {
+      if (isMobile()) {
+        toast.error("فشل في إنشاء الطلب. الرجاء المحاولة مرة أخرى.", {
+          position: "top-right",
+          autoClose: 2500,
+          rtl: true,
+        });
       } else {
-        if (isMobile()) {
-          toast.error("فشل في إنشاء الطلب. الرجاء المحاولة مرة أخرى.", {
-            position: "top-right",
-            autoClose: 2500,
-            rtl: true,
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "خطأ",
-            text: "فشل في إنشاء الطلب. الرجاء المحاولة مرة أخرى.",
-            timer: 2500,
-            showConfirmButton: false,
-            customClass: {
-              popup: "rounded-3xl shadow-2xl dark:bg-gray-800 dark:text-white",
-            },
-          });
-        }
+        Swal.fire({
+          icon: "error",
+          title: "خطأ",
+          text: "فشل في إنشاء الطلب. الرجاء المحاولة مرة أخرى.",
+          timer: 2500,
+          showConfirmButton: false,
+          customClass: {
+            popup: "rounded-3xl shadow-2xl dark:bg-gray-800 dark:text-white",
+          },
+        });
       }
     }
   };
@@ -1350,6 +1454,183 @@ export default function Cart() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 py-4 sm:py-8 transition-colors duration-300">
+      {/* Phone Input Modal */}
+      {showPhoneInputModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[80] p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 border border-gray-300"
+            dir="rtl"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <FaPhone className="text-[#E41E26] text-xl" />
+                <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+                  تحديث رقم الهاتف
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowPhoneInputModal(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              >
+                <FaTimes className="text-lg" />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-xl border border-gray-300 mb-4">
+                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                  الرجاء إدخال رقم هاتفك لتتمكن من إكمال عملية الدفع.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  رقم الهاتف
+                </label>
+                <input
+                  type="tel"
+                  value={newPhoneNumber}
+                  onChange={(e) => setNewPhoneNumber(e.target.value)}
+                  placeholder="أدخل رقم الهاتف"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent"
+                  dir="ltr"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  سيتم استخدام هذا الرقم للتواصل بشأن الطلب
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowPhoneInputModal(false)}
+                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={updatePhoneNumber}
+                disabled={loadingProfile || !newPhoneNumber.trim()}
+                className="flex-1 py-3 bg-[#E41E26] text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-[#E41E26]"
+              >
+                {loadingProfile ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                    جاري الحفظ...
+                  </>
+                ) : (
+                  <>
+                    <FaSave />
+                    حفظ وتأكيد الدفع
+                  </>
+                )}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Missing Info Modal */}
+      {showMissingInfoModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70] p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 border border-gray-300"
+            dir="rtl"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <FaInfoCircle className="text-[#E41E26] text-xl" />
+                <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+                  معلومات ناقصة
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowMissingInfoModal(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              >
+                <FaTimes className="text-lg" />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <div className="p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-xl border border-yellow-300 mb-4">
+                <p className="text-yellow-700 dark:text-yellow-300 text-sm">
+                  يرجى إضافة رقم هاتف أو عنوان افتراضي للمتابعة في عملية الدفع.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    اختر أحد الخيارات التالية:
+                  </p>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={openPhoneInputModal}
+                  className="w-full p-4 bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-300 hover:border-[#E41E26] transition-all duration-300 flex items-center justify-center gap-3"
+                >
+                  <div className="w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                    <FaPhone className="text-[#E41E26] text-xl" />
+                  </div>
+                  <div className="text-right">
+                    <h4 className="font-bold text-gray-800 dark:text-white text-base">
+                      إضافة رقم هاتف
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      أضف رقم هاتف للتواصل معك بشأن الطلب
+                    </p>
+                  </div>
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleAddAddress}
+                  className="w-full p-4 bg-white dark:bg-gray-700 rounded-xl border-2 border-gray-300 hover:border-[#E41E26] transition-all duration-300 flex items-center justify-center gap-3"
+                >
+                  <div className="w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                    <FaMapPin className="text-[#E41E26] text-xl" />
+                  </div>
+                  <div className="text-right">
+                    <h4 className="font-bold text-gray-800 dark:text-white text-base">
+                      إضافة عنوان
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      أضف عنوان افتراضي لتوصيل الطلب
+                    </p>
+                  </div>
+                </motion.button>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowMissingInfoModal(false)}
+                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300"
+              >
+                إلغاء الطلب
+              </button>
+              <button
+                onClick={() => {
+                  setShowMissingInfoModal(false);
+                  navigate("/");
+                }}
+                className="flex-1 py-3 bg-[#E41E26] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 border border-[#E41E26]"
+              >
+                مواصلة التسوق
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       {showNotesModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
           <motion.div
