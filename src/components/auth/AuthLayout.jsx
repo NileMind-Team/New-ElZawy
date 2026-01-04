@@ -1,4 +1,4 @@
-import React from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaGoogle } from "react-icons/fa";
 
@@ -11,6 +11,23 @@ export default function AuthLayout({
   onGoogleLogin,
   isGoogleLoading,
 }) {
+  const formContainerRef = useRef(null);
+
+  const handleTabChangeWithScroll = (tab) => {
+    onTabChange(tab);
+
+    if (window.innerWidth < 1024) {
+      setTimeout(() => {
+        if (formContainerRef.current) {
+          formContainerRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
+    }
+  };
+
   return (
     <div
       className={`min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4 relative font-sans overflow-hidden transition-colors duration-300`}
@@ -67,7 +84,7 @@ export default function AuthLayout({
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => onTabChange("login")}
+                onClick={() => handleTabChangeWithScroll("login")}
                 className={`flex items-center gap-4 px-6 py-4 rounded-xl font-semibold text-lg transition-all duration-300 border ${
                   activeTab === "login"
                     ? "bg-white dark:bg-gray-800 text-[#E41E26] shadow-lg border-[#E41E26]"
@@ -87,7 +104,7 @@ export default function AuthLayout({
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => onTabChange("register")}
+                onClick={() => handleTabChangeWithScroll("register")}
                 className={`flex items-center gap-4 px-6 py-4 rounded-xl font-semibold text-lg transition-all duration-300 border ${
                   activeTab === "register"
                     ? "bg-white dark:bg-gray-800 text-[#E41E26] shadow-lg border-[#E41E26]"
@@ -167,7 +184,10 @@ export default function AuthLayout({
           </motion.div>
 
           {/* Right Side - Auth Form */}
-          <div className="lg:col-span-2 flex flex-col justify-center px-6 py-6 md:px-8 md:py-8">
+          <div
+            ref={formContainerRef}
+            className="lg:col-span-2 flex flex-col justify-center px-6 py-6 md:px-8 md:py-8"
+          >
             {children}
           </div>
         </div>

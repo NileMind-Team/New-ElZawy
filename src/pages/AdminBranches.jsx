@@ -73,10 +73,18 @@ const adjustTimeForBackend = (timeString) => {
 const adjustTimeFromBackend = (timeString) => {
   if (!timeString) return "";
 
-  const [hours, minutes] = timeString.split(":").map(Number);
+  let hours, minutes;
+
+  if (timeString.includes(":")) {
+    const parts = timeString.split(":");
+    hours = parseInt(parts[0]);
+    minutes = parseInt(parts[1]);
+  }
+
+  if (isNaN(hours) || isNaN(minutes)) return "";
+
   const date = new Date();
   date.setHours(hours, minutes, 0, 0);
-
   date.setHours(date.getHours() + 2);
 
   return `${date.getHours().toString().padStart(2, "0")}:${date
@@ -444,14 +452,15 @@ export default function AdminBranches() {
     const closingTime24 = branch.closingTime
       ? adjustTimeFromBackend(branch.closingTime)
       : "";
+
     setFormData({
       name: branch.name || "",
       email: branch.email || "",
       address: branch.address || "",
       locationUrl: branch.locationUrl || "",
       status: branch.status || "Open",
-      openingTime: convert24To12HourFormat(openingTime24),
-      closingTime: convert24To12HourFormat(closingTime24),
+      openingTime: openingTime24,
+      closingTime: closingTime24,
       isActive: branch.isActive !== undefined ? branch.isActive : true,
       cityId: branch.city?.id || "",
       managerId: branch.managerId || "",

@@ -23,6 +23,7 @@ import {
   FaMap,
   FaPercent,
   FaChartBar,
+  FaArrowLeft,
 } from "react-icons/fa";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -40,6 +41,8 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
   const [userRoles, setUserRoles] = useState([]);
   const sidebarRef = useRef(null);
   const dropdownRef = useRef(null);
+  // eslint-disable-next-line no-unused-vars
+  const [isHoveringLogo, setIsHoveringLogo] = useState(false);
 
   const isLoggedIn = !!localStorage.getItem("token");
 
@@ -309,16 +312,57 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
         >
           <Link
             to="/"
-            className="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform duration-200"
+            className="flex items-center gap-2 sm:gap-3 group relative"
+            onMouseEnter={() => setIsHoveringLogo(true)}
+            onMouseLeave={() => setIsHoveringLogo(false)}
+            aria-label="الرجوع إلى الصفحة الرئيسية"
+            title="الرجوع إلى الصفحة الرئيسية"
           >
-            <img
-              src={darkMode ? logoDark : logo}
-              alt="New - ElZawy logo"
-              className="w-14 h-12 object-contain"
-            />
-            <h1 className="hidden md:block text-xl lg:text-2xl font-bold text-[#E41E26] dark:text-[#E41E26]">
-              New - ElZawy
-            </h1>
+            {/* Logo Container */}
+            <div className="relative">
+              <img
+                src={darkMode ? logoDark : logo}
+                alt="New - ElZawy logo"
+                className="w-14 h-12 object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+
+              {/* Home Icon on Small Screens - Inside Logo */}
+              <div className="md:hidden absolute -top-1 -right-1 bg-[#E41E26] dark:bg-[#E41E26] rounded-full p-1 border-2 border-white dark:border-gray-900 shadow-sm">
+                <FaHome className="text-white text-xs" />
+              </div>
+            </div>
+
+            <div className="flex flex-col items-start">
+              {/* Title and Icon for Medium+ Screens */}
+              <div className="flex items-center gap-2">
+                <h1 className="hidden md:block text-xl lg:text-2xl font-bold text-[#E41E26] dark:text-[#E41E26] transition-all duration-300">
+                  New - ElZawy
+                </h1>
+
+                {/* Home Icon for Medium+ Screens */}
+                <FaHome className="hidden md:block text-[#E41E26] dark:text-[#E41E26] text-sm transition-all duration-300" />
+              </div>
+
+              {/* Home Indicator Text - All Screens */}
+              <div className="flex items-center gap-1">
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-1 transition-all duration-300 group-hover:text-[#E41E26] dark:group-hover:text-[#E41E26]">
+                  {/* Show Arrow on Small Screens, Home Icon on Medium+ */}
+                  <span className="md:hidden flex items-center gap-1">
+                    <FaArrowLeft className="text-[10px]" />
+                    <span className="ml-1">الرئيسية</span>
+                  </span>
+
+                  {/* Full Text on Medium+ Screens */}
+                  <span className="hidden md:flex items-center gap-1">
+                    <FaArrowLeft className="text-[10px]" />
+                    <span>الصفحة الرئيسية</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* Hover Effect Ring - Only for Medium+ Screens */}
+            <div className="hidden md:block absolute inset-0 -m-2 rounded-2xl bg-[#E41E26] pointer-events-none opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
           </Link>
         </motion.div>
 
