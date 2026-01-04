@@ -1339,7 +1339,6 @@ export default function Cart() {
           setShowMissingInfoModal(true);
           fetchUserProfile();
         } else {
-          // أي Error تاني
           if (
             errorItem.code === "User" &&
             errorItem.description === "User is not active."
@@ -1354,6 +1353,10 @@ export default function Cart() {
           } else if (errorItem.code === "Branch.InActive") {
             errorMessages.push(
               "الفرع المختار غير نشط حالياً. الرجاء اختيار فرع آخر أو المحاولة عندما يكون الفرع نشطاً."
+            );
+          } else if (errorItem.code === "Branch.OutOfWorkingHours") {
+            errorMessages.push(
+              "الفرع المختار خارج ساعات العمل حالياً. الرجاء المحاولة خلال ساعات العمل أو اختيار فرع آخر."
             );
           } else if (errorItem.code === "DeliveryFee.NotActive") {
             errorMessages.push(
