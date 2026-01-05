@@ -1041,25 +1041,6 @@ const SalesReports = () => {
     }
   };
 
-  const getPrintStatusClass = (status) => {
-    switch (status) {
-      case "Pending":
-        return "status-pending";
-      case "Confirmed":
-        return "status-confirmed";
-      case "Preparing":
-        return "status-preparing";
-      case "OutForDelivery":
-        return "status-outfordelivery";
-      case "Delivered":
-        return "status-delivered";
-      case "Cancelled":
-        return "status-cancelled";
-      default:
-        return "";
-    }
-  };
-
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     fetchReportData(pageNumber, false);
@@ -1296,43 +1277,6 @@ const SalesReports = () => {
     font-weight: bold;
   }
   
-  .status-badge {
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8px;
-    font-weight: bold;
-  }
-  
-  .status-pending {
-    background: #fef3c7 !important;
-    color: #92400e !important;
-  }
-  
-  .status-confirmed {
-    background: #dbeafe !important;
-    color: #1e40af !important;
-  }
-  
-  .status-preparing {
-    background: #ffedd5 !important;
-    color: #92400e !important;
-  }
-  
-  .status-outfordelivery {
-    background: #f3e8ff !important;
-    color: #6b21a8 !important;
-  }
-  
-  .status-delivered {
-    background: #d1fae5 !important;
-    color: #065f46 !important;
-  }
-  
-  .status-cancelled {
-    background: #f8d7da !important;
-    color: #721c24 !important;
-  }
-  
   .order-type-delivery {
     color: #1d4ed8 !important;
   }
@@ -1413,20 +1357,18 @@ ${
   <table class="print-table">
     <thead>
       <tr>
-        <th width="10%">رقم الطلب</th>
-        <th width="15%">العميل</th>
-        <th width="10%">الهاتف</th>
-        <th width="10%">نوع الطلب</th>
+        <th width="15%">رقم الطلب</th>
+        <th width="20%">العميل</th>
+        <th width="20%">الهاتف</th>
+        <th width="15%">نوع الطلب</th>
         <th width="20%">العنوان</th>
-        <th width="10%">الحالة</th>
-        <th width="15%">المبلغ النهائي</th>
+        <th width="20%">المبلغ النهائي</th>
       </tr>
     </thead>
     <tbody>
       ${allOrders
         .map((order, index) => {
           const userName = findUserName(order.userId);
-          const statusClass = getPrintStatusClass(order.status);
           const orderTypeClass = `order-type-${
             order.deliveryFee?.fee > 0 ? "delivery" : "pickup"
           }`;
@@ -1447,9 +1389,6 @@ ${
             order.deliveryFee?.fee > 0 ? "توصيل" : "استلام"
           }</td>
             <td>${order.location?.streetName || "غير متوفر"}</td>
-            <td><span class="status-badge ${statusClass}">${getStatusLabel(
-            order.status
-          )}</span></td>
             <td class="total-amount">${formatCurrencyArabic(
               order.totalWithFee || 0
             )}</td>
@@ -1458,7 +1397,7 @@ ${
         })
         .join("")}
       <tr style="background-color: #f0f0f0 !important; font-weight: bold;">
-        <td colspan="6" style="text-align: left; padding-right: 20px;">المجموع الكلي:</td>
+        <td colspan="5" style="text-align: left; padding-right: 20px;">المجموع الكلي:</td>
         <td class="total-amount" style="text-align: center;">${formatCurrencyArabic(
           printSummary.totalSales || 0
         )}</td>
