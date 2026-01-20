@@ -18,6 +18,7 @@ import {
   FaLayerGroup,
   FaStickyNote,
   FaPercent,
+  FaChevronDown,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -53,6 +54,10 @@ const ProductDetails = () => {
     canSelectMultipleOptions: false,
     isSelectionRequired: false,
   });
+  const [existingAddonTypes, setExistingAddonTypes] = useState([]);
+  const [selectedAddonType, setSelectedAddonType] = useState(null);
+  const [showAddonTypeDropdown, setShowAddonTypeDropdown] = useState(false);
+  const [isAddingNewAddonType, setIsAddingNewAddonType] = useState(false);
 
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [showNotesModal, setShowNotesModal] = useState(false);
@@ -62,6 +67,7 @@ const ProductDetails = () => {
   const modalRef = useRef(null);
   const addonTypeModalRef = useRef(null);
   const notesModalRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const isMobile = () => {
     return window.innerWidth < 768;
@@ -204,7 +210,7 @@ const ProductDetails = () => {
 
       const totalCount = cartItems.reduce(
         (total, item) => total + item.quantity,
-        0
+        0,
       );
       setCartItemsCount(totalCount);
     } catch (error) {
@@ -218,12 +224,24 @@ const ProductDetails = () => {
       if (!categoryId) return;
 
       const response = await axiosInstance.get(
-        `/api/Categories/Get/${categoryId}`
+        `/api/Categories/Get/${categoryId}`,
       );
       setCategoryInfo(response.data);
     } catch (error) {
       console.error("Error fetching category info:", error);
       setCategoryInfo(null);
+    }
+  };
+
+  const fetchExistingAddonTypes = async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/api/MenuItemOptionTypes/GetAll",
+      );
+      setExistingAddonTypes(response.data || []);
+    } catch (error) {
+      console.error("Error fetching existing addon types:", error);
+      setExistingAddonTypes([]);
     }
   };
 
@@ -291,7 +309,7 @@ const ProductDetails = () => {
           everyday: productData.isAllTime,
           specificDays:
             productData.menuItemSchedules?.map((schedule) =>
-              getDayName(schedule.day)
+              getDayName(schedule.day),
             ) || [],
         },
         menuItemSchedules: productData.menuItemSchedules || [],
@@ -322,6 +340,7 @@ const ProductDetails = () => {
   useEffect(() => {
     fetchProductDetails();
     fetchCartItemsCount();
+    fetchExistingAddonTypes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, navigate]);
 
@@ -355,6 +374,13 @@ const ProductDetails = () => {
       ) {
         handleCloseNotesModal();
       }
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        showAddonTypeDropdown
+      ) {
+        setShowAddonTypeDropdown(false);
+      }
     };
 
     if (showOptionModal || showAddonTypeModal || showNotesModal) {
@@ -366,7 +392,12 @@ const ProductDetails = () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [showOptionModal, showAddonTypeModal, showNotesModal]);
+  }, [
+    showOptionModal,
+    showAddonTypeModal,
+    showNotesModal,
+    showAddonTypeDropdown,
+  ]);
 
   const getDayName = (dayNumber) => {
     const days = [
@@ -466,7 +497,7 @@ const ProductDetails = () => {
 
         if (currentSelections.includes(optionId)) {
           newSelectedAddons[addonId] = currentSelections.filter(
-            (id) => id !== optionId
+            (id) => id !== optionId,
           );
         } else {
           newSelectedAddons[addonId] = [...currentSelections, optionId];
@@ -520,7 +551,7 @@ const ProductDetails = () => {
         cancelButtonColor: "#6B7280",
         confirmButtonText: "تسجيل الدخول",
         cancelButtonText: "إنشاء حساب جديد",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           navigate("/login");
         } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -535,16 +566,16 @@ const ProductDetails = () => {
         "warning",
         "تحذير",
         `لا يمكن إضافة هذا المنتج إلى السلة حالياً`,
-        { timer: 2000 }
+        { timer: 2000 },
       );
       return;
     }
 
     const requiredAddons = addonsData.filter(
-      (addon) => addon.isSelectionRequired
+      (addon) => addon.isSelectionRequired,
     );
     const missingRequiredAddons = requiredAddons.filter(
-      (addon) => !selectedAddons[addon.id]
+      (addon) => !selectedAddons[addon.id],
     );
 
     if (missingRequiredAddons.length > 0) {
@@ -554,7 +585,7 @@ const ProductDetails = () => {
         `يرجى اختيار ${missingRequiredAddons
           .map((addon) => addon.title)
           .join(" و ")}`,
-        { timer: 2000 }
+        { timer: 2000 },
       );
       return;
     }
@@ -582,7 +613,7 @@ const ProductDetails = () => {
         "success",
         "تم بنجاح!",
         `تم إضافة ${toArabicNumbers(quantity)} ${product.name} إلى سلة التسوق`,
-        { timer: 1500 }
+        { timer: 1500 },
       );
 
       setQuantity(1);
@@ -638,14 +669,14 @@ const ProductDetails = () => {
         "error",
         "لا يمكن التعديل",
         "لا يمكن تعديل حالة المنتج لأن الفئة معطلة",
-        { timer: 2000 }
+        { timer: 2000 },
       );
       return;
     }
 
     try {
       await axiosInstance.put(
-        `/api/MenuItems/ChangeMenuItemActiveStatus/${product.id}`
+        `/api/MenuItems/ChangeMenuItemActiveStatus/${product.id}`,
       );
 
       setProduct({ ...product, isActive: !product.isActive });
@@ -655,7 +686,7 @@ const ProductDetails = () => {
         "success",
         "تم تحديث الحالة!",
         `تم ${currentActiveStatus ? "تعطيل" : "تفعيل"} المنتج`,
-        { timer: 1500 }
+        { timer: 1500 },
       );
     } catch (error) {
       console.error("Error updating product status:", error);
@@ -671,7 +702,7 @@ const ProductDetails = () => {
       const offersData = response.data;
 
       const existingOffer = offersData.find(
-        (offer) => offer.menuItemId === product.id
+        (offer) => offer.menuItemId === product.id,
       );
 
       if (existingOffer) {
@@ -748,7 +779,7 @@ const ProductDetails = () => {
             name: optionForm.name,
             price: optionForm.price,
             typeId: editingOption.typeId,
-          }
+          },
         );
 
         showMessage("success", "تم بنجاح!", "تم تحديث الخيار بنجاح", {
@@ -809,6 +840,8 @@ const ProductDetails = () => {
       canSelectMultipleOptions: false,
       isSelectionRequired: false,
     });
+    setSelectedAddonType(null);
+    setIsAddingNewAddonType(false);
     setNewAddonOptions([]);
     setShowAddonTypeModal(true);
   };
@@ -820,6 +853,8 @@ const ProductDetails = () => {
       canSelectMultipleOptions: false,
       isSelectionRequired: false,
     });
+    setSelectedAddonType(null);
+    setIsAddingNewAddonType(false);
     setNewAddonOptions([]);
   };
 
@@ -829,6 +864,28 @@ const ProductDetails = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleSelectExistingAddonType = (addonType) => {
+    setSelectedAddonType(addonType);
+    setAddonTypeForm({
+      name: addonType.name,
+      canSelectMultipleOptions: addonType.canSelectMultipleOptions,
+      isSelectionRequired: addonType.isSelectionRequired,
+    });
+    setIsAddingNewAddonType(false);
+    setShowAddonTypeDropdown(false);
+  };
+
+  const handleAddNewAddonType = () => {
+    setSelectedAddonType(null);
+    setAddonTypeForm({
+      name: "",
+      canSelectMultipleOptions: false,
+      isSelectionRequired: false,
+    });
+    setIsAddingNewAddonType(true);
+    setShowAddonTypeDropdown(false);
   };
 
   const addNewOptionField = () => {
@@ -850,8 +907,8 @@ const ProductDetails = () => {
               ...option,
               [field]: field === "price" ? parseFloat(value) || 0 : value,
             }
-          : option
-      )
+          : option,
+      ),
     );
   };
 
@@ -860,54 +917,116 @@ const ProductDetails = () => {
   };
 
   const handleSaveAddonType = async () => {
-    if (!addonTypeForm.name.trim()) {
-      showMessage("error", "خطأ", "يرجى إدخال اسم نوع الإضافة", {
-        timer: 2000,
-      });
-      return;
-    }
-
     try {
-      const response = await axiosInstance.post(
-        `/api/MenuItemOptionTypes/Add`,
-        {
-          menuItemId: parseInt(id),
-          name: addonTypeForm.name,
-          canSelectMultipleOptions: addonTypeForm.canSelectMultipleOptions,
-          isSelectionRequired: addonTypeForm.isSelectionRequired,
+      if (selectedAddonType && !isAddingNewAddonType) {
+        // التحقق من وجود خيارات إذا كان اختيار نوع إضافة قديم
+        if (newAddonOptions.length === 0) {
+          showMessage("error", "خطأ", "يرجى إضافة خيار واحد على الأقل", {
+            timer: 2000,
+          });
+          return;
         }
-      );
 
-      const newAddonTypeId = response.data.id;
+        // التحقق من أن جميع الخيارات لها اسم
+        const invalidOptions = newAddonOptions.filter(
+          (option) => !option.name.trim(),
+        );
+        if (invalidOptions.length > 0) {
+          showMessage("error", "خطأ", "يرجى إدخال اسم لكل خيار", {
+            timer: 2000,
+          });
+          return;
+        }
 
-      if (newAddonOptions.length > 0) {
+        // فقط إضافة الخيارات باستخدام الـ endpoint الخاص بإضافة الخيارات
         const optionPromises = newAddonOptions.map((option) => {
-          if (option.name.trim()) {
-            return axiosInstance.post(`/api/MenuItemOptions/Add`, {
-              menuItemId: parseInt(id),
-              typeId: newAddonTypeId,
-              name: option.name,
-              price: option.price,
-            });
-          }
-          return Promise.resolve();
+          return axiosInstance.post(`/api/MenuItemOptions/Add`, {
+            menuItemId: parseInt(id),
+            typeId: selectedAddonType.id,
+            name: option.name,
+            price: option.price,
+          });
         });
 
         await Promise.all(optionPromises);
-      }
 
-      showMessage(
-        "success",
-        "تم بنجاح!",
-        "تم إضافة نوع الإضافة مع خياراته بنجاح",
-        { timer: 2000 }
-      );
+        showMessage(
+          "success",
+          "تم بنجاح!",
+          "تم إضافة الخيارات لنوع الإضافة المحدد",
+          { timer: 2000 },
+        );
+      } else if (isAddingNewAddonType) {
+        // إضافة نوع إضافة جديد
+        if (!addonTypeForm.name.trim()) {
+          showMessage("error", "خطأ", "يرجى إدخال اسم نوع الإضافة", {
+            timer: 2000,
+          });
+          return;
+        }
+
+        // إضافة نوع الإضافة الجديد
+        const response = await axiosInstance.post(
+          `/api/MenuItemOptionTypes/Add`,
+          {
+            menuItemId: parseInt(id),
+            name: addonTypeForm.name,
+            canSelectMultipleOptions: addonTypeForm.canSelectMultipleOptions,
+            isSelectionRequired: addonTypeForm.isSelectionRequired,
+          },
+        );
+
+        const newAddonTypeId = response.data.id;
+
+        // إضافة الخيارات إذا وجدت
+        if (newAddonOptions.length > 0) {
+          const optionPromises = newAddonOptions.map((option) => {
+            if (option.name.trim()) {
+              return axiosInstance.post(`/api/MenuItemOptions/Add`, {
+                menuItemId: parseInt(id),
+                typeId: newAddonTypeId,
+                name: option.name,
+                price: option.price,
+              });
+            }
+            return Promise.resolve();
+          });
+
+          await Promise.all(optionPromises);
+        }
+
+        showMessage(
+          "success",
+          "تم بنجاح!",
+          "تم إضافة نوع الإضافة الجديد مع خياراته بنجاح",
+          { timer: 2000 },
+        );
+      } else {
+        showMessage(
+          "error",
+          "خطأ",
+          "يرجى اختيار نوع الإضافة أو إضافة نوع جديد",
+          {
+            timer: 2000,
+          },
+        );
+        return;
+      }
 
       await fetchProductDetails();
       handleCloseAddonTypeModal();
     } catch (error) {
       console.error("Error saving addon type:", error);
-      showMessage("error", "خطأ", "فشل في حفظ نوع الإضافة", { timer: 2000 });
+      if (error.response?.data?.errors?.TypeId) {
+        showMessage(
+          "error",
+          "خطأ",
+          "خطأ في معرّف نوع الإضافة. يرجى المحاولة مرة أخرى",
+          { timer: 2000 },
+        );
+      } else {
+        showMessage("error", "خطأ", "فشل في حفظ نوع الإضافة", { timer: 2000 });
+      }
     }
   };
 
@@ -1079,63 +1198,166 @@ const ProductDetails = () => {
 
             <div className="space-y-6">
               <div className="space-y-4">
-                <div>
+                <div ref={dropdownRef} className="relative">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    اسم نوع الإضافة *
+                    اختيار نوع الإضافة *
                   </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={addonTypeForm.name}
-                    onChange={handleAddonTypeFormChange}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent"
-                    placeholder="أدخل اسم نوع الإضافة"
-                    autoFocus
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      id="canSelectMultipleOptions"
-                      name="canSelectMultipleOptions"
-                      checked={addonTypeForm.canSelectMultipleOptions}
-                      onChange={handleAddonTypeFormChange}
-                      className="w-5 h-5 text-[#E41E26] rounded focus:ring-[#E41E26]"
+                  <div
+                    className={`w-full px-4 py-3 border rounded-lg cursor-pointer flex items-center justify-between ${
+                      showAddonTypeDropdown
+                        ? "border-[#E41E26] ring-2 ring-[#E41E26]/20"
+                        : "border-gray-300 dark:border-gray-600"
+                    } bg-white dark:bg-gray-700`}
+                    onClick={() =>
+                      setShowAddonTypeDropdown(!showAddonTypeDropdown)
+                    }
+                  >
+                    <span className="text-gray-700 dark:text-gray-300">
+                      {selectedAddonType
+                        ? selectedAddonType.name
+                        : isAddingNewAddonType
+                          ? "إضافة نوع جديد"
+                          : "اختر نوع الإضافة"}
+                    </span>
+                    <FaChevronDown
+                      className={`text-gray-500 transition-transform ${
+                        showAddonTypeDropdown ? "rotate-180" : ""
+                      }`}
                     />
-                    <label
-                      htmlFor="canSelectMultipleOptions"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      يمكن اختيار أكثر من خيار
-                    </label>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      id="isSelectionRequired"
-                      name="isSelectionRequired"
-                      checked={addonTypeForm.isSelectionRequired}
-                      onChange={handleAddonTypeFormChange}
-                      className="w-5 h-5 text-[#E41E26] rounded focus:ring-[#E41E26]"
-                    />
-                    <label
-                      htmlFor="isSelectionRequired"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      اختيار إجباري
-                    </label>
-                  </div>
+                  {showAddonTypeDropdown && (
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      <div
+                        className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-200 dark:border-gray-700 text-green-600 dark:text-green-400 font-medium"
+                        onClick={handleAddNewAddonType}
+                      >
+                        + إضافة نوع جديد
+                      </div>
+                      {existingAddonTypes.map((addonType) => (
+                        <div
+                          key={addonType.id}
+                          className={`px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer ${
+                            selectedAddonType?.id === addonType.id
+                              ? "bg-gray-100 dark:bg-gray-700"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleSelectExistingAddonType(addonType)
+                          }
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-700 dark:text-gray-300">
+                              {addonType.name}
+                            </span>
+                            <div className="flex gap-2">
+                              {addonType.canSelectMultipleOptions && (
+                                <span className="text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-300">
+                                  متعدد
+                                </span>
+                              )}
+                              {addonType.isSelectionRequired && (
+                                <span className="text-xs bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-300 px-2 py-1 rounded-full border border-red-300">
+                                  مطلوب
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+                {isAddingNewAddonType && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        اسم نوع الإضافة الجديد *
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={addonTypeForm.name}
+                        onChange={handleAddonTypeFormChange}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent"
+                        placeholder="أدخل اسم نوع الإضافة الجديد"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          id="canSelectMultipleOptions"
+                          name="canSelectMultipleOptions"
+                          checked={addonTypeForm.canSelectMultipleOptions}
+                          onChange={handleAddonTypeFormChange}
+                          className="w-5 h-5 text-[#E41E26] rounded focus:ring-[#E41E26]"
+                        />
+                        <label
+                          htmlFor="canSelectMultipleOptions"
+                          className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
+                          يمكن اختيار أكثر من خيار
+                        </label>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          id="isSelectionRequired"
+                          name="isSelectionRequired"
+                          checked={addonTypeForm.isSelectionRequired}
+                          onChange={handleAddonTypeFormChange}
+                          className="w-5 h-5 text-[#E41E26] rounded focus:ring-[#E41E26]"
+                        />
+                        <label
+                          htmlFor="isSelectionRequired"
+                          className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
+                          اختيار إجباري
+                        </label>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {selectedAddonType && !isAddingNewAddonType && (
+                  <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                        {selectedAddonType.name}
+                      </h4>
+                      <div className="flex gap-2">
+                        {selectedAddonType.canSelectMultipleOptions && (
+                          <span className="text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-300">
+                            متعدد
+                          </span>
+                        )}
+                        {selectedAddonType.isSelectionRequired && (
+                          <span className="text-xs bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-300 px-2 py-1 rounded-full border border-red-300">
+                            مطلوب
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      سيتم إضافة خيارات جديدة لهذا النوع
+                    </p>
+                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                      * يجب إضافة خيار واحد على الأقل
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Add Options Section */}
               <div className="border-t pt-4">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-gray-800 dark:text-gray-200">
-                    إضافة خيارات
+                    إضافة خيارات{" "}
+                    {selectedAddonType && !isAddingNewAddonType && "(مطلوب)*"}
                   </h4>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -1147,6 +1369,16 @@ const ProductDetails = () => {
                     إضافة خيار
                   </motion.button>
                 </div>
+
+                {selectedAddonType &&
+                  !isAddingNewAddonType &&
+                  newAddonOptions.length === 0 && (
+                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg p-3 mb-3">
+                      <p className="text-sm text-amber-700 dark:text-amber-300">
+                        يجب إضافة خيار واحد على الأقل لنوع الإضافة المحدد
+                      </p>
+                    </div>
+                  )}
 
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
                   {newAddonOptions.length === 0 ? (
@@ -1180,11 +1412,12 @@ const ProductDetails = () => {
                                 updateNewOptionField(
                                   option.id,
                                   "name",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-[#E41E26] focus:border-transparent"
                               placeholder="اسم الخيار"
+                              required
                             />
                           </div>
                           <div>
@@ -1195,7 +1428,7 @@ const ProductDetails = () => {
                                 updateNewOptionField(
                                   option.id,
                                   "price",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               min="0"
@@ -1221,7 +1454,20 @@ const ProductDetails = () => {
               </button>
               <button
                 onClick={handleSaveAddonType}
-                className="flex-1 py-3 bg-[#E41E26] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap border border-[#E41E26] hover:bg-[#d11c24]"
+                disabled={
+                  (!selectedAddonType && !isAddingNewAddonType) ||
+                  (selectedAddonType &&
+                    !isAddingNewAddonType &&
+                    newAddonOptions.length === 0)
+                }
+                className={`flex-1 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 whitespace-nowrap border ${
+                  (selectedAddonType &&
+                    !isAddingNewAddonType &&
+                    newAddonOptions.length > 0) ||
+                  (isAddingNewAddonType && addonTypeForm.name.trim())
+                    ? "bg-[#E41E26] text-white hover:shadow-lg transition-all border-[#E41E26] hover:bg-[#d11c24]"
+                    : "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed border-gray-400"
+                }`}
               >
                 <FaSave />
                 حفظ
@@ -1501,17 +1747,17 @@ const ProductDetails = () => {
                           {product.preparationTimeStart &&
                           product.preparationTimeEnd
                             ? `${toArabicNumbers(
-                                product.preparationTimeStart
+                                product.preparationTimeStart,
                               )} - ${toArabicNumbers(
-                                product.preparationTimeEnd
+                                product.preparationTimeEnd,
                               )} دقيقة`
                             : product.preparationTimeStart
-                            ? `${toArabicNumbers(
-                                product.preparationTimeStart
-                              )} دقيقة`
-                            : `${toArabicNumbers(
-                                product.preparationTimeEnd
-                              )} دقيقة`}
+                              ? `${toArabicNumbers(
+                                  product.preparationTimeStart,
+                                )} دقيقة`
+                              : `${toArabicNumbers(
+                                  product.preparationTimeEnd,
+                                )} دقيقة`}
                         </div>
                       </div>
                     )}
@@ -1586,7 +1832,7 @@ const ProductDetails = () => {
                                       handleAddonSelect(
                                         addon.id,
                                         option.id,
-                                        addon.type
+                                        addon.type,
                                       )
                                     }
                                     className={`w-full p-2 md:p-3 rounded-lg md:rounded-xl border-2 transition-all duration-200 flex items-center justify-between ${
@@ -1627,7 +1873,7 @@ const ProductDetails = () => {
                                           e.stopPropagation();
                                           handleOpenEditOptionModal(
                                             addon.id,
-                                            option
+                                            option,
                                           );
                                         }}
                                         className="bg-blue-500 text-white p-1.5 rounded-lg hover:bg-blue-600 transition-colors shadow-md border border-blue-600"
@@ -1704,7 +1950,7 @@ const ProductDetails = () => {
                             {additionalNotes
                               ? `انقر لتعديل التعليمات: ${additionalNotes.substring(
                                   0,
-                                  60
+                                  60,
                                 )}${additionalNotes.length > 60 ? "..." : ""}`
                               : "انقر لإضافة تعليمات إضافية"}
                           </p>
@@ -1766,8 +2012,8 @@ const ProductDetails = () => {
                   addingToCart
                     ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white cursor-wait"
                     : isProductAvailableForCart()
-                    ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
-                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                      ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
+                      : "bg-gray-400 text-gray-200 cursor-not-allowed"
                 }`}
                 dir="rtl"
               >
@@ -1781,7 +2027,7 @@ const ProductDetails = () => {
                     <FaShoppingCart className="text-lg md:text-xl" />
                     {isProductAvailableForCart()
                       ? `أضف إلى السلة - ${toArabicNumbers(
-                          calculateTotalPrice().toFixed(2)
+                          calculateTotalPrice().toFixed(2),
                         )} ج.م`
                       : "غير متوفر"}
                   </>

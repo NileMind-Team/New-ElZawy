@@ -988,6 +988,13 @@ const TimeDateSalesReport = () => {
     return "لا يوجد";
   };
 
+  const getBranchName = (order) => {
+    if (order.branch?.name) {
+      return order.branch.name;
+    }
+    return "غير محدد";
+  };
+
   const formatCurrency = (amount) => {
     if (amount === null || amount === undefined || isNaN(amount)) {
       return "0.00 ج.م";
@@ -1335,12 +1342,13 @@ ${
   <table class="print-table">
     <thead>
       <tr>
-        <th width="15%">رقم الطلب</th>
-        <th width="20%">العميل</th>
-        <th width="20%">الهاتف</th>
-        <th width="20%">نوع الطلب</th>
-        <th width="15%">المدينة</th>
-        <th width="20%">المبلغ النهائي</th>
+        <th width="12%">رقم الطلب</th>
+        <th width="15%">العميل</th>
+        <th width="12%">الهاتف</th>
+        <th width="12%">نوع الطلب</th>
+        <th width="12%">المدينة</th>
+        <th width="15%">الفرع</th>
+        <th width="12%">المبلغ النهائي</th>
       </tr>
     </thead>
     <tbody>
@@ -1357,6 +1365,7 @@ ${
             : order.user?.phoneNumber || "غير متوفر";
 
           const cityName = order.location?.city?.name || "لا يوجد";
+          const branchName = order.branch?.name || "غير محدد";
 
           const orderTypeClass = `order-type-${
             order.deliveryFee?.fee > 0 ? "delivery" : "pickup"
@@ -1368,6 +1377,7 @@ ${
             ? phoneNumber.replace(/\d/g, (d) => toArabicNumbers(d))
             : "غير متوفر";
           const cityArabic = cityName;
+          const branchArabic = branchName;
 
           return `
           <tr>
@@ -1378,6 +1388,7 @@ ${
               order.deliveryFee?.fee > 0 ? "توصيل" : "استلام"
             }</td>
             <td>${cityArabic}</td>
+            <td>${branchArabic}</td>
             <td class="total-amount">${formatCurrencyArabic(
               order.totalWithFee || 0,
             )}</td>
@@ -1386,7 +1397,7 @@ ${
         })
         .join("")}
       <tr style="background-color: #f0f0f0 !important; font-weight: bold;">
-        <td colspan="5" style="text-align: left; padding-right: 20px;">المجموع الكلي:</td>
+        <td colspan="6" style="text-align: left; padding-right: 20px;">المجموع الكلي:</td>
         <td class="total-amount" style="text-align: center;">${formatCurrencyArabic(
           printSummary.totalSales || 0,
         )}</td>
@@ -1962,6 +1973,9 @@ ${
                           المدينة
                         </th>
                         <th className="px-4 py-3 text-center font-semibold text-gray-700 dark:text-gray-300">
+                          الفرع
+                        </th>
+                        <th className="px-4 py-3 text-center font-semibold text-gray-700 dark:text-gray-300">
                           الإجمالي
                         </th>
                         <th className="px-4 py-3 text-center font-semibold text-gray-700 dark:text-gray-300">
@@ -2008,6 +2022,9 @@ ${
                           <td className="px-4 py-3 text-center text-sm text-gray-600 dark:text-gray-400">
                             {getCustomerCity(order)}
                           </td>
+                          <td className="px-4 py-3 text-center text-sm text-gray-600 dark:text-gray-400">
+                            {getBranchName(order)}
+                          </td>
                           <td className="px-4 py-3 text-center font-bold text-[#E41E26] dark:text-[#FDB913]">
                             {formatCurrency(order.totalWithFee)}
                           </td>
@@ -2034,7 +2051,7 @@ ${
                     <tfoot className="bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700">
                       <tr>
                         <td
-                          colSpan="5"
+                          colSpan="6"
                           className="px-4 py-3 text-center font-bold text-gray-800 dark:text-white"
                         >
                           المجموع الكلي:
