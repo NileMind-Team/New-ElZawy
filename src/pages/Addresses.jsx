@@ -475,25 +475,25 @@ export default function Addresses() {
       if (editingId) {
         const res = await axiosInstance.put(
           `/api/Locations/Update/${editingId}`,
-          formattedData
+          formattedData,
         );
         if (res.status === 200 || res.status === 204) {
           setAddresses(
             addresses.map((addr) =>
-              addr.id === editingId ? { ...addr, ...formattedData } : addr
-            )
+              addr.id === editingId ? { ...addr, ...formattedData } : addr,
+            ),
           );
           showAddressSuccessAlert("تم تحديث العنوان: تم تحديث عنوانك بنجاح");
         }
       } else {
         const res = await axiosInstance.post(
           "/api/Locations/Add",
-          formattedData
+          formattedData,
         );
         if (res.status === 200) {
           fetchAddresses();
           showAddressSuccessAlert(
-            "تم إضافة العنوان: تم إضافة عنوانك الجديد بنجاح"
+            "تم إضافة العنوان: تم إضافة عنوانك الجديد بنجاح",
           );
           if (location.state?.fromCart) {
             setTimeout(() => {
@@ -557,18 +557,22 @@ export default function Addresses() {
     });
   };
 
-  const handleSetDefault = async (id) => {
+  const handleSetDefault = async (id, e) => {
+    if (e) e.stopPropagation();
+
     try {
       await axiosInstance.put(`/api/Locations/ChangeDefaultLocation/${id}`);
-      setAddresses(
-        addresses.map((addr) => ({
+
+      // تحديث الحالة المحلية فورياً
+      setAddresses((prevAddresses) =>
+        prevAddresses.map((addr) => ({
           ...addr,
           isDefaultLocation: addr.id === id,
-        }))
+        })),
       );
 
       showAddressSuccessAlert(
-        "تم تحديث العنوان الافتراضي: تم تغيير عنوانك الافتراضي"
+        "تم تحديث العنوان الافتراضي: تم تغيير عنوانك الافتراضي",
       );
 
       if (location.state?.fromCart) {
@@ -577,6 +581,7 @@ export default function Addresses() {
         }, 1500);
       }
     } catch (err) {
+      console.error("Error setting default address:", err);
       showAddressErrorAlert(err.response?.data);
     }
   };
@@ -629,7 +634,7 @@ export default function Addresses() {
           console.warn("خطأ في تحديد الموقع:", error);
           setSelectedLocation(defaultCenter);
         },
-        { enableHighAccuracy: true }
+        { enableHighAccuracy: true },
       );
     } else {
       setSelectedLocation(defaultCenter);
@@ -673,7 +678,7 @@ export default function Addresses() {
     ];
 
     return requiredFields.every(
-      (field) => formData[field] && formData[field].toString().trim() !== ""
+      (field) => formData[field] && formData[field].toString().trim() !== "",
     );
   };
 
@@ -948,7 +953,7 @@ export default function Addresses() {
                       darkMode
                         ? "bg-gray-700/80 border-gray-600"
                         : "bg-white/80 border-gray-200"
-                    } backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 border-2 transition-all duration-300 hover:shadow-lg ${
+                    } backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 border-2 transition-all duration-300 hover:shadow-lg cursor-pointer group ${
                       address.isDefaultLocation
                         ? `border-[#E41E26] ${
                             darkMode
@@ -958,7 +963,13 @@ export default function Addresses() {
                         : ""
                     }`}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+                    <div
+                      className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSetDefault(address.id, e);
+                      }}
+                    >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                           <div
@@ -1053,15 +1064,18 @@ export default function Addresses() {
                             <motion.button
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
-                              onClick={() => toggleMapVisibility(address.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleMapVisibility(address.id);
+                              }}
                               className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm transition-all duration-300 border ${
                                 darkMode
                                   ? expandedMaps[address.id]
                                     ? "bg-gray-600 text-gray-200 hover:bg-gray-500 border-gray-500"
                                     : "bg-gray-700 text-gray-300 hover:bg-gray-600 border-gray-600"
                                   : expandedMaps[address.id]
-                                  ? "bg-gray-200 text-gray-700 hover:bg-gray-300 border-gray-300"
-                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-200"
+                                    ? "bg-gray-200 text-gray-700 hover:bg-gray-300 border-gray-300"
+                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-200"
                               }`}
                             >
                               {expandedMaps[address.id] ? (
@@ -1080,31 +1094,42 @@ export default function Addresses() {
                         )}
                       </div>
 
-                      <div className="flex flex-row sm:flex-col lg:flex-row gap-1 sm:gap-2 justify-end sm:justify-start">
-                        {!address.isDefaultLocation && (
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleSetDefault(address.id)}
-                            className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 ${
-                              darkMode
-                                ? "bg-green-900/50 text-green-300 hover:bg-green-800 border-green-800"
-                                : "bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
-                            } rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border`}
-                          >
-                            <FaStar className="text-xs sm:text-sm" />
-                            <span className="whitespace-nowrap hidden xs:inline">
-                              تعيين افتراضي
-                            </span>
-                            <span className="whitespace-nowrap xs:hidden">
-                              افتراضي
-                            </span>
-                          </motion.button>
-                        )}
+                      <div className="flex flex-row sm:flex-col lg:flex-row gap-1 sm:gap-2 justify-end sm:justify-start items-center">
+                        {/* تشيك بوكس دائري مع علامة ✓ */}
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSetDefault(address.id, e);
+                          }}
+                          className={`relative w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 cursor-pointer transition-all duration-200 flex items-center justify-center ${
+                            address.isDefaultLocation
+                              ? "border-[#E41E26] bg-[#E41E26]"
+                              : darkMode
+                                ? "border-gray-500 bg-gray-800 hover:border-[#E41E26] group-hover:border-[#E41E26]"
+                                : "border-gray-300 bg-white hover:border-[#E41E26] group-hover:border-[#E41E26]"
+                          }`}
+                        >
+                          {address.isDefaultLocation && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: "spring", stiffness: 300 }}
+                              className="text-white text-xs sm:text-sm font-bold"
+                            >
+                              ✓
+                            </motion.div>
+                          )}
+                        </motion.div>
+
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => handleEdit(address)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(address);
+                          }}
                           className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 ${
                             darkMode
                               ? "bg-blue-900/50 text-blue-300 hover:bg-blue-800 border-blue-800"
@@ -1117,7 +1142,10 @@ export default function Addresses() {
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => handleDelete(address.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(address.id);
+                          }}
                           className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 ${
                             darkMode
                               ? "bg-red-900/50 text-red-300 hover:bg-red-800 border-red-800"
@@ -1238,7 +1266,8 @@ export default function Addresses() {
                               <span>
                                 {formData.cityId
                                   ? cities.find(
-                                      (c) => c.id.toString() === formData.cityId
+                                      (c) =>
+                                        c.id.toString() === formData.cityId,
                                     )?.name
                                   : "اختر المدينة"}
                               </span>
