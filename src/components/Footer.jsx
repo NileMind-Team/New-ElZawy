@@ -88,7 +88,7 @@ const Footer = () => {
     const itemsPerColumn = 4;
 
     const otherCategories = categories.filter(
-      (cat) => cat.id !== "all" && cat.id !== "offers"
+      (cat) => cat.id !== "all" && cat.id !== "offers",
     );
 
     const firstColumnItems = [
@@ -118,7 +118,7 @@ const Footer = () => {
       window.dispatchEvent(
         new CustomEvent("categorySelectedFromFooter", {
           detail: { categoryId, fromHomePage: true },
-        })
+        }),
       );
     } else {
       navigate("/", {
@@ -276,7 +276,8 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm text-center" dir="rtl">
               © {currentYear} New - ElZawy. جميع الحقوق محفوظة. | صنع بواسطة{" "}
-              <span className="text-[#E41E26]">مهند أشرف</span> في مصر
+              <span className="text-[#E41E26]">شركه TripleS للبرمجيات</span> في
+              مصر
             </p>
 
             <div className="flex gap-6 text-sm text-gray-400">
