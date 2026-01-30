@@ -2,14 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
   FaPhone,
-  FaEnvelope,
   FaMapMarkerAlt,
   FaClock,
   FaArrowRight,
+  FaWhatsapp,
 } from "react-icons/fa";
 import logo from "../assets/logo.png";
 import { useEffect, useState } from "react";
@@ -34,26 +31,14 @@ const Footer = () => {
     {
       name: "فيسبوك",
       icon: <FaFacebookF />,
-      url: "https://facebook.com",
+      url: "https://www.facebook.com/ProstElzawy.New",
       color: "hover:bg-blue-600",
     },
     {
-      name: "تويتر",
-      icon: <FaTwitter />,
-      url: "https://twitter.com",
-      color: "hover:bg-blue-400",
-    },
-    {
-      name: "انستجرام",
-      icon: <FaInstagram />,
-      url: "https://instagram.com",
-      color: "hover:bg-pink-600",
-    },
-    {
-      name: "لينكد إن",
-      icon: <FaLinkedinIn />,
-      url: "https://linkedin.com",
-      color: "hover:bg-blue-800",
+      name: "واتساب",
+      icon: <FaWhatsapp />,
+      url: "https://wa.me/201025256954",
+      color: "hover:bg-green-600",
     },
   ];
 
@@ -170,15 +155,15 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors">
                 <FaPhone className="text-[#E41E26] text-sm" />
-                <span className="text-sm">+20 115 942 4411</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors">
-                <FaEnvelope className="text-[#E41E26] text-sm" />
-                <span className="text-sm">info@New-ElZawy.com</span>
+                <span className="text-sm" dir="ltr">
+                  +20 106 002 7648
+                </span>{" "}
               </div>
               <div className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors">
                 <FaMapMarkerAlt className="text-[#E41E26] text-sm" />
-                <span className="text-sm">الجيزة، مصر</span>
+                <span className="text-sm">
+                  الفيوم الحواتم - امام موقف بني سويف
+                </span>
               </div>
             </div>
           </motion.div>
@@ -250,18 +235,10 @@ const Footer = () => {
               <FaClock className="text-[#E41E26]" />
               ساعات العمل
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-gray-300">
+            <div className="grid grid-cols-1 gap-4 text-gray-300">
               <div>
-                <p className="font-semibold text-white">الأحد - الخميس</p>
-                <p>9:00 ص - 11:00 م</p>
-              </div>
-              <div>
-                <p className="font-semibold text-white">الجمعة - السبت</p>
-                <p>10:00 ص - 12:00 ص</p>
-              </div>
-              <div>
-                <p className="font-semibold text-white">التوصيل</p>
-                <p>متاح 24/7</p>
+                <p className="font-semibold text-white">كل الأيام</p>
+                <p>11:00 ص - 2:00 ص</p>
               </div>
             </div>
           </div>
