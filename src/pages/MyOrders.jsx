@@ -929,7 +929,7 @@ export default function MyOrders() {
             return;
           }
 
-          const response = await axiosInstance.get("/api/Users/GetAll", {
+          const response = await axiosInstance.get("/api/Users/GetAllList", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
