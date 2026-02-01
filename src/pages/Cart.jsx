@@ -228,7 +228,7 @@ export default function Cart() {
         setUserAddresses(response.data);
 
         const defaultAddress = response.data.find(
-          (addr) => addr.isDefaultLocation
+          (addr) => addr.isDefaultLocation,
         );
         if (defaultAddress) {
           setSelectedAddress(defaultAddress);
@@ -315,7 +315,7 @@ export default function Cart() {
 
         const priceAfterDiscount = calculatePriceAfterDiscount(
           basePrice,
-          itemOffer
+          itemOffer,
         );
 
         const discountInMoney = calculateDiscountInMoney(basePrice, itemOffer);
@@ -330,7 +330,7 @@ export default function Cart() {
 
         const optionsTotal = calculateOptionsTotal(
           item.menuItemOptions,
-          item.quantity
+          item.quantity,
         );
 
         const finalPrice = priceAfterDiscount;
@@ -430,7 +430,7 @@ export default function Cart() {
       });
 
       const filteredAreas = response.data.filter(
-        (area) => !area.areaName.includes("الاستلام من المكان")
+        (area) => !area.areaName.includes("الاستلام من المكان"),
       );
 
       setDeliveryAreas(filteredAreas);
@@ -486,7 +486,7 @@ export default function Cart() {
       const branchPickupFee = deliveryFees.find(
         (fee) =>
           fee.areaName.includes("الاستلام من المكان") &&
-          fee.branchId === selectedBranch.id
+          fee.branchId === selectedBranch.id,
       );
 
       if (branchPickupFee) {
@@ -494,7 +494,7 @@ export default function Cart() {
       }
 
       const anyPickupFee = deliveryFees.find((fee) =>
-        fee.areaName.includes("الاستلام من المكان")
+        fee.areaName.includes("الاستلام من المكان"),
       );
 
       return anyPickupFee ? anyPickupFee.fee : 0;
@@ -509,7 +509,7 @@ export default function Cart() {
       const branchPickupFee = deliveryFees.find(
         (fee) =>
           fee.areaName.includes("الاستلام من المكان") &&
-          fee.branchId === selectedBranch.id
+          fee.branchId === selectedBranch.id,
       );
 
       if (branchPickupFee) {
@@ -517,7 +517,7 @@ export default function Cart() {
       }
 
       const anyPickupFee = deliveryFees.find((fee) =>
-        fee.areaName.includes("الاستلام من المكان")
+        fee.areaName.includes("الاستلام من المكان"),
       );
 
       return anyPickupFee ? anyPickupFee.id : 0;
@@ -566,7 +566,7 @@ export default function Cart() {
     if (product.itemOffer?.isEnabled) {
       const priceAfterDiscount = calculatePriceAfterDiscount(
         product.basePrice,
-        product.itemOffer
+        product.itemOffer,
       );
 
       return (
@@ -697,7 +697,7 @@ export default function Cart() {
       setItemNotes(item.note || "");
 
       const response = await axiosInstance.get(
-        `/api/MenuItems/Get/${item.menuItem?.id}`
+        `/api/MenuItems/Get/${item.menuItem?.id}`,
       );
       const productData = response.data;
 
@@ -795,7 +795,7 @@ export default function Cart() {
 
         if (currentSelections.includes(optionId)) {
           newSelectedAddons[addonId] = currentSelections.filter(
-            (id) => id !== optionId
+            (id) => id !== optionId,
           );
         } else {
           newSelectedAddons[addonId] = [...currentSelections, optionId];
@@ -834,7 +834,7 @@ export default function Cart() {
 
     const priceAfterDiscount = calculatePriceAfterDiscount(
       basePrice,
-      productDetails.itemOffer
+      productDetails.itemOffer,
     );
 
     let total = priceAfterDiscount * productQuantity;
@@ -909,7 +909,7 @@ export default function Cart() {
           `/api/CartItems/UpdateQuantity/${selectedProduct.id}`,
           {
             quantity: productQuantity,
-          }
+          },
         );
       }
 
@@ -1020,7 +1020,7 @@ export default function Cart() {
             };
           }
           return item;
-        })
+        }),
       );
 
       toast.success("تم تحديث الكمية", {
@@ -1071,7 +1071,7 @@ export default function Cart() {
           await axiosInstance.delete(`/api/CartItems/Delete/${id}`);
 
           setCartItems((prevItems) =>
-            prevItems.filter((item) => item.id !== id)
+            prevItems.filter((item) => item.id !== id),
           );
 
           if (isMobile()) {
@@ -1139,7 +1139,7 @@ export default function Cart() {
             position: "top-right",
             autoClose: 2500,
             rtl: true,
-          }
+          },
         );
       } else {
         Swal.fire({
@@ -1329,7 +1329,6 @@ export default function Cart() {
       let showModalOnly = false;
 
       errors.forEach((errorItem) => {
-        // ✅ الحالة الخاصة فقط
         if (
           errorItem.code === "User.MissingInfo" &&
           errorItem.description ===
@@ -1344,32 +1343,36 @@ export default function Cart() {
             errorItem.description === "User is not active."
           ) {
             errorMessages.push(
-              "حسابك غير نشط حالياً. الرجاء التواصل مع إدارة المطعم لتفعيل الحساب."
+              "حسابك غير نشط حالياً. الرجاء التواصل مع إدارة المطعم لتفعيل الحساب.",
             );
           } else if (errorItem.code === "Branch.Closed") {
             errorMessages.push(
-              "الفرع المختار مغلق حالياً. الرجاء اختيار فرع آخر أو المحاولة عند فتح الفرع."
+              "الفرع المختار مغلق حالياً. الرجاء اختيار فرع آخر أو المحاولة عند فتح الفرع.",
+            );
+          } else if (errorItem.code === "Branch.disabled") {
+            errorMessages.push(
+              "تم تعطيل الطلبات مؤقتًا. يرجى المحاولة مرة أخرى بعد 10 دقائق.",
             );
           } else if (errorItem.code === "Branch.InActive") {
             errorMessages.push(
-              "الفرع المختار غير نشط حالياً. الرجاء اختيار فرع آخر أو المحاولة عندما يكون الفرع نشطاً."
+              "الفرع المختار غير نشط حالياً. الرجاء اختيار فرع آخر أو المحاولة عندما يكون الفرع نشطاً.",
             );
           } else if (errorItem.code === "Branch.OutOfWorkingHours") {
             errorMessages.push(
-              "الفرع المختار خارج ساعات العمل حالياً. الرجاء المحاولة خلال ساعات العمل أو اختيار فرع آخر."
+              "الفرع المختار خارج ساعات العمل حالياً. الرجاء المحاولة خلال ساعات العمل أو اختيار فرع آخر.",
             );
           } else if (errorItem.code === "DeliveryFee.NotActive") {
             errorMessages.push(
               `رسوم ${
                 deliveryType === "delivery" ? "التوصيل" : "الاستلام"
-              } غير نشطة حالياً. الرجاء اختيار فرع آخر أو طريقة استلام مختلفة.`
+              } غير نشطة حالياً. الرجاء اختيار فرع آخر أو طريقة استلام مختلفة.`,
             );
           } else if (errorItem.code === "Cart") {
             const match = errorItem.description.match(/\d+/g);
             const unavailableItemIds = match ? match.map(Number) : [];
 
             const unavailableItems = cartItems.filter((item) =>
-              unavailableItemIds.includes(item.id)
+              unavailableItemIds.includes(item.id),
             );
 
             const itemNames = unavailableItems
@@ -1379,13 +1382,13 @@ export default function Cart() {
             errorMessages.push(
               `المنتجات التالية غير متاحة في فرع ${
                 selectedBranch?.name || "المختار"
-              }: ${itemNames}. الرجاء إزالتها من السلة أو اختيار فرع آخر.`
+              }: ${itemNames}. الرجاء إزالتها من السلة أو اختيار فرع آخر.`,
             );
           } else if (errorItem.code === "DeliveryFee.NotFound") {
             errorMessages.push(
               `رسوم ${
                 deliveryType === "delivery" ? "التوصيل" : "الاستلام"
-              } غير متاحة لهذا الفرع حالياً. الرجاء اختيار فرع آخر أو طريقة استلام مختلفة.`
+              } غير متاحة لهذا الفرع حالياً. الرجاء اختيار فرع آخر أو طريقة استلام مختلفة.`,
             );
           } else {
             // fallback لأي رسالة غير مترجمة
@@ -1760,8 +1763,8 @@ export default function Cart() {
                             {toArabicNumbers(
                               calculateDiscountInMoney(
                                 productDetails.basePrice,
-                                productDetails.itemOffer
-                              ).toFixed(2)
+                                productDetails.itemOffer,
+                              ).toFixed(2),
                             )}{" "}
                             ج.م
                           </span>
@@ -1796,7 +1799,7 @@ export default function Cart() {
                       {toArabicNumbers(productDetails.preparationTimeStart)}
                       {productDetails.preparationTimeEnd !== null &&
                         `-${toArabicNumbers(
-                          productDetails.preparationTimeEnd
+                          productDetails.preparationTimeEnd,
                         )}`}{" "}
                       دقيقة
                     </span>
@@ -1848,7 +1851,7 @@ export default function Cart() {
                         <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2">
                           {addon.options.map((option) => {
                             const isSelected = selectedOptionIds.includes(
-                              option.id
+                              option.id,
                             );
                             return (
                               <motion.button
@@ -1859,7 +1862,7 @@ export default function Cart() {
                                   handleAddonSelect(
                                     addon.id,
                                     option.id,
-                                    addon.type
+                                    addon.type,
                                   )
                                 }
                                 className={`w-full p-2 rounded-md sm:rounded-lg border-2 transition-all duration-200 flex items-center justify-between ${
@@ -1944,7 +1947,7 @@ export default function Cart() {
                       {itemNotes
                         ? `انقر لتعديل التعليمات: ${itemNotes.substring(
                             0,
-                            60
+                            60,
                           )}${itemNotes.length > 60 ? "..." : ""}`
                         : "انقر لإضافة تعليمات إضافية"}
                     </p>
@@ -1966,7 +1969,7 @@ export default function Cart() {
                       <button
                         onClick={() =>
                           setProductQuantity((prev) =>
-                            prev > 1 ? prev - 1 : 1
+                            prev > 1 ? prev - 1 : 1,
                           )
                         }
                         className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 flex items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border border-gray-200"
@@ -2118,7 +2121,7 @@ export default function Cart() {
                                 <div className="absolute -top-2 -right-2 bg-[#E41E26] text-white px-2 py-1 rounded-lg text-xs font-bold shadow-lg border border-white">
                                   خصم{" "}
                                   {toArabicNumbers(
-                                    item.discountValue.toFixed(2)
+                                    item.discountValue.toFixed(2),
                                   )}{" "}
                                   ج.م
                                 </div>
@@ -2327,7 +2330,7 @@ export default function Cart() {
                       type="button"
                       onClick={() =>
                         setOpenDropdown(
-                          openDropdown === "branch" ? null : "branch"
+                          openDropdown === "branch" ? null : "branch",
                         )
                       }
                       className="w-full flex items-center justify-between border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base cursor-pointer"
@@ -2394,7 +2397,7 @@ export default function Cart() {
                           type="button"
                           onClick={() =>
                             setOpenDropdown(
-                              openDropdown === "area" ? null : "area"
+                              openDropdown === "area" ? null : "area",
                             )
                           }
                           className="w-full flex items-center justify-between border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base cursor-pointer"
