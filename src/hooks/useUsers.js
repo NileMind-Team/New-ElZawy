@@ -301,18 +301,33 @@ export const useUsers = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axiosInstance.put(`/api/Users/ChangeUserStatus/${user.id}`);
-
           const updatedUsers = users.map((u) =>
             u.id === user.id ? { ...u, isActive: newStatus } : u,
           );
           setUsers(updatedUsers);
+
+          const updatedFilteredUsers = filteredUsers.map((u) =>
+            u.id === user.id ? { ...u, isActive: newStatus } : u,
+          );
+          setFilteredUsers(updatedFilteredUsers);
+
+          await axiosInstance.put(`/api/Users/ChangeUserStatus/${user.id}`);
 
           showSuccessAlert(
             `${action === "تفعيل" ? "تم التفعيل" : "تم التعطيل"}!`,
             `تم ${action} المستخدم بنجاح.`,
           );
         } catch (err) {
+          const restoredUsers = users.map((u) =>
+            u.id === user.id ? { ...u, isActive: user.isActive } : u,
+          );
+          setUsers(restoredUsers);
+
+          const restoredFilteredUsers = filteredUsers.map((u) =>
+            u.id === user.id ? { ...u, isActive: user.isActive } : u,
+          );
+          setFilteredUsers(restoredFilteredUsers);
+
           showErrorAlert("خطأ", `فشل في ${action} المستخدم.`);
         }
       }
