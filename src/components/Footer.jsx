@@ -69,28 +69,44 @@ const Footer = () => {
   }, []);
 
   const getCategoriesInColumns = () => {
-    const columns = [];
-    const itemsPerColumn = 4;
+    const itemsPerColumn = 5;
+    const columnsPerBlock = 2;
 
-    const otherCategories = categories.filter(
+    const filteredCategories = categories.filter(
       (cat) => cat.id !== "all" && cat.id !== "offers",
     );
 
-    const firstColumnItems = [
+    const orderedCategories = [
       categories.find((cat) => cat.id === "all"),
       categories.find((cat) => cat.id === "offers"),
-      ...otherCategories.slice(0, itemsPerColumn - 2),
+      ...filteredCategories,
     ].filter(Boolean);
 
-    columns.push(firstColumnItems);
+    const columns = [];
 
-    const remainingCategories = otherCategories.slice(itemsPerColumn - 2);
+    for (
+      let i = 0;
+      i < orderedCategories.length;
+      i += itemsPerColumn * columnsPerBlock
+    ) {
+      const blockItems = orderedCategories.slice(
+        i,
+        i + itemsPerColumn * columnsPerBlock,
+      );
 
-    for (let i = 0; i < remainingCategories.length; i += itemsPerColumn) {
-      const column = remainingCategories.slice(i, i + itemsPerColumn);
-      if (column.length > 0) {
-        columns.push(column);
-      }
+      const col1 = [];
+      const col2 = [];
+
+      blockItems.forEach((item, index) => {
+        if (index % 2 === 0) {
+          col1.push(item);
+        } else {
+          col2.push(item);
+        }
+      });
+
+      if (col1.length) columns.push(col1);
+      if (col2.length) columns.push(col2);
     }
 
     return columns;
