@@ -148,8 +148,8 @@ const Footer = () => {
             </Link>
 
             <p className="text-gray-300 mb-6 leading-relaxed">
-              نقدم أشهى الدجاج المقلي والوجبات. جرب مزيجًا مثاليًا من القرمشة
-              اللذيذة والنكهات الأصيلة.
+              استمتع بتجربة طعام فريدة مع وصفاتنا الخاصة التي تمزج بين النكهة
+              الأصيلة والمذاق الشهي.
             </p>
 
             <div className="space-y-3">
@@ -256,24 +256,6 @@ const Footer = () => {
               <span className="text-[#E41E26]">شركه TripleS للبرمجيات</span> في
               مصر
             </p>
-
-            <div className="flex gap-6 text-sm text-gray-400">
-              <Link
-                to="/sitemap"
-                className="hover:text-white transition-colors"
-              >
-                خريطة الموقع
-              </Link>
-              <Link to="/terms" className="hover:text-white transition-colors">
-                شروط الخدمة
-              </Link>
-              <Link
-                to="/privacy"
-                className="hover:text-white transition-colors"
-              >
-                سياسة الخصوصية
-              </Link>
-            </div>
 
             <div className="flex gap-3">
               {socialLinks.map((social) => (
