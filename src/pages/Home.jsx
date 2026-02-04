@@ -63,6 +63,8 @@ const Home = () => {
   const [productAddons, setProductAddons] = useState([]);
   const [selectedAddons, setSelectedAddons] = useState({});
   const [modalLoading, setModalLoading] = useState(false);
+  const [modalNotes, setModalNotes] = useState("");
+  const [showModalNotes, setShowModalNotes] = useState(false);
 
   const categoriesContainerRef = useRef(null);
   const categoriesSectionRef = useRef(null);
@@ -689,6 +691,7 @@ const Home = () => {
         setSelectedProductForAddons(product);
         setProductAddons(addons);
         setSelectedAddons({}); // Reset selected addons
+        setModalNotes(""); // Reset notes
         setShowAddonsModal(true);
         return;
       }
@@ -807,7 +810,7 @@ const Home = () => {
 
       await axiosInstance.post("/api/CartItems/AddCartItem", {
         menuItemId: selectedProductForAddons.id,
-        note: "",
+        note: modalNotes.trim(), // إرسال الملاحظات مع الطلب
         quantity: 1,
         options: options,
       });
@@ -841,6 +844,8 @@ const Home = () => {
     setSelectedProductForAddons(null);
     setProductAddons([]);
     setSelectedAddons({});
+    setModalNotes(""); // Reset notes
+    setShowModalNotes(false); // Reset notes modal state
     setModalLoading(false);
   };
 
@@ -1614,6 +1619,72 @@ const Home = () => {
                             </div>
                           </div>
                         ))}
+
+                        <div
+                          onClick={() => setShowModalNotes(true)}
+                          className={`w-full rounded-lg sm:rounded-xl p-3 sm:p-4 text-center transition-all duration-300 cursor-pointer ${
+                            modalNotes
+                              ? "bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-solid border-green-300 dark:border-green-600 hover:border-green-400 dark:hover:border-green-500"
+                              : "bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 border-2 border-dashed border-indigo-300 dark:border-indigo-600 hover:border-solid hover:border-indigo-400 dark:hover:border-indigo-500"
+                          }`}
+                          dir="rtl"
+                        >
+                          <div className="flex flex-col items-center justify-center gap-2">
+                            <div
+                              className={`p-2 rounded-full ${
+                                modalNotes
+                                  ? "bg-green-100 dark:bg-green-800/50"
+                                  : "bg-indigo-100 dark:bg-indigo-800/50"
+                              }`}
+                            >
+                              <svg
+                                className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                                  modalNotes
+                                    ? "text-green-600 dark:text-green-400"
+                                    : "text-indigo-600 dark:text-indigo-400"
+                                }`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <h4
+                                className={`font-semibold text-sm sm:text-base md:text-lg ${
+                                  modalNotes
+                                    ? "text-green-700 dark:text-green-300"
+                                    : "text-indigo-700 dark:text-indigo-300"
+                                }`}
+                              >
+                                {modalNotes
+                                  ? "تعليمات إضافية"
+                                  : "إضافة تعليمات إضافية"}
+                              </h4>
+                              <p
+                                className={`text-xs sm:text-sm mt-1 ${
+                                  modalNotes
+                                    ? "text-green-600/70 dark:text-green-400/70"
+                                    : "text-indigo-600/70 dark:text-indigo-400/70"
+                                }`}
+                              >
+                                {modalNotes
+                                  ? `انقر لتعديل التعليمات: ${modalNotes.substring(
+                                      0,
+                                      60,
+                                    )}${modalNotes.length > 60 ? "..." : ""}`
+                                  : "انقر لإضافة تعليمات إضافية"}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -1648,6 +1719,125 @@ const Home = () => {
                     </div>
                   </>
                 )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {showModalNotes && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[102]"
+            onClick={() => setShowModalNotes(false)}
+          />
+          <div
+            className="fixed inset-0 z-[103] flex items-center justify-center p-2 sm:p-4"
+            onClick={() => setShowModalNotes(false)}
+          >
+            <div
+              className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-md mx-2 sm:mx-4 p-4 sm:p-6"
+              onClick={(e) => e.stopPropagation()}
+              dir="rtl"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-indigo-100 dark:bg-indigo-800/50 p-2 rounded-full">
+                    <svg
+                      className="w-5 h-5 text-indigo-600 dark:text-indigo-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
+                    تعليمات إضافية
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setShowModalNotes(false)}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                >
+                  <FaTimes className="text-lg" />
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                  اكتب أي ملاحظات
+                </p>
+
+                <textarea
+                  value={modalNotes}
+                  onChange={(e) => setModalNotes(e.target.value)}
+                  placeholder="اكتب تعليماتك هنا..."
+                  className="w-full h-40 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent resize-none"
+                  dir="rtl"
+                  maxLength={500}
+                  autoFocus
+                />
+
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    اختياري
+                  </span>
+                  <span
+                    className={`text-xs ${
+                      modalNotes.length >= 450
+                        ? "text-red-500"
+                        : "text-gray-500 dark:text-gray-400"
+                    }`}
+                  >
+                    {modalNotes.length}/500
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setModalNotes("");
+                    showNotification(
+                      "info",
+                      "تم المسح",
+                      "تم مسح التعليمات الإضافية",
+                      { timer: 1500 },
+                    );
+                  }}
+                  className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
+                >
+                  <FaTrash className="text-sm" />
+                  مسح
+                </button>
+                <button
+                  onClick={() => setShowModalNotes(false)}
+                  className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                >
+                  إلغاء
+                </button>
+                <button
+                  onClick={() => {
+                    setShowModalNotes(false);
+                    showNotification(
+                      "success",
+                      "تم بنجاح!",
+                      "تم حفظ التعليمات الإضافية",
+                      { timer: 1500 },
+                    );
+                  }}
+                  className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                >
+                  <FaCheck className="text-sm" />
+                  حفظ
+                </button>
               </div>
             </div>
           </div>
