@@ -1833,7 +1833,7 @@ const Home = () => {
                       { timer: 1500 },
                     );
                   }}
-                  className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                  className="flex-1 py-3 bg-[#E41E26] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
                 >
                   <FaCheck className="text-sm" />
                   حفظ
