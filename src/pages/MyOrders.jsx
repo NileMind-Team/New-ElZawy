@@ -34,6 +34,7 @@ import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as signalR from "@microsoft/signalr";
+import { Helmet } from "react-helmet-async";
 
 export default function MyOrders() {
   const navigate = useNavigate();
@@ -1247,6 +1248,13 @@ export default function MyOrders() {
 
   return (
     <>
+      <Helmet>
+        <title>New El-Zawy</title>
+        <meta
+          name="description"
+          content="New - ElZawy is a modern restaurant offering high-quality service and a unique dining experience, delivering great taste and exceptional customer satisfaction."
+        />
+      </Helmet>
       <div
         className={`min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 py-4 sm:py-8 transition-colors duration-300`}
       >
@@ -1444,6 +1452,7 @@ export default function MyOrders() {
                                         <img
                                           src={`${BASE_URL}${user.imageUrl}`}
                                           alt={user.firstName}
+                                          loading="lazy"
                                           className="w-full h-full object-cover"
                                         />
                                       ) : (
@@ -2345,6 +2354,7 @@ export default function MyOrders() {
                                         <img
                                           src={`${BASE_URL}${imageUrl}`}
                                           alt={itemName}
+                                          loading="lazy"
                                           className="w-full h-full object-cover"
                                           onError={(e) => {
                                             e.target.onerror = null;
