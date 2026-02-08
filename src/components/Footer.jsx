@@ -154,11 +154,11 @@ const Footer = () => {
               <div className="flex items-center gap-3">
                 <img
                   src={logo}
-                  alt="New - ElZawy"
+                  alt="ElZawy - New "
                   className="w-12 h-12 object-contain"
                 />
                 <span className="text-2xl font-bold bg-gradient-to-r from-[#E41E26] to-[#FFFFFF] bg-clip-text text-transparent">
-                  New - ElZawy
+                  ElZawy - New
                 </span>
               </div>
             </Link>
@@ -265,7 +265,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm text-center" dir="rtl">
-              © {currentYear} New - ElZawy. جميع الحقوق محفوظة. | صنع بواسطة{" "}
+              © {currentYear} ElZawy - New. جميع الحقوق محفوظة. | صنع بواسطة{" "}
               <span className="text-[#E41E26]">شركه TripleS للبرمجيات</span> في
               مصر
             </p>

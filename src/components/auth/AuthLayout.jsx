@@ -75,7 +75,7 @@ export default function AuthLayout({
                   مرحباً بك في
                   <br />
                   <span className="text-[#E41E26] block mt-2">
-                    New - ElZawy
+                    ElZawy - New
                   </span>
                 </h1>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-right">

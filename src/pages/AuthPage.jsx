@@ -565,10 +565,10 @@ export default function AuthPage() {
   return (
     <>
       <Helmet>
-        <title>New El-Zawy</title>
+        <title>El-Zawy New | الزاوي نيو</title>
         <meta
           name="description"
-          content="New - ElZawy is a modern restaurant offering high-quality service and a unique dining experience, delivering great taste and exceptional customer satisfaction."
+          content="ElZawy - New is a modern restaurant offering high-quality service and a unique dining experience, delivering great taste and exceptional customer satisfaction."
         />
       </Helmet>
       <AuthLayout

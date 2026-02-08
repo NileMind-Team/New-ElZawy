@@ -460,10 +460,10 @@ const Favorites = () => {
   return (
     <>
       <Helmet>
-        <title>New El-Zawy</title>
+        <title>El-Zawy New | الزاوي نيو</title>
         <meta
           name="description"
-          content="New - ElZawy is a modern restaurant offering high-quality service and a unique dining experience, delivering great taste and exceptional customer satisfaction."
+          content="ElZawy - New is a modern restaurant offering high-quality service and a unique dining experience, delivering great taste and exceptional customer satisfaction."
         />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 md:px-6 py-3 sm:py-6 relative font-sans overflow-hidden transition-colors duration-300">
