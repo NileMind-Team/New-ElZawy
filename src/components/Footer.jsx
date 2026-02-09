@@ -7,6 +7,8 @@ import {
   FaClock,
   FaArrowRight,
   FaWhatsapp,
+  FaChevronDown,
+  FaChevronUp,
 } from "react-icons/fa";
 import logo from "../assets/logo.png";
 import { useEffect, useState } from "react";
@@ -18,6 +20,7 @@ const Footer = () => {
     { id: "all", name: "جميع العناصر" },
     { id: "offers", name: "العروض" },
   ]);
+  const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
   const navigate = useNavigate();
 
   const quickLinks = [
@@ -131,6 +134,10 @@ const Footer = () => {
     }
   };
 
+  const toggleCategories = () => {
+    setIsCategoriesExpanded(!isCategoriesExpanded);
+  };
+
   return (
     <footer
       className="bg-gradient-to-br from-gray-900 via-gray-800 to-[#1a1a1a] text-white relative overflow-hidden border-t border-[#E41E26]"
@@ -216,24 +223,49 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:col-span-2"
           >
-            <h3 className="text-lg font-bold mb-6">الفئات</h3>
+            <button
+              onClick={toggleCategories}
+              className="flex items-center gap-2 text-lg font-bold mb-6 hover:text-white transition-colors duration-300 w-full text-right group"
+            >
+              <div className="flex items-center gap-2">
+                <span>الفئات</span>
+                {isCategoriesExpanded ? (
+                  <FaChevronUp className="text-[#E41E26] transition-transform duration-300" />
+                ) : (
+                  <FaChevronDown className="text-[#E41E26] transition-transform duration-300" />
+                )}
+              </div>
+            </button>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {categoryColumns.map((column, index) => (
-                <ul key={index} className="space-y-3">
-                  {column.map((category) => (
-                    <li key={category.id}>
-                      <button
-                        onClick={() => handleCategoryClick(category.id)}
-                        className="flex items-center gap-3 text-gray-300 hover:text-white w-full text-right"
-                      >
-                        {category.name}
-                      </button>
-                    </li>
+            {isCategoriesExpanded && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {categoryColumns.map((column, index) => (
+                    <ul key={index} className="space-y-3">
+                      {column.map((category) => (
+                        <li key={category.id}>
+                          <button
+                            onClick={() => handleCategoryClick(category.id)}
+                            className="flex items-center gap-3 text-gray-300 hover:text-white w-full text-right transition-all duration-300 group py-1"
+                          >
+                            <FaArrowRight className="text-[#E41E26] text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-2 group-hover:translate-x-0 rotate-180" />
+                            <span className="group-hover:translate-x-2 transition-transform duration-300">
+                              {category.name}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
                   ))}
-                </ul>
-              ))}
-            </div>
+                </div>
+              </motion.div>
+            )}
           </motion.div>
         </div>
 
