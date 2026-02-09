@@ -264,10 +264,24 @@ const Footer = () => {
           className="mt-8 pt-8 border-t border-gray-700"
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm text-center" dir="rtl">
+            <p
+              className="text-gray-400 text-sm text-center flex flex-wrap items-center justify-center gap-2"
+              dir="rtl"
+            >
               © {currentYear} ElZawy - New. جميع الحقوق محفوظة. | صنع بواسطة{" "}
-              <span className="text-[#E41E26]">شركه TripleS للبرمجيات</span> في
-              مصر
+              <span className="text-[#E41E26] font-semibold">
+                شركه TripleS للبرمجيات
+              </span>{" "}
+              في مصر — وللتواصل
+              <a
+                href="https://wa.me/201062485133"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-green-600 hover:bg-green-500 transition-all duration-300 hover:scale-110"
+                title="تواصل واتساب"
+              >
+                <FaWhatsapp className="text-white text-sm" />
+              </a>
             </p>
 
             <div className="flex gap-3">
