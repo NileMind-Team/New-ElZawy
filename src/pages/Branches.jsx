@@ -297,7 +297,7 @@ const Branches = () => {
         <title>El-Zawy New | الزاوي نيو</title>
         <meta
           name="description"
-          content="ElZawy - New is a modern restaurant offering high-quality service and a unique dining experience, delivering great taste and exceptional customer satisfaction."
+          content="الزاوي - نيو هو مطعم عصري يقدّم خدمة عالية الجودة وتجربة طعام مميزة، حيث نوفر مذاقًا رائعًا ونحرص على تحقيق أعلى مستويات رضا العملاء."
         />
       </Helmet>
 
