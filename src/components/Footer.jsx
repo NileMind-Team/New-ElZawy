@@ -243,16 +243,35 @@ const Footer = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-12 pt-8 border-t border-gray-700"
         >
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-lg font-bold mb-4 flex items-center justify-center gap-2">
-              <FaClock className="text-[#E41E26]" />
-              ساعات العمل
-            </h3>
-            <div className="grid grid-cols-1 gap-4 text-gray-300">
-              <div>
+          <div className="relative flex flex-col items-center justify-center gap-6 md:flex-row">
+            {/* Working Hours - Center */}
+            <div className="text-center order-1">
+              <h3 className="text-lg font-bold mb-3 flex items-center justify-center gap-2">
+                <FaClock className="text-[#E41E26]" />
+                ساعات العمل
+              </h3>
+
+              <div className="text-gray-300">
                 <p className="font-semibold text-white">كل الأيام</p>
                 <p>11:00 ص - 2:00 ص</p>
               </div>
+            </div>
+
+            {/* Social Media */}
+            <div className="flex items-center gap-4 order-2 md:absolute md:left-0">
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.15, y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-10 h-10 bg-gray-700 rounded-2xl flex items-center justify-center text-white transition-all duration-300 ${social.color} hover:shadow-xl border border-gray-600`}
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
             </div>
           </div>
         </motion.div>
@@ -269,9 +288,14 @@ const Footer = () => {
               dir="rtl"
             >
               © {currentYear} ElZawy - New. جميع الحقوق محفوظة. | صنع بواسطة{" "}
-              <span className="text-[#E41E26] font-semibold">
+              <a
+                href="https://wa.me/201062485133"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#E41E26] font-semibold hover:text-red-400 transition-colors duration-300"
+              >
                 شركه TripleS للبرمجيات
-              </span>{" "}
+              </a>
               في مصر — وللتواصل
               <a
                 href="https://wa.me/201062485133"
@@ -283,22 +307,6 @@ const Footer = () => {
                 <FaWhatsapp className="text-white text-sm" />
               </a>
             </p>
-
-            <div className="flex gap-3">
-              {socialLinks.map((social) => (
-                <motion.a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`w-10 h-10 bg-gray-700 rounded-xl flex items-center justify-center text-white transition-all duration-300 ${social.color} hover:shadow-lg border border-gray-600`}
-                >
-                  {social.icon}
-                </motion.a>
-              ))}
-            </div>
           </div>
         </motion.div>
       </div>
