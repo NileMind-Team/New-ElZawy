@@ -213,10 +213,10 @@ const HeroSwipper = () => {
   return (
     <>
       <Helmet>
-        <title>El-Zawy New | الزاوي نيو</title>
+        <title>الزاوي نيو | El-Zawy New</title>
         <meta
           name="description"
-          content="الزاوي - نيو هو مطعم عصري يقدّم خدمة عالية الجودة وتجربة طعام مميزة، حيث نوفر مذاقًا رائعًا ونحرص على تحقيق أعلى مستويات رضا العملاء."
+          content="الزاوي نيو، مطعم عصري يقدم أفضل المأكولات الشرقية والغربية وتجربة طعام فريدة، مع خدمة عالية الجودة."
         />
       </Helmet>
       <div className="relative w-full h-[40vh] sm:h-[45vh] md:h-[50vh] lg:h-[55vh] min-h-[300px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[450px] max-h-[400px] sm:max-h-[450px] md:max-h-[500px] lg:max-h-[600px] overflow-hidden rounded-b-2xl shadow-xl">

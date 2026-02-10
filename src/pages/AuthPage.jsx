@@ -565,10 +565,10 @@ export default function AuthPage() {
   return (
     <>
       <Helmet>
-        <title>El-Zawy New | الزاوي نيو</title>
+        <title>الزاوي نيو | El-Zawy New</title>
         <meta
           name="description"
-          content="الزاوي - نيو هو مطعم عصري يقدّم خدمة عالية الجودة وتجربة طعام مميزة، حيث نوفر مذاقًا رائعًا ونحرص على تحقيق أعلى مستويات رضا العملاء."
+          content="الزاوي نيو، مطعم عصري يقدم أفضل المأكولات الشرقية والغربية وتجربة طعام فريدة، مع خدمة عالية الجودة."
         />
       </Helmet>
       <AuthLayout

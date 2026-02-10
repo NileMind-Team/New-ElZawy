@@ -884,10 +884,10 @@ export default function ItemOffersManagement() {
   return (
     <>
       <Helmet>
-        <title>El-Zawy New | الزاوي نيو</title>
+        <title>الزاوي نيو | El-Zawy New</title>
         <meta
           name="description"
-          content="الزاوي - نيو هو مطعم عصري يقدّم خدمة عالية الجودة وتجربة طعام مميزة، حيث نوفر مذاقًا رائعًا ونحرص على تحقيق أعلى مستويات رضا العملاء."
+          content="الزاوي نيو، مطعم عصري يقدم أفضل المأكولات الشرقية والغربية وتجربة طعام فريدة، مع خدمة عالية الجودة."
         />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 py-4 sm:py-8 transition-colors duration-300">
