@@ -25,6 +25,8 @@ import ItemOffersManagement from "./pages/ItemOffersManagement";
 import SalesReports from "./pages/SalesReports";
 import TimeDateSalesReport from "./pages/TimeDateSalesReport";
 import AuthGuard from "./guards/AuthGuard";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import DataDeletion from "./pages/DataDeletion";
 
 function App() {
   const location = useLocation();
@@ -112,6 +114,8 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/data-deletion" element={<DataDeletion />} />
 
           <Route element={<AuthGuard />}>
             <Route path="/profile" element={<Profile />} />
@@ -147,7 +151,7 @@ function App() {
         <div className="relative" style={{ zIndex: 1 }}>
           <Footer />
         </div>
-      )}{" "}
+      )}
     </div>
   );
 }

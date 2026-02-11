@@ -159,25 +159,46 @@ const Footer = () => {
               className="text-gray-400 text-sm text-center flex flex-wrap items-center justify-center gap-2"
               dir="rtl"
             >
-              © {currentYear} ElZawy - New. جميع الحقوق محفوظة. | صنع بواسطة{" "}
-              <a
-                href="https://wa.me/201062485133"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#E41E26] font-semibold hover:text-red-400 transition-colors duration-300"
+              <p
+                className="text-gray-400 text-sm text-center flex flex-wrap items-center justify-center gap-2"
+                dir="rtl"
               >
-                شركه TripleS للبرمجيات
-              </a>
-              في مصر — وللتواصل
-              <a
-                href="https://wa.me/201062485133"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-600 hover:bg-green-500 transition-all duration-300 hover:scale-110"
-                title="تواصل واتساب"
-              >
-                <FaWhatsapp className="text-white text-sm" />
-              </a>
+                © {currentYear} ElZawy - New. جميع الحقوق محفوظة.
+                <span>|</span>
+                <Link
+                  to="/privacy-policy"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+                <span>|</span>
+                <Link
+                  to="/data-deletion"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Data Deletion
+                </Link>
+                <span>|</span>
+                صنع بواسطة{" "}
+                <a
+                  href="https://wa.me/201062485133"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#E41E26] font-semibold hover:text-red-400 transition-colors duration-300"
+                >
+                  شركه TripleS للبرمجيات
+                </a>
+                في مصر — وللتواصل
+                <a
+                  href="https://wa.me/201062485133"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-600 hover:bg-green-500 transition-all duration-300 hover:scale-110"
+                  title="تواصل واتساب"
+                >
+                  <FaWhatsapp className="text-white text-sm" />
+                </a>
+              </p>
             </p>
           </div>
         </motion.div>

@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, handleGoogleCallback } from "../redux/slices/loginSlice";
+import {
+  loginUser,
+  handleGoogleCallback,
+  handleFacebookCallback,
+} from "../redux/slices/loginSlice";
 import { registerUser } from "../redux/slices/registerSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
@@ -78,9 +82,11 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { isLoading: loginLoading, isGoogleLoading } = useSelector(
-    (state) => state.login,
-  );
+  const {
+    isLoading: loginLoading,
+    isGoogleLoading,
+    isFacebookLoading,
+  } = useSelector((state) => state.login);
 
   const { isLoading: registerLoading } = useSelector((state) => state.register);
 
@@ -96,6 +102,7 @@ export default function AuthPage() {
   const [loggedUserName, setLoggedUserName] = useState("");
   const [loggedUserImage, setLoggedUserImage] = useState("");
   const [isProcessingGoogle, setIsProcessingGoogle] = useState(false);
+  const [isProcessingFacebook, setIsProcessingFacebook] = useState(false);
 
   // Login states
   const [loginData, setLoginData] = useState({
@@ -119,12 +126,17 @@ export default function AuthPage() {
   // Forget password state
   const [forgetEmail, setForgetEmail] = useState("");
 
-  const translateGoogleError = (error) => {
+  const translateSocialError = (error) => {
     const errorMap = {
       "user is already has password": "هذا الحساب مسجل بالفعل بكلمة مرور.",
+      "Facebook login failed": "فشل تسجيل الدخول عبر Facebook.",
+      "Google login failed": "فشل تسجيل الدخول عبر Google.",
     };
 
-    return errorMap[error] || "حدث خطأ أثناء تسجيل الدخول باستخدام Google";
+    return (
+      errorMap[error] ||
+      "حدث خطأ أثناء تسجيل الدخول باستخدام حساب التواصل الاجتماعي"
+    );
   };
 
   const extractTokenFromUrl = useCallback(() => {
@@ -147,15 +159,30 @@ export default function AuthPage() {
     return searchParams.get("error");
   }, []);
 
+  const extractProviderFromUrl = useCallback(() => {
+    const hash = window.location.hash;
+    const searchParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(hash.slice(1));
+
+    const provider =
+      hashParams.get("provider") ||
+      searchParams.get("provider") ||
+      (hash.includes("facebook") ? "facebook" : null) ||
+      (hash.includes("google") ? "google" : null);
+
+    return provider;
+  }, []);
+
   useEffect(() => {
     const token = extractTokenFromUrl();
     const error = extractErrorFromUrl();
+    const provider = extractProviderFromUrl();
 
     if (error) {
       window.history.replaceState(null, "", "/auth");
 
       if (window.innerWidth < 768) {
-        showAuthMobileAlertToast(translateGoogleError(error), "error");
+        showAuthMobileAlertToast(translateSocialError(error), "error");
         setTimeout(() => {
           navigate("/login");
         }, 2500);
@@ -163,7 +190,7 @@ export default function AuthPage() {
         Swal.fire({
           icon: "error",
           title: "تعذر تسجيل الدخول",
-          text: translateGoogleError(error),
+          text: translateSocialError(error),
           showConfirmButton: false,
           timer: 2500,
           didClose: () => {
@@ -177,17 +204,29 @@ export default function AuthPage() {
 
     if (token) {
       window.history.replaceState(null, "", "/auth");
-      setIsProcessingGoogle(true); // Set processing flag
 
-      const processGoogleLogin = async () => {
+      const processSocialLogin = async () => {
         try {
-          const result = await dispatch(handleGoogleCallback(token)).unwrap();
+          let result;
+
+          if (
+            provider === "facebook" ||
+            token.includes("facebook") ||
+            location.pathname.includes("facebook")
+          ) {
+            setIsProcessingFacebook(true);
+            result = await dispatch(handleFacebookCallback(token)).unwrap();
+          } else {
+            setIsProcessingGoogle(true);
+            result = await dispatch(handleGoogleCallback(token)).unwrap();
+          }
 
           if (result?.token) {
             setLoggedUserName(result.firstName || result.email || "مستخدم");
             setLoggedUserImage(result.imageUrl || "");
             setShowWelcome(true);
-            setIsProcessingGoogle(false); // Clear processing flag
+            setIsProcessingGoogle(false);
+            setIsProcessingFacebook(false);
 
             setTimeout(() => {
               setShowWelcome(false);
@@ -195,11 +234,12 @@ export default function AuthPage() {
             }, 3000);
           }
         } catch (err) {
-          setIsProcessingGoogle(false); // Clear processing flag on error
+          setIsProcessingGoogle(false);
+          setIsProcessingFacebook(false);
 
           if (window.innerWidth < 768) {
             showAuthMobileAlertToast(
-              "حدث خطأ أثناء تسجيل الدخول باستخدام Google",
+              "حدث خطأ أثناء تسجيل الدخول باستخدام حساب التواصل الاجتماعي",
               "error",
             );
             setTimeout(() => {
@@ -209,7 +249,7 @@ export default function AuthPage() {
             Swal.fire({
               icon: "error",
               title: "خطأ في تسجيل الدخول",
-              text: "حدث خطأ أثناء تسجيل الدخول باستخدام Google",
+              text: "حدث خطأ أثناء تسجيل الدخول باستخدام حساب التواصل الاجتماعي",
               showConfirmButton: false,
               timer: 2500,
               didClose: () => {
@@ -220,9 +260,16 @@ export default function AuthPage() {
         }
       };
 
-      processGoogleLogin();
+      processSocialLogin();
     }
-  }, [dispatch, navigate, extractTokenFromUrl, extractErrorFromUrl]);
+  }, [
+    dispatch,
+    navigate,
+    extractTokenFromUrl,
+    extractErrorFromUrl,
+    extractProviderFromUrl,
+    location,
+  ]);
 
   const handleTabChange = useCallback((tab) => {
     setActiveTab(tab);
@@ -236,7 +283,6 @@ export default function AuthPage() {
     setRegisterData((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  // Login handler
   const handleLogin = async (e) => {
     e.preventDefault();
     Swal.fire({
@@ -310,6 +356,32 @@ export default function AuthPage() {
           icon: "error",
           title: "خطأ في الاتصال",
           text: "حدث خطأ أثناء التوجيه إلى Google. يرجى المحاولة مرة أخرى.",
+          confirmButtonText: "حاول مرة أخرى",
+        });
+      }
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      const returnUrl = encodeURIComponent(`${window.location.origin}/auth`);
+      const tenant = "New_Zawy";
+
+      const facebookAuthUrl = `https://restaurant-template.runasp.net/api/Auth/FacebookLogin/facebook-login?returnUrl=${returnUrl}&tenant=${tenant}`;
+      window.location.href = facebookAuthUrl;
+    } catch (error) {
+      console.error("Facebook login redirect error:", error);
+
+      if (window.innerWidth < 768) {
+        showAuthMobileAlertToast(
+          "حدث خطأ أثناء التوجيه إلى Facebook. يرجى المحاولة مرة أخرى.",
+          "error",
+        );
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "خطأ في الاتصال",
+          text: "حدث خطأ أثناء التوجيه إلى Facebook. يرجى المحاولة مرة أخرى.",
           confirmButtonText: "حاول مرة أخرى",
         });
       }
@@ -562,6 +634,8 @@ export default function AuthPage() {
       registerData.password === registerData.confirmPassword,
   };
 
+  const isProcessingSocial = isProcessingGoogle || isProcessingFacebook;
+
   return (
     <>
       <Helmet>
@@ -577,18 +651,26 @@ export default function AuthPage() {
         onBack={() => navigate(-1)}
         showWelcome={showWelcome}
         isProcessingGoogle={isProcessingGoogle}
+        isProcessingFacebook={isProcessingFacebook}
         onGoogleLogin={handleGoogleLogin}
+        onFacebookLogin={handleFacebookLogin}
         isGoogleLoading={isGoogleLoading}
+        isFacebookLoading={isFacebookLoading}
       >
         {showWelcome ? (
           <WelcomeAnimation
             userName={loggedUserName}
             userImage={loggedUserImage}
           />
-        ) : isProcessingGoogle ? (
-          // Show only loading during Google processing
+        ) : isProcessingSocial ? (
+          // Show only loading during social processing
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26] dark:border-[#E41E26] mb-6"></div>
+            <p className="text-gray-700 dark:text-gray-300 text-lg">
+              {isProcessingGoogle
+                ? "جاري تسجيل الدخول باستخدام Google..."
+                : "جاري تسجيل الدخول باستخدام Facebook..."}
+            </p>
           </div>
         ) : waitingForConfirmation ? (
           <WaitingConfirmation
