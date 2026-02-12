@@ -30,10 +30,8 @@ import { Helmet } from "react-helmet-async";
 const translateOfferErrorMessage = (errorData, useHTML = true) => {
   if (!errorData) return "حدث خطأ غير معروف";
 
-  // معالجة أخطاء الـ API التي تأتي كمصفوفة errors
   if (Array.isArray(errorData.errors)) {
     const errorMessages = errorData.errors.map((error) => {
-      // ترجمة الأكواد الشائعة
       switch (error.code) {
         case "ItemOffer.ItemOfferAlreadyExists":
           return "هناك عرض نشط لهذا العنصر بالفعل.";
@@ -58,7 +56,6 @@ const translateOfferErrorMessage = (errorData, useHTML = true) => {
         case "ItemOffer.CannotUpdateMenuItem":
           return "لا يمكن تغيير العنصر أثناء التعديل.";
         default:
-          // إذا كان هناك وصف، استخدمه، وإلا استخدم الكود
           return error.description || error.code;
       }
     });
@@ -83,7 +80,6 @@ const translateOfferErrorMessage = (errorData, useHTML = true) => {
     }
   }
 
-  // معالجة أخطاء ModelState التي تأتي ككائن
   if (errorData.errors && typeof errorData.errors === "object") {
     const errorMessages = [];
 
@@ -177,7 +173,6 @@ const translateOfferErrorMessage = (errorData, useHTML = true) => {
       });
     }
 
-    // معالجة الحقول الأخرى
     Object.keys(errorData.errors).forEach((key) => {
       if (
         ![
@@ -225,7 +220,6 @@ const translateOfferErrorMessage = (errorData, useHTML = true) => {
     }
   }
 
-  // معالجة رسائل الخطأ العامة
   if (typeof errorData.message === "string") {
     const msg = errorData.message.toLowerCase();
     if (msg.includes("network") || msg.includes("internet")) {
@@ -241,7 +235,6 @@ const translateOfferErrorMessage = (errorData, useHTML = true) => {
       return "هناك تعارض في البيانات. قد يكون هناك عرض نشط للعنصر بالفعل.";
     }
 
-    // ترجمة رسائل الخطأ الإنجليزية الشائعة
     const englishArabicMap = {
       "start date must be in the future":
         "تاريخ البداية يجب أن يكون في المستقبل",
@@ -258,7 +251,6 @@ const translateOfferErrorMessage = (errorData, useHTML = true) => {
         "نسبة الخصم يجب أن تكون بين 0 و 100",
     };
 
-    // البحث عن رسالة مطابقة
     const lowerMsg = msg.toLowerCase();
     for (const [english, arabic] of Object.entries(englishArabicMap)) {
       if (lowerMsg.includes(english)) {
@@ -483,45 +475,26 @@ export default function ItemOffersManagement() {
       const response = await axiosInstance.get("/api/ItemOffers/GetAll");
       const offersData = response.data;
 
-      const offersWithDetails = await Promise.all(
-        offersData.map(async (offer) => {
-          try {
-            const menuItemResponse = await axiosInstance.get(
-              `/api/MenuItems/Get/${offer.menuItemId}`,
-            );
+      const offersWithDetails = offersData.map((offer) => {
+        const adjustedStartDate = adjustTimeFromAPI(offer.startDate);
+        const adjustedEndDate = adjustTimeFromAPI(offer.endDate);
 
-            const adjustedStartDate = adjustTimeFromAPI(offer.startDate);
-            const adjustedEndDate = adjustTimeFromAPI(offer.endDate);
+        const branchNames =
+          offer.branches?.map((branch) => branch.branchName) || [];
 
-            let branchNames = [];
-            if (offer.branchesIds && offer.branchesIds.length > 0) {
-              branchNames = offer.branchesIds.map((branchId) => {
-                const branch = branchesList.find((b) => b.id === branchId);
-                return branch ? branch.name : `فرع #${branchId}`;
-              });
-            } else {
-              branchNames = branchesList.map((b) => b.name);
-            }
-
-            return {
-              ...offer,
-              menuItem: menuItemResponse.data,
-              branchNames: branchNames,
-              startDate: adjustedStartDate,
-              endDate: adjustedEndDate,
-            };
-          } catch (error) {
-            console.error(`خطأ في جلب العنصر ${offer.menuItemId}:`, error);
-            return {
-              ...offer,
-              menuItem: null,
-              branchNames: [],
-              startDate: adjustTimeFromAPI(offer.startDate),
-              endDate: adjustTimeFromAPI(offer.endDate),
-            };
-          }
-        }),
-      );
+        return {
+          ...offer,
+          menuItem: {
+            name: offer.menuItemName,
+            basePrice: offer.menuItemBasePrice,
+            description: offer.menuItemDescription || "",
+            id: offer.menuItemId,
+          },
+          branchNames: branchNames,
+          startDate: adjustedStartDate,
+          endDate: adjustedEndDate,
+        };
+      });
 
       setOffers(offersWithDetails);
       setFilteredOffers(offersWithDetails);
@@ -568,9 +541,10 @@ export default function ItemOffersManagement() {
             offer.menuItem.name
               ?.toLowerCase()
               .includes(searchTerm.toLowerCase()) ||
-            offer.menuItem.description
-              ?.toLowerCase()
-              .includes(searchTerm.toLowerCase());
+            (offer.menuItem.description &&
+              offer.menuItem.description
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase()));
 
           const branchMatch = offer.branchNames.some((name) =>
             name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -698,7 +672,6 @@ export default function ItemOffersManagement() {
 
       resetForm();
       fetchOffers();
-      fetchMenuItems();
     } catch (err) {
       console.error("خطأ في حفظ العرض:", err);
       console.log("بيانات الخطأ من الـ API:", err.response?.data);
@@ -721,9 +694,10 @@ export default function ItemOffersManagement() {
     const endDateObj = new Date(offer.endDate);
 
     const currentBranchesIds =
-      offer.branchesIds && offer.branchesIds.length > 0
+      offer.branches?.map((branch) => branch.branchId) ||
+      (offer.branchesIds && offer.branchesIds.length > 0
         ? offer.branchesIds
-        : branches.map((branch) => branch.id);
+        : branches.map((branch) => branch.id));
 
     setFormData({
       menuItemId: offer.menuItemId.toString(),
@@ -759,7 +733,6 @@ export default function ItemOffersManagement() {
           await axiosInstance.delete(`/api/ItemOffers/Delete/${id}`);
           fetchOffers();
           showMessage("success", "تم الحذف!", "تم حذف عرض العنصر.");
-          fetchMenuItems();
         } catch (err) {
           showMessage("error", "خطأ", "فشل في حذف عرض العنصر.", {
             timer: 2500,
@@ -782,7 +755,10 @@ export default function ItemOffersManagement() {
       startDate: adjustTimeForAPI(offer.startDate),
       endDate: adjustTimeForAPI(offer.endDate),
       isEnabled: !offer.isEnabled,
-      branchesIds: offer.branchesIds || branches.map((branch) => branch.id),
+      branchesIds:
+        offer.branches?.map((branch) => branch.branchId) ||
+        offer.branchesIds ||
+        branches.map((branch) => branch.id),
     };
 
     try {
@@ -798,7 +774,6 @@ export default function ItemOffersManagement() {
           `تم ${offer.isEnabled ? "تعطيل" : "تفعيل"} عرض العنصر`,
           { timer: 1500 },
         );
-        fetchMenuItems();
       }
     } catch (error) {
       console.error("خطأ في تحديث حالة العرض:", error);
@@ -822,6 +797,7 @@ export default function ItemOffersManagement() {
     setIsAdding(false);
     setOpenDropdown(null);
     setError(null);
+    setMenuItems([]);
   };
 
   const handleAddNewOffer = () => {
@@ -997,9 +973,13 @@ export default function ItemOffersManagement() {
                                 {getStatusText(offer)}
                               </span>
                             </div>
-                            {offer.menuItem && (
-                              <p className="text-gray-600 dark:text-gray-400 text-base truncate">
-                                {offer.menuItem.description || "لا يوجد وصف"}
+                            {offer.menuItem?.description ? (
+                              <p className="text-gray-600 dark:text-gray-400 text-base mb-2">
+                                {offer.menuItem.description}
+                              </p>
+                            ) : (
+                              <p className="text-gray-400 dark:text-gray-500 text-base mb-2 italic">
+                                لا يوجد وصف
                               </p>
                             )}
                           </div>

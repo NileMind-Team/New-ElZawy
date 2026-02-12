@@ -134,7 +134,62 @@ export default function Cart() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  // New function: Fetch user profile
+  useEffect(() => {
+    if (selectedBranch && cartItems.length > 0) {
+      const updatedItems = cartItems.map((item) => {
+        const basePrice = item.menuItem?.basePrice || 0;
+        const itemOffer = item.menuItem?.itemOffer;
+        const isOfferValidForBranch = checkIfOfferValidForBranch(
+          itemOffer,
+          selectedBranch?.id,
+        );
+
+        const priceAfterDiscount = calculatePriceAfterDiscount(
+          basePrice,
+          itemOffer,
+          isOfferValidForBranch,
+        );
+
+        const discountInMoney = calculateDiscountInMoney(
+          basePrice,
+          itemOffer,
+          isOfferValidForBranch,
+        );
+
+        const optionsTotal = calculateOptionsTotal(
+          item.menuItemOptions,
+          item.quantity,
+        );
+
+        const finalPrice = priceAfterDiscount;
+        const totalPrice = priceAfterDiscount * item.quantity + optionsTotal;
+
+        return {
+          ...item,
+          finalPrice: finalPrice,
+          totalPrice: totalPrice,
+          hasDiscount: isOfferValidForBranch,
+          discountValue: discountInMoney,
+          isPercentageDiscount: itemOffer?.isPercentage || false,
+          originalDiscountValue: itemOffer?.discountValue || 0,
+        };
+      });
+
+      setCartItems(updatedItems);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBranch]);
+
+  const checkIfOfferValidForBranch = (itemOffer, branchId) => {
+    if (!itemOffer || !itemOffer.isEnabled) return false;
+    if (!branchId) return false;
+    if (itemOffer.branches && Array.isArray(itemOffer.branches)) {
+      return itemOffer.branches.some((branch) => branch.branchId === branchId);
+    }
+
+    return false;
+  };
+
   const fetchUserProfile = async () => {
     try {
       setLoadingProfile(true);
@@ -193,13 +248,11 @@ export default function Cart() {
     }
   };
 
-  // Function to open phone input modal
   const openPhoneInputModal = () => {
     setShowMissingInfoModal(false);
     setShowPhoneInputModal(true);
   };
 
-  // Function to handle adding address
   const handleAddAddress = () => {
     setShowMissingInfoModal(false);
     navigate("/addresses", { state: { fromCart: true, requireDefault: true } });
@@ -264,8 +317,12 @@ export default function Cart() {
     }
   };
 
-  const calculateDiscountInMoney = (basePrice, itemOffer) => {
-    if (!itemOffer || !itemOffer.isEnabled) return 0;
+  const calculateDiscountInMoney = (
+    basePrice,
+    itemOffer,
+    isOfferValid = true,
+  ) => {
+    if (!isOfferValid || !itemOffer || !itemOffer.isEnabled) return 0;
 
     if (itemOffer.isPercentage) {
       return (basePrice * itemOffer.discountValue) / 100;
@@ -274,8 +331,12 @@ export default function Cart() {
     }
   };
 
-  const calculatePriceAfterDiscount = (basePrice, itemOffer) => {
-    if (!itemOffer || !itemOffer.isEnabled) return basePrice;
+  const calculatePriceAfterDiscount = (
+    basePrice,
+    itemOffer,
+    isOfferValid = true,
+  ) => {
+    if (!isOfferValid || !itemOffer || !itemOffer.isEnabled) return basePrice;
 
     if (itemOffer.isPercentage) {
       return basePrice - (basePrice * itemOffer.discountValue) / 100;
@@ -314,12 +375,21 @@ export default function Cart() {
         const basePrice = item.menuItem?.basePrice || 0;
         const itemOffer = item.menuItem?.itemOffer;
 
+        const isOfferValidForBranch = selectedBranch
+          ? checkIfOfferValidForBranch(itemOffer, selectedBranch.id)
+          : false;
+
         const priceAfterDiscount = calculatePriceAfterDiscount(
           basePrice,
           itemOffer,
+          isOfferValidForBranch,
         );
 
-        const discountInMoney = calculateDiscountInMoney(basePrice, itemOffer);
+        const discountInMoney = calculateDiscountInMoney(
+          basePrice,
+          itemOffer,
+          isOfferValidForBranch,
+        );
 
         let prepTime = null;
         if (
@@ -354,7 +424,7 @@ export default function Cart() {
           menuItem: item.menuItem,
           menuItemOptions: item.menuItemOptions || [],
           note: item.note || "",
-          hasDiscount: itemOffer?.isEnabled || false,
+          hasDiscount: isOfferValidForBranch,
           discountValue: discountInMoney,
           originalDiscountValue: itemOffer?.discountValue || 0,
           isPercentageDiscount: itemOffer?.isPercentage || false,
@@ -564,10 +634,15 @@ export default function Cart() {
       );
     }
 
-    if (product.itemOffer?.isEnabled) {
+    const isOfferValidForBranch = selectedBranch
+      ? checkIfOfferValidForBranch(product.itemOffer, selectedBranch.id)
+      : false;
+
+    if (product.itemOffer?.isEnabled && isOfferValidForBranch) {
       const priceAfterDiscount = calculatePriceAfterDiscount(
         product.basePrice,
         product.itemOffer,
+        true,
       );
 
       return (
@@ -705,22 +780,34 @@ export default function Cart() {
       productData.isPriceBasedOnRequest = productData.basePrice === 0;
 
       const transformedAddons =
-        productData.typesWithOptions?.map((type) => ({
-          id: type.id,
-          title: type.name,
-          type: type.canSelectMultipleOptions ? "multiple" : "single",
-          required: type.isSelectionRequired,
-          canSelectMultipleOptions: type.canSelectMultipleOptions,
-          isSelectionRequired: type.isSelectionRequired,
-          options:
-            type.menuItemOptions?.map((option) => ({
-              id: option.id,
-              name: option.name,
-              price: option.price,
-              typeId: type.id,
-              branchMenuItemOption: option.branchMenuItemOption || [],
-            })) || [],
-        })) || [];
+        productData.typesWithOptions
+          ?.map((type) => ({
+            id: type.id,
+            title: type.name,
+            type: type.canSelectMultipleOptions ? "multiple" : "single",
+            required: type.isSelectionRequired,
+            canSelectMultipleOptions: type.canSelectMultipleOptions,
+            isSelectionRequired: type.isSelectionRequired,
+            options:
+              type.menuItemOptions
+                ?.map((option) => ({
+                  id: option.id,
+                  name: option.name,
+                  price: option.price,
+                  typeId: type.id,
+                  branchMenuItemOption: option.branchMenuItemOption || [],
+                }))
+                .filter((option) => {
+                  if (!selectedBranch) return true;
+                  return option.branchMenuItemOption.some(
+                    (branchOption) =>
+                      branchOption.branchId === selectedBranch.id &&
+                      branchOption.isAvailable === true &&
+                      branchOption.isActive === true,
+                  );
+                }) || [],
+          }))
+          .filter((addon) => addon.options.length > 0) || [];
 
       setProductAddons(transformedAddons);
       setProductDetails(productData);
@@ -816,6 +903,10 @@ export default function Cart() {
 
     const basePrice = productDetails.basePrice || 0;
 
+    const isOfferValidForBranch = selectedBranch
+      ? checkIfOfferValidForBranch(productDetails.itemOffer, selectedBranch.id)
+      : false;
+
     if (basePrice === 0) {
       let total = 0;
 
@@ -836,6 +927,7 @@ export default function Cart() {
     const priceAfterDiscount = calculatePriceAfterDiscount(
       basePrice,
       productDetails.itemOffer,
+      isOfferValidForBranch,
     );
 
     let total = priceAfterDiscount * productQuantity;
@@ -1764,7 +1856,12 @@ export default function Cart() {
                       </div>
 
                       {productDetails.itemOffer?.isEnabled &&
-                        productDetails.basePrice !== 0 && (
+                        productDetails.basePrice !== 0 &&
+                        selectedBranch &&
+                        checkIfOfferValidForBranch(
+                          productDetails.itemOffer,
+                          selectedBranch.id,
+                        ) && (
                           <div className="bg-[#E41E26] text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg font-bold shadow text-xs sm:text-sm flex items-center gap-1 border border-white">
                             <span>خصم</span>
                             <span>
@@ -1772,6 +1869,7 @@ export default function Cart() {
                                 calculateDiscountInMoney(
                                   productDetails.basePrice,
                                   productDetails.itemOffer,
+                                  true,
                                 ).toFixed(2),
                               )}{" "}
                               ج.م
@@ -1826,7 +1924,6 @@ export default function Cart() {
                   </div>
                 )}
 
-                {/* Addons - UPDATED DESIGN TO MATCH PRODUCT DETAILS PAGE */}
                 {productAddons.length > 0 && (
                   <div className="space-y-3 sm:space-y-5 lg:space-y-6 mb-4 sm:mb-5 lg:mb-6">
                     {productAddons.map((addon) => {
@@ -2124,7 +2221,7 @@ export default function Cart() {
                                 loading="lazy"
                                 className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg sm:rounded-xl object-cover flex-shrink-0 border border-gray-200"
                               />
-                              {/* Badge for discount */}
+                              {/* Badge for discount - only show if offer is valid for selected branch */}
                               {item.hasDiscount &&
                                 !item.isPriceBasedOnRequest && (
                                   <div className="absolute -top-2 -right-2 bg-[#E41E26] text-white px-2 py-1 rounded-lg text-xs font-bold shadow-lg border border-white">
@@ -2165,7 +2262,6 @@ export default function Cart() {
                                 </div>
                               )}
 
-                              {/* Notes - New Section Added */}
                               {item.note && (
                                 <div className="flex items-start gap-2 text-xs sm:text-sm text-green-600 dark:text-green-400 mt-2 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg border border-green-300">
                                   <FaStickyNote
@@ -2333,7 +2429,6 @@ export default function Cart() {
                   </div>
                 </div>
 
-                {/* Branch Selection Dropdown - UPDATED DESIGN */}
                 <div
                   className="mb-4 sm:mb-6 relative"
                   style={{ zIndex: 10000 }}
@@ -2399,12 +2494,11 @@ export default function Cart() {
 
                 {deliveryType === "delivery" && (
                   <>
-                    {/* Delivery Area Selection Dropdown - UPDATED DESIGN */}
+                    {/* Delivery Area Selection Dropdown */}
                     <div
                       className="mb-4 sm:mb-6 relative"
                       style={{ zIndex: 1000 }}
                     >
-                      {" "}
                       <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         اختر منطقة التوصيل
                       </label>
