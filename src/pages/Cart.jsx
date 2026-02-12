@@ -139,6 +139,7 @@ export default function Cart() {
       const updatedItems = cartItems.map((item) => {
         const basePrice = item.menuItem?.basePrice || 0;
         const itemOffer = item.menuItem?.itemOffer;
+
         const isOfferValidForBranch = checkIfOfferValidForBranch(
           itemOffer,
           selectedBranch?.id,
@@ -183,6 +184,7 @@ export default function Cart() {
   const checkIfOfferValidForBranch = (itemOffer, branchId) => {
     if (!itemOffer || !itemOffer.isEnabled) return false;
     if (!branchId) return false;
+
     if (itemOffer.branches && Array.isArray(itemOffer.branches)) {
       return itemOffer.branches.some((branch) => branch.branchId === branchId);
     }
@@ -248,11 +250,13 @@ export default function Cart() {
     }
   };
 
+  // Function to open phone input modal
   const openPhoneInputModal = () => {
     setShowMissingInfoModal(false);
     setShowPhoneInputModal(true);
   };
 
+  // Function to handle adding address
   const handleAddAddress = () => {
     setShowMissingInfoModal(false);
     navigate("/addresses", { state: { fromCart: true, requireDefault: true } });
@@ -780,34 +784,22 @@ export default function Cart() {
       productData.isPriceBasedOnRequest = productData.basePrice === 0;
 
       const transformedAddons =
-        productData.typesWithOptions
-          ?.map((type) => ({
-            id: type.id,
-            title: type.name,
-            type: type.canSelectMultipleOptions ? "multiple" : "single",
-            required: type.isSelectionRequired,
-            canSelectMultipleOptions: type.canSelectMultipleOptions,
-            isSelectionRequired: type.isSelectionRequired,
-            options:
-              type.menuItemOptions
-                ?.map((option) => ({
-                  id: option.id,
-                  name: option.name,
-                  price: option.price,
-                  typeId: type.id,
-                  branchMenuItemOption: option.branchMenuItemOption || [],
-                }))
-                .filter((option) => {
-                  if (!selectedBranch) return true;
-                  return option.branchMenuItemOption.some(
-                    (branchOption) =>
-                      branchOption.branchId === selectedBranch.id &&
-                      branchOption.isAvailable === true &&
-                      branchOption.isActive === true,
-                  );
-                }) || [],
-          }))
-          .filter((addon) => addon.options.length > 0) || [];
+        productData.typesWithOptions?.map((type) => ({
+          id: type.id,
+          title: type.name,
+          type: type.canSelectMultipleOptions ? "multiple" : "single",
+          required: type.isSelectionRequired,
+          canSelectMultipleOptions: type.canSelectMultipleOptions,
+          isSelectionRequired: type.isSelectionRequired,
+          options:
+            type.menuItemOptions?.map((option) => ({
+              id: option.id,
+              name: option.name,
+              price: option.price,
+              typeId: type.id,
+              branchMenuItemOption: option.branchMenuItemOption || [],
+            })) || [],
+        })) || [];
 
       setProductAddons(transformedAddons);
       setProductDetails(productData);
