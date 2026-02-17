@@ -977,7 +977,7 @@ export default function ItemOffersManagement() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 mb-6 sm:mb-8 relative z-30 dark:bg-gray-800/90 border border-gray-300"
+            className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 mb-6 sm:mb-8 relative z-30 dark:bg-gray-800/90"
           >
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1 relative">
@@ -987,7 +987,7 @@ export default function ItemOffersManagement() {
                   placeholder="ابحث في العروض حسب اسم العنصر، الوصف، أو الفرع..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl bg-white text-black focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
 
@@ -996,7 +996,7 @@ export default function ItemOffersManagement() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleAddNewOffer}
-                  className="flex items-center gap-2 bg-[#E41E26] text-white px-4 sm:px-5 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base whitespace-nowrap w-full sm:w-auto justify-center border border-white"
+                  className="flex items-center gap-2 bg-[#E41E26] text-white px-4 sm:px-5 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base whitespace-nowrap w-full sm:w-auto justify-center"
                 >
                   <FaPlus className="text-sm" />
                   <span className="hidden sm:inline">إنشاء عرض</span>
@@ -1019,12 +1019,12 @@ export default function ItemOffersManagement() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className={`bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-5 lg:p-6 hover:shadow-2xl transition-all duration-300 dark:bg-gray-800/90 border border-gray-300 ${
+                    className={`bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-5 lg:p-6 hover:shadow-2xl transition-all duration-300 dark:bg-gray-800/90 border-2 ${
                       offer.isEnabled &&
                       new Date(offer.startDate) <= new Date() &&
                       new Date(offer.endDate) >= new Date()
-                        ? "border-green-300 dark:border-green-700"
-                        : "border-gray-300 dark:border-gray-600"
+                        ? "border-green-200 dark:border-green-800"
+                        : "border-gray-200/50 dark:border-gray-600"
                     }`}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
@@ -1033,12 +1033,16 @@ export default function ItemOffersManagement() {
                         <div className="flex items-start justify-between mb-3 sm:mb-4">
                           <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                             <div
-                              className={`p-3 sm:p-4 bg-gradient-to-r from-[#fff5f5] to-[#ffe5e5] dark:from-gray-700 dark:to-gray-600 rounded-xl sm:rounded-2xl border border-[#E41E26]/30 dark:border-gray-500 flex-shrink-0`}
+                              className={`p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gradient-to-r ${
+                                offer.isPercentage
+                                  ? "from-green-500/10 to-green-600/10 dark:from-green-500/20 dark:to-green-600/20"
+                                  : "from-blue-500/10 to-blue-600/10 dark:from-blue-500/20 dark:to-blue-600/20"
+                              } border ${getStatusColor(offer)} flex-shrink-0`}
                             >
                               {offer.isPercentage ? (
-                                <FaPercent className="text-[#E41E26] dark:text-[#E41E26] text-xl sm:text-2xl" />
+                                <FaPercent className="text-[#E41E26] text-lg sm:text-xl" />
                               ) : (
-                                <FaMoneyBillWave className="text-[#E41E26] dark:text-[#E41E26] text-xl sm:text-2xl" />
+                                <FaMoneyBillWave className="text-[#E41E26] text-lg sm:text-xl" />
                               )}
                             </div>
                             <div className="min-w-0 flex-1">
@@ -1179,30 +1183,20 @@ export default function ItemOffersManagement() {
                           </div>
                           {offer.branchNames && offer.branchNames.length > 0 ? (
                             <div className="flex flex-wrap gap-2">
-                              {offer.branchNames
-                                .slice(0, 2)
-                                .map((branchName, index) => (
-                                  <span
-                                    key={index}
-                                    className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-xs font-medium flex items-center gap-1"
-                                  >
-                                    <FaStore className="text-xs" />
-                                    {branchName}
-                                  </span>
-                                ))}
-                              {offer.branchNames.length > 2 && (
-                                <span className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-lg text-xs font-medium">
-                                  +{offer.branchNames.length - 2}
+                              {offer.branchNames.map((branchName, index) => (
+                                <span
+                                  key={index}
+                                  className="px-3 py-1.5 bg-[#E41E26] text-white rounded-lg text-xs font-medium flex items-center gap-1"
+                                >
+                                  <FaStore className="text-xs" />
+                                  {branchName}
                                 </span>
-                              )}
+                              ))}
                             </div>
                           ) : (
-                            <div className="text-center py-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-300">
-                              <FaStore className="mx-auto text-3xl text-gray-400 dark:text-gray-500 mb-2" />
-                              <p className="text-gray-600 dark:text-gray-400 font-medium">
-                                لم يتم تحديد فروع
-                              </p>
-                            </div>
+                            <p className="text-xs text-gray-400 dark:text-gray-500">
+                              لم يتم تحديد فروع
+                            </p>
                           )}
                         </div>
 
@@ -1215,26 +1209,26 @@ export default function ItemOffersManagement() {
                         </div>
                       </div>
 
-                      {/* Action Buttons */}
-                      <div className="flex flex-col sm:flex-col lg:flex-row gap-2 sm:gap-3 justify-end sm:justify-start mt-4 sm:mt-0">
+                      {/* Action Buttons - مثل الكود الأول تماماً */}
+                      <div className="flex flex-row sm:flex-col lg:flex-row gap-1 sm:gap-2 justify-end sm:justify-start items-center mt-2 sm:mt-0">
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={(e) => handleToggleActive(offer.id, e)}
-                          className={`flex items-center gap-2 px-4 py-2.5 ${
+                          className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 ${
                             offer.isEnabled
-                              ? "bg-yellow-50 text-yellow-700 hover:bg-yellow-100 dark:bg-yellow-900/50 dark:text-yellow-300 dark:hover:bg-yellow-800 border border-yellow-300"
-                              : "bg-green-50 text-green-700 hover:bg-green-100 dark:bg-green-900/50 dark:text-green-300 dark:hover:bg-green-800 border border-green-300"
-                          } rounded-lg transition-colors duration-200 text-sm font-medium flex-1 sm:flex-none justify-center`}
+                              ? "bg-yellow-50 text-yellow-700 hover:bg-yellow-100 dark:bg-yellow-900/50 dark:text-yellow-300 dark:hover:bg-yellow-800 border-yellow-200 dark:border-yellow-800"
+                              : "bg-green-50 text-green-700 hover:bg-green-100 dark:bg-green-900/50 dark:text-green-300 dark:hover:bg-green-800 border-green-200 dark:border-green-800"
+                          } rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border`}
                         >
                           {offer.isEnabled ? (
                             <>
-                              <FaTimesCircle className="text-sm" />
+                              <FaTimesCircle className="text-xs sm:text-sm" />
                               <span className="whitespace-nowrap">تعطيل</span>
                             </>
                           ) : (
                             <>
-                              <FaCheckCircle className="text-sm" />
+                              <FaCheckCircle className="text-xs sm:text-sm" />
                               <span className="whitespace-nowrap">تفعيل</span>
                             </>
                           )}
@@ -1243,18 +1237,18 @@ export default function ItemOffersManagement() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleEdit(offer)}
-                          className="flex items-center gap-2 px-4 py-2.5 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800 rounded-lg transition-colors duration-200 text-sm font-medium flex-1 sm:flex-none justify-center border border-blue-300"
+                          className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border border-blue-200 dark:border-blue-800"
                         >
-                          <FaEdit className="text-sm" />
+                          <FaEdit className="text-xs sm:text-sm" />
                           <span className="whitespace-nowrap">تعديل</span>
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleDelete(offer.id)}
-                          className="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/50 dark:text-red-300 dark:hover:bg-red-800 rounded-lg transition-colors duration-200 text-sm font-medium flex-1 sm:flex-none justify-center border border-red-300"
+                          className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/50 dark:text-red-300 dark:hover:bg-red-800 rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium flex-1 sm:flex-none justify-center border border-red-200 dark:border-red-800"
                         >
-                          <FaTrash className="text-sm" />
+                          <FaTrash className="text-xs sm:text-sm" />
                           <span className="whitespace-nowrap">حذف</span>
                         </motion.button>
                       </div>
@@ -1267,7 +1261,7 @@ export default function ItemOffersManagement() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center py-8 sm:py-10 md:py-12 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200 dark:bg-gray-700/80 dark:border-gray-600"
+                  className="text-center py-8 sm:py-10 md:py-12 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200/50 dark:bg-gray-700/80 dark:border-gray-600"
                 >
                   <FaTag className="mx-auto text-3xl sm:text-4xl md:text-5xl text-gray-400 dark:text-gray-500 mb-3 sm:mb-4" />
                   <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">
@@ -1282,7 +1276,7 @@ export default function ItemOffersManagement() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleAddNewOffer}
-                    className="flex items-center gap-2 bg-[#E41E26] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base mx-auto border border-white"
+                    className="flex items-center gap-2 bg-[#E41E26] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base mx-auto"
                   >
                     <FaPlus className="text-xs sm:text-sm" />
                     <span>إنشاء أول عرض</span>
@@ -1318,7 +1312,7 @@ export default function ItemOffersManagement() {
                               onClick={() => handlePageChange(pageNum)}
                               className={`px-3 sm:px-4 py-1 sm:py-2 rounded-xl font-semibold ${
                                 currentPage === pageNum
-                                  ? "bg-gradient-to-r from-[#E41E26] to-[#E41E26] text-white shadow-lg"
+                                  ? "bg-[#E41E26] text-white shadow-lg"
                                   : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
                               }`}
                             >
@@ -1354,14 +1348,14 @@ export default function ItemOffersManagement() {
                   exit={{ opacity: 0, x: 20 }}
                   className="xl:col-span-1"
                 >
-                  <div className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-5 lg:p-6 border border-gray-300 dark:bg-gray-800/90 dark:border-gray-600 sticky top-4 sm:top-6 transition-colors duration-300">
+                  <div className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-5 lg:p-6 border border-gray-200/50 dark:bg-gray-800/90 dark:border-gray-600 sticky top-4 sm:top-6 transition-colors duration-300">
                     <div className="flex items-center justify-between mb-3 sm:mb-4">
                       <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200">
                         {editingId ? "تعديل العرض" : "إنشاء عرض جديد"}
                       </h3>
                       <button
                         onClick={resetForm}
-                        className="text-gray-500 hover:text-[#E41E26] dark:text-gray-400 dark:hover:text-[#E41E26] transition-colors duration-200 flex-shrink-0 ml-2 border border-gray-300 p-1 rounded-full"
+                        className="text-gray-500 hover:text-[#E41E26] dark:text-gray-400 dark:hover:text-[#E41E26] transition-colors duration-200 flex-shrink-0 ml-2"
                       >
                         <FaTimes size={16} className="sm:size-5" />
                       </button>
@@ -1391,7 +1385,7 @@ export default function ItemOffersManagement() {
                               }
                             }}
                             disabled={editingId !== null}
-                            className="w-full flex items-center justify-between border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl px-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed text-right"
+                            className="w-full flex items-center justify-between border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl px-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed text-right"
                           >
                             <span className="flex items-center gap-2 truncate">
                               <FaHamburger className="text-[#E41E26] flex-shrink-0" />
@@ -1437,17 +1431,17 @@ export default function ItemOffersManagement() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -5 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 shadow-2xl rounded-xl overflow-hidden max-h-64 overflow-y-auto"
+                                className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-2xl rounded-xl overflow-hidden max-h-64 overflow-y-auto"
                               >
                                 {loadingItems ? (
-                                  <div className="flex items-center justify-center py-4 border border-gray-300">
+                                  <div className="flex items-center justify-center py-4">
                                     <FaSpinner className="text-[#E41E26] animate-spin text-lg" />
                                     <span className="ml-2 text-gray-600 dark:text-gray-400">
                                       جاري تحميل العناصر...
                                     </span>
                                   </div>
                                 ) : menuItems.length === 0 ? (
-                                  <div className="px-4 py-3 text-center border border-gray-300">
+                                  <div className="px-4 py-3 text-center">
                                     <p className="text-gray-500 dark:text-gray-400 text-sm">
                                       {editingId
                                         ? "لا يمكن تغيير العنصر أثناء التعديل"
@@ -1466,7 +1460,7 @@ export default function ItemOffersManagement() {
                                           );
                                           setOpenDropdown(null);
                                         }}
-                                        className="px-4 py-3 hover:bg-gradient-to-r hover:from-[#fff5f5] hover:to-[#ffe5e5] dark:hover:from-gray-600 dark:hover:to-gray-500 cursor-pointer text-gray-700 dark:text-gray-300 transition-all text-sm sm:text-base border-b border-gray-200 dark:border-gray-600 last:border-b-0 flex flex-col text-right"
+                                        className="px-4 py-3 hover:bg-gradient-to-r hover:from-[#fff5f5] hover:to-[#ffe5e5] dark:hover:from-gray-600 dark:hover:to-gray-500 cursor-pointer text-gray-700 dark:text-gray-300 transition-all text-sm sm:text-base border-b border-gray-100 dark:border-gray-600 last:border-b-0 flex flex-col text-right"
                                       >
                                         <div className="font-medium truncate">
                                           {item.name}
@@ -1568,7 +1562,7 @@ export default function ItemOffersManagement() {
                               min="0"
                               max={formData.isPercentage ? "100" : ""}
                               step={formData.isPercentage ? "1" : "0.01"}
-                              className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base text-right"
+                              className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base text-right"
                               placeholder={
                                 formData.isPercentage ? "0-100" : "0.00"
                               }
@@ -1590,7 +1584,7 @@ export default function ItemOffersManagement() {
                               value={formData.startDate}
                               onChange={handleInputChange}
                               required
-                              className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                              className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                             />
                           </div>
                         </div>
@@ -1605,7 +1599,7 @@ export default function ItemOffersManagement() {
                               name="startTime"
                               value={formData.startTime}
                               onChange={handleInputChange}
-                              className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                              className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                             />
                           </div>
                         </div>
@@ -1625,7 +1619,7 @@ export default function ItemOffersManagement() {
                               onChange={handleInputChange}
                               required
                               min={formData.startDate}
-                              className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                              className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                             />
                           </div>
                         </div>
@@ -1640,7 +1634,7 @@ export default function ItemOffersManagement() {
                               name="endTime"
                               value={formData.endTime}
                               onChange={handleInputChange}
-                              className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                              className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl pl-3 pr-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                             />
                           </div>
                         </div>
@@ -1650,9 +1644,9 @@ export default function ItemOffersManagement() {
                         <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                           الفروع المطبق عليها *
                         </label>
-                        <div className="border border-gray-300 dark:border-gray-600 rounded-lg sm:rounded-xl p-3 max-h-48 overflow-y-auto bg-white dark:bg-gray-700">
+                        <div className="border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl p-3 max-h-48 overflow-y-auto bg-white dark:bg-gray-700">
                           {branches.length === 0 ? (
-                            <div className="text-center py-4 border border-gray-300">
+                            <div className="text-center py-4">
                               <FaStore className="mx-auto text-2xl text-gray-400 dark:text-gray-500 mb-2" />
                               <p className="text-sm text-gray-500 dark:text-gray-400">
                                 لا توجد فروع متاحة
@@ -1663,7 +1657,7 @@ export default function ItemOffersManagement() {
                               {branches.map((branch) => (
                                 <label
                                   key={branch.id}
-                                  className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 border border-gray-200"
+                                  className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200"
                                 >
                                   <input
                                     type="checkbox"
@@ -1697,7 +1691,7 @@ export default function ItemOffersManagement() {
                           name="isEnabled"
                           checked={formData.isEnabled}
                           onChange={handleInputChange}
-                          className="w-4 h-4 text-[#E41E26] bg-gray-100 rounded focus:ring-[#E41E26] focus:ring-2 border border-gray-300"
+                          className="w-4 h-4 text-[#E41E26] bg-gray-100 border-gray-300 rounded focus:ring-[#E41E26] focus:ring-2"
                         />
                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                           نشط (متاح للاستخدام)
@@ -1723,12 +1717,12 @@ export default function ItemOffersManagement() {
                             formData.branchesIds.length === 0 ||
                             isSubmitting
                           }
-                          className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center justify-center gap-1 sm:gap-2 border ${
+                          className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center justify-center gap-1 sm:gap-2 ${
                             isFormValid() &&
                             formData.branchesIds.length > 0 &&
                             !isSubmitting
-                              ? "bg-[#E41E26] text-white hover:shadow-xl hover:shadow-[#E41E26]/25 cursor-pointer border-white"
-                              : "bg-gray-300 text-gray-500 cursor-not-allowed border-gray-400"
+                              ? "bg-[#E41E26] text-white hover:shadow-xl hover:shadow-[#E41E26]/25 cursor-pointer"
+                              : "bg-gray-300 text-gray-500 cursor-not-allowed"
                           }`}
                         >
                           {isSubmitting ? (
