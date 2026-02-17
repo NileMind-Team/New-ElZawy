@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { FaArrowLeft, FaGoogle, FaFacebook } from "react-icons/fa";
+import { FaArrowLeft, FaGoogle } from "react-icons/fa";
 
 export default function AuthLayout({
   children,
@@ -11,9 +11,6 @@ export default function AuthLayout({
   isProcessingGoogle,
   onGoogleLogin,
   isGoogleLoading,
-  onFacebookLogin,
-  isFacebookLoading,
-  isProcessingFacebook,
 }) {
   const formContainerRef = useRef(null);
 
@@ -32,8 +29,6 @@ export default function AuthLayout({
     }
   };
 
-  const isAnySocialProcessing = isProcessingGoogle || isProcessingFacebook;
-
   return (
     <div
       className={`min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe5e5] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4 relative font-sans overflow-hidden transition-colors duration-300`}
@@ -45,7 +40,7 @@ export default function AuthLayout({
         <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-gradient-to-r from-[#d11c24]/10 to-[#E41E26]/10 dark:from-[#d11c24]/20 dark:to-[#E41E26]/20 rounded-full blur-3xl"></div>
       </div>
 
-      {!showWelcome && !isAnySocialProcessing && (
+      {!showWelcome && !isProcessingGoogle && (
         <button
           onClick={onBack}
           className="fixed top-6 left-6 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md hover:bg-[#E41E26] hover:text-white rounded-full p-3 text-[#E41E26] dark:text-gray-300 border border-[#E41E26] dark:border-gray-600 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
@@ -66,8 +61,8 @@ export default function AuthLayout({
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#E41E26]/5 to-transparent rounded-tr-3xl"></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 min-h-[600px]">
-          {/* Left Side - Brand Section with Tabs - Hide during social processing */}
-          {!isAnySocialProcessing && (
+          {/* Left Side - Brand Section with Tabs - Hide during Google processing */}
+          {!isProcessingGoogle && (
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -131,7 +126,7 @@ export default function AuthLayout({
                 </motion.button>
               </div>
 
-              {/* Social Login Buttons */}
+              {/* Google Login Button */}
               <div className="mt-6 mb-6">
                 <div className="relative mb-6">
                   <div className="absolute inset-0 flex items-center">
@@ -144,67 +139,34 @@ export default function AuthLayout({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Google Login Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    type="button"
-                    onClick={onGoogleLogin}
-                    disabled={isGoogleLoading}
-                    className={`flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl transition-all duration-300 border ${
-                      isGoogleLoading
-                        ? "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 cursor-not-allowed"
-                        : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-lg"
-                    }`}
-                  >
-                    {isGoogleLoading ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#DB4437]"></div>
-                      </div>
-                    ) : (
-                      <>
-                        <FaGoogle className="text-[#DB4437]" size={18} />
-                        <span className="text-gray-700 dark:text-gray-300 text-sm">
-                          Google
-                        </span>
-                      </>
-                    )}
-                  </motion.button>
-
-                  {/* Facebook Login Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    type="button"
-                    onClick={onFacebookLogin}
-                    disabled={isFacebookLoading}
-                    className={`flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl transition-all duration-300 border ${
-                      isFacebookLoading
-                        ? "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 cursor-not-allowed"
-                        : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-lg"
-                    }`}
-                  >
-                    {isFacebookLoading ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1877F2]"></div>
-                      </div>
-                    ) : (
-                      <>
-                        <FaFacebook className="text-[#1877F2]" size={18} />
-                        <span className="text-gray-700 dark:text-gray-300 text-sm">
-                          Facebook
-                        </span>
-                      </>
-                    )}
-                  </motion.button>
-                </div>
-
-                <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-3">
-                  {activeTab === "login"
-                    ? "تسجيل الدخول باستخدام"
-                    : "إنشاء حساب باستخدام"}
-                </p>
+                {/* Google Login Button */}
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  type="button"
+                  onClick={onGoogleLogin}
+                  disabled={isGoogleLoading}
+                  className={`w-full flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl transition-all duration-300 border ${
+                    isGoogleLoading
+                      ? "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 cursor-not-allowed"
+                      : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-lg"
+                  }`}
+                >
+                  {isGoogleLoading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#DB4437]"></div>
+                    </div>
+                  ) : (
+                    <>
+                      <FaGoogle className="text-[#DB4437]" size={20} />
+                      <span className="text-gray-700 dark:text-gray-300">
+                        {activeTab === "login"
+                          ? "تسجيل الدخول عبر Google"
+                          : "إنشاء حساب عبر Google"}
+                      </span>
+                    </>
+                  )}
+                </motion.button>
               </div>
 
               {/* Animated Dots */}
@@ -224,11 +186,11 @@ export default function AuthLayout({
             </motion.div>
           )}
 
-          {/* Right Side - Auth Form - Full width during social processing */}
+          {/* Right Side - Auth Form - Full width during Google processing */}
           <div
             ref={formContainerRef}
             className={`${
-              isAnySocialProcessing ? "lg:col-span-3" : "lg:col-span-2"
+              isProcessingGoogle ? "lg:col-span-3" : "lg:col-span-2"
             } flex flex-col justify-center px-6 py-6 md:px-8 md:py-8`}
           >
             {children}
