@@ -79,6 +79,10 @@ const Home = () => {
     return window.innerWidth <= 768;
   };
 
+  const trimText = (text) => {
+    return text.trim();
+  };
+
   // Function to show notification based on device and content
   const showNotification = (type, title, text, options = {}) => {
     if (options.showConfirmButton || options.showCancelButton) {
@@ -984,7 +988,9 @@ const Home = () => {
   };
 
   const handleSaveCategory = async () => {
-    if (!editingCategory.name.trim()) {
+    const trimmedName = trimText(editingCategory.name);
+
+    if (!trimmedName) {
       showNotification("error", "خطأ", "اسم التصنيف مطلوب", { timer: 2000 });
       return;
     }
@@ -1003,14 +1009,16 @@ const Home = () => {
       await axiosInstance.put(
         `/api/Categories/Update/${editingCategory.originalId}`,
         {
-          name: editingCategory.name,
+          name: trimmedName,
           isActive: editingCategory.isActive,
         },
       );
 
       setCategories(
         categories.map((cat) =>
-          cat.id === editingCategory.id ? { ...editingCategory } : cat,
+          cat.id === editingCategory.id
+            ? { ...editingCategory, name: trimmedName }
+            : cat,
         ),
       );
 
@@ -1025,7 +1033,9 @@ const Home = () => {
   };
 
   const handleAddCategory = async () => {
-    if (!newCategory.name.trim()) {
+    const trimmedName = trimText(newCategory.name);
+
+    if (!trimmedName) {
       showNotification("error", "خطأ", "اسم التصنيف مطلوب", { timer: 2000 });
       return;
     }
@@ -1033,7 +1043,7 @@ const Home = () => {
     try {
       const response = await axiosInstance.post("/api/Categories/Add", null, {
         params: {
-          Name: newCategory.name,
+          Name: trimmedName,
           IsActive: newCategory.isActive,
         },
       });
