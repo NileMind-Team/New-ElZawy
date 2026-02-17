@@ -420,6 +420,13 @@ export default function ItemOffersManagement() {
   });
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [currentPage]);
+
+  useEffect(() => {
     const checkUserRoleAndFetchData = async () => {
       try {
         const token = localStorage.getItem("token");
