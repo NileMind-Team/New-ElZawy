@@ -404,6 +404,9 @@ export default function ItemOffersManagement() {
   const [totalPages, setTotalPages] = useState(1);
   // eslint-disable-next-line no-unused-vars
   const [pageSize, setPageSize] = useState(5);
+
+  const isPaginationChange = useRef(false);
+
   const offersContainerRef = useRef(null);
   const firstOfferRef = useRef(null);
 
@@ -423,28 +426,32 @@ export default function ItemOffersManagement() {
   });
 
   const scrollToFirstOffer = () => {
-    setTimeout(() => {
-      if (firstOfferRef.current) {
-        const offset = 120;
-        const elementPosition =
-          firstOfferRef.current.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
+    if (isPaginationChange.current) {
+      setTimeout(() => {
+        if (firstOfferRef.current) {
+          const offset = 120;
+          const elementPosition =
+            firstOfferRef.current.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-      } else if (offersContainerRef.current) {
-        const containerPosition =
-          offersContainerRef.current.getBoundingClientRect().top;
-        const offsetPosition = containerPosition + window.pageYOffset - 80;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        } else if (offersContainerRef.current) {
+          const containerPosition =
+            offersContainerRef.current.getBoundingClientRect().top;
+          const offsetPosition = containerPosition + window.pageYOffset - 80;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-      }
-    }, 300);
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }, 200);
+
+      isPaginationChange.current = false;
+    }
   };
 
   useEffect(() => {
@@ -501,6 +508,7 @@ export default function ItemOffersManagement() {
         );
       } finally {
         setLoading(false);
+        isPaginationChange.current = false;
       }
     };
 
@@ -920,18 +928,22 @@ export default function ItemOffersManagement() {
 
   const handlePageChange = (pageNumber) => {
     if (pageNumber !== currentPage) {
+      isPaginationChange.current = true;
       setCurrentPage(pageNumber);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
+      isPaginationChange.current = true;
       setCurrentPage(currentPage - 1);
     }
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
+      // تعيين أن هذا التغيير من الباجينيشن
+      isPaginationChange.current = true;
       setCurrentPage(currentPage + 1);
     }
   };
