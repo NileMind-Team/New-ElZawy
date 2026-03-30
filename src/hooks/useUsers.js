@@ -162,7 +162,7 @@ export const useUsers = () => {
 
       if (res.status === 200) {
         const responseData = res.data;
-        const usersData = responseData.items || responseData.data || [];
+        const usersData = responseData.data || responseData.items || [];
 
         setUsers(usersData);
         setFilteredUsers(usersData);
@@ -196,7 +196,7 @@ export const useUsers = () => {
 
       if (res.status === 200) {
         const responseData = res.data;
-        const usersData = responseData.items || responseData.data || [];
+        const usersData = responseData.data || responseData.items || [];
 
         setUsers(usersData);
         setFilteredUsers(usersData);
@@ -448,6 +448,25 @@ export const useUsers = () => {
     return currentUser && user.email === currentUser.email;
   };
 
+  const getAllPhoneNumbers = (user) => {
+    if (!user.locations || user.locations.length === 0) return [];
+    return user.locations
+      .map((location) => location.phoneNumber)
+      .filter((phone) => phone && phone.trim() !== "");
+  };
+
+  const getPrimaryPhoneNumber = (user) => {
+    if (user.phoneNumber && user.phoneNumber.trim() !== "") {
+      return user.phoneNumber;
+    }
+    const locationPhones = getAllPhoneNumbers(user);
+    return locationPhones.length > 0 ? locationPhones[0] : null;
+  };
+
+  const hasLocationPhones = (user) => {
+    return getAllPhoneNumbers(user).length > 0;
+  };
+
   return {
     users,
     filteredUsers,
@@ -478,5 +497,8 @@ export const useUsers = () => {
     handlePrevPage,
     handleNextPage,
     getPaginationNumbers,
+    getAllPhoneNumbers,
+    getPrimaryPhoneNumber,
+    hasLocationPhones,
   };
 };
